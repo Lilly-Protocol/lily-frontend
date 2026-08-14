@@ -7,7 +7,13 @@ type PageScaffoldProps = {
 
 export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
   return (
-    <main className="surface rounded-[1.75rem] p-8 sm:p-10">
+    // tabIndex -1 so the skip link can move focus here; without it the
+    // browser moves the scroll position but leaves focus in the header.
+    <main
+      className="surface rounded-[1.75rem] p-8 sm:p-10"
+      id="main-content"
+      tabIndex={-1}
+    >
       <p className="eyebrow text-[var(--color-accent)]">{route.section}</p>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>

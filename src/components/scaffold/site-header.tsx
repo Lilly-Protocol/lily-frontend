@@ -6,9 +6,15 @@ import { routes, siteConfig } from "@/config/site";
 export function SiteHeader() {
   return (
     <header className="border-b border-[var(--color-line)] bg-white/90">
+      {/* First focusable element on the page, so a keyboard user can bypass the
+          header nav before reaching it (WCAG 2.4.1). Hidden until focused. */}
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div>
           <Link
+            aria-label={`${siteConfig.name} home`}
             className="text-lg font-semibold tracking-tight"
             href={routes.home as Route}
           >
@@ -18,7 +24,7 @@ export function SiteHeader() {
             Contributor-ready scaffold
           </p>
         </div>
-        <nav aria-label="Global" className="flex flex-wrap gap-2 text-sm">
+        <nav aria-label="Primary" className="flex flex-wrap gap-2 text-sm">
           <Link
             className="rounded-full border border-[var(--color-line)] px-4 py-2 hover:border-[var(--color-accent)]"
             href={routes.docs as Route}
