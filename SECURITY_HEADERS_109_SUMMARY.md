@@ -34,6 +34,7 @@ Implement the open `$35` security-headers bounty for `Lilly-Protocol/lily-fronte
 - `npm ci` reported 9 dependency audit findings (1 low, 8 high) from the existing dependency graph; these were not changed because they are outside issue #109.
 - If a future feature adds analytics, APIs, remote fonts, embeds, or external images, the CSP must be reviewed and narrowed to the exact required hosts.
 - GitHub maintainer review, merge, bounty approval, and payment are external gates and remain pending.
+- The PR's Vercel status is currently failing at an authorization URL owned by the repository's deployment integration; this is an external deployment gate and does not contradict the passing local production build or header checks.
 
 ## Useful paths and commands
 
