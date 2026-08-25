@@ -48,6 +48,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Use Node.js `22+`. The repo declares this in `package.json` so local and CI environments stay aligned.
 
+### Remote images
+
+`next.config.ts` includes narrowly scoped placeholder patterns for the planned OG image service (`opengraph.example.com/og/**`) and asset CDN (`assets.example.com/lily/**`). Before using either service with `next/image`, replace its example hostname and path with the real provider values. Add another `images.remotePatterns` entry for each additional HTTPS host or path instead of broadening an existing pattern. Keep `port: ""` to disallow custom ports; add a `search` value when the provider uses one fixed query string.
+
 Docker is not configured in this repository yet. The badge above marks it as planned rather than available today.
 
 ## Quality checks
