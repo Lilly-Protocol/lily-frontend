@@ -9,6 +9,7 @@ describe("site config", () => {
       default: siteConfig.name,
       template: `%s | ${siteConfig.name}`,
     });
+    expect(metadata.manifest).toBe(siteConfig.manifestPath);
     expect(metadata.metadataBase?.toString()).toBe(`${siteConfig.url}/`);
   });
 

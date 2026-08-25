@@ -21,6 +21,8 @@ export const siteConfig = {
   tagline:
     "A stable Next.js frontend foundation for issue-driven open source contribution.",
   url: "https://lilyprotocol.dev",
+  themeColor: "#f7f7f5",
+  manifestPath: "/manifest.webmanifest",
   keywords: [
     "Stellar",
     "frontend",
@@ -42,6 +44,7 @@ export function createSiteMetadata(): Metadata {
     },
     description: siteConfig.description,
     applicationName: siteConfig.name,
+    manifest: siteConfig.manifestPath,
     keywords: [...siteConfig.keywords],
     openGraph: {
       title: siteConfig.name,
