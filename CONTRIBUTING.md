@@ -53,6 +53,7 @@ npm run check
 ## Engineering expectations
 
 - Prefer server components unless client interactivity is required.
+- External links that use `target="_blank"` must also use `rel="noopener noreferrer"`; ESLint enforces this with `react/jsx-no-target-blank`.
 - Keep business logic and presentation modular so future contributors can extend issue-sized features without rewriting route files.
 - Add or update tests when you change reusable behavior, rendering logic, or project configuration.
 - Use typed imports, consistent naming, and small focused components over large catch-all files.

@@ -7,6 +7,13 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
+      "react/jsx-no-target-blank": [
+        "error",
+        {
+          allowReferrer: false,
+          enforceDynamicLinks: "always",
+        },
+      ],
       "@typescript-eslint/consistent-type-imports": [
         "error",
         {
