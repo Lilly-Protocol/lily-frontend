@@ -1,6 +1,8 @@
+import type { Viewport } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { createSiteMetadata } from "@/config/site";
+import { rootViewport } from "@/config/viewport";
 
 import "./globals.css";
 
@@ -16,6 +18,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata = createSiteMetadata();
+
+export const viewport: Viewport = rootViewport;
 
 export default function RootLayout({
   children,
