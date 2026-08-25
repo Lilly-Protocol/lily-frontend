@@ -62,6 +62,17 @@ npm run check
 
 `npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
 
+## Security headers
+
+The Next.js application applies the following response headers to every route:
+
+- `Content-Security-Policy` limits scripts, styles, images, fonts, connections, forms, frames, and objects to the local application (with inline scripts/styles required by the current Next.js shell).
+- `Referrer-Policy: strict-origin-when-cross-origin` limits cross-origin referrer detail.
+- `X-Content-Type-Options: nosniff` prevents MIME-type sniffing.
+- `X-Frame-Options: DENY` prevents the application from being embedded in a frame.
+
+These headers are configured in `next.config.ts` and should be checked against production responses when adding third-party scripts, APIs, embeds, or asset hosts.
+
 ## Project structure
 
 ```text

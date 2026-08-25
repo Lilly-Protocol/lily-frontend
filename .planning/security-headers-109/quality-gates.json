@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "initiative_id": "security-headers-109",
+  "updated_at": "2026-08-25T18:01:21Z",
+  "scope": {
+    "has_frontend": true,
+    "image_capability": "available"
+  },
+  "image_workflow": {
+    "mode": "generate",
+    "status": "pending",
+    "reason": "Frontend default",
+    "evidence": [],
+    "replacement_checks": [],
+    "user_confirmation": null
+  },
+  "authority": {
+    "sources": [],
+    "conflicts": []
+  },
+  "decisions": [],
+  "hard_gates": [
+    {
+      "id": "HG-01",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-02",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-03",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-04",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-05",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-06",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-07",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-08",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-09",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-10",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-11",
+      "status": "active",
+      "evidence": []
+    },
+    {
+      "id": "HG-12",
+      "status": "active",
+      "evidence": []
+    }
+  ],
+  "acceptance_reviews": [],
+  "stages": [
+    {
+      "id": "S1-requirements-architecture",
+      "name": "Requirements and architecture",
+      "applicable": true,
+      "status": "in_progress",
+      "dependencies": [],
+      "decision_ids": [],
+      "deliverables": [],
+      "acceptance_review_ids": [],
+      "checklist": {
+        "total": 0,
+        "passed": 0,
+        "pending": 0,
+        "failed": 0,
+        "blocked": 0
+      },
+      "gates": {
+        "source_coverage": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "architecture": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "dialogue_confirmation": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "user_scope_approval": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        }
+      },
+      "open_items": []
+    },
+    {
+      "id": "S2-ui-design",
+      "name": "UI design and approval",
+      "applicable": true,
+      "status": "pending",
+      "dependencies": [
+        "S1-requirements-architecture"
+      ],
+      "decision_ids": [],
+      "deliverables": [],
+      "acceptance_review_ids": [],
+      "checklist": {
+        "total": 0,
+        "passed": 0,
+        "pending": 0,
+        "failed": 0,
+        "blocked": 0
+      },
+      "gates": {
+        "functional": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "visual_fidelity": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "information_completeness": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "artifact_acceptance": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "user_approval": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        }
+      },
+      "open_items": []
+    },
+    {
+      "id": "S3-implementation-testing",
+      "name": "Implementation and testing",
+      "applicable": true,
+      "status": "pending",
+      "dependencies": [
+        "S1-requirements-architecture",
+        "S2-ui-design"
+      ],
+      "decision_ids": [],
+      "deliverables": [],
+      "acceptance_review_ids": [],
+      "checklist": {
+        "total": 0,
+        "passed": 0,
+        "pending": 0,
+        "failed": 0,
+        "blocked": 0
+      },
+      "gates": {
+        "implementation": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "automated_tests": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "real_validation": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "artifact_acceptance": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "human_acceptance": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        }
+      },
+      "open_items": []
+    },
+    {
+      "id": "S4-release-handoff-monitoring",
+      "name": "Release, handoff, and monitoring",
+      "applicable": true,
+      "status": "pending",
+      "dependencies": [
+        "S3-implementation-testing"
+      ],
+      "decision_ids": [],
+      "deliverables": [],
+      "acceptance_review_ids": [],
+      "checklist": {
+        "total": 0,
+        "passed": 0,
+        "pending": 0,
+        "failed": 0,
+        "blocked": 0
+      },
+      "gates": {
+        "release_evidence": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "handoff": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "external_acceptance": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        },
+        "monitoring_stop": {
+          "status": "pending",
+          "evidence": [],
+          "rationale": ""
+        }
+      },
+      "open_items": []
+    }
+  ]
+}
