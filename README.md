@@ -56,11 +56,15 @@ Docker is not configured in this repository yet. The badge above marks it as pla
 npm run lint
 npm run typecheck
 npm run test:run
+npm run test:e2e
 npm run build
 npm run check
 ```
 
-`npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
+`npm run test:e2e` runs the Playwright smoke suite against a production build. Run
+`npm run build` first; Playwright starts and stops the production server for you.
+
+`npm run check` runs the lint, type-check, unit test, and build checks before opening a PR.
 
 ## Project structure
 
@@ -112,7 +116,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage
 
 ## CI
 
-GitHub Actions runs linting, type-checking, tests with coverage, and production builds on pushes and pull requests. Each check runs as its own job with `fail-fast` disabled, so you can immediately see exactly what failed without losing the rest of the signal. The workflow also persists `.next/cache` to speed up repeat builds in line with the current Next.js CI caching guidance.
+GitHub Actions runs linting, type-checking, tests with coverage, production builds, and Playwright smoke tests on pushes and pull requests. The Playwright job builds the app, serves it with `next start`, and uploads traces and screenshots when the smoke suite fails. Each validation check runs as its own job with `fail-fast` disabled, so you can immediately see exactly what failed without losing the rest of the signal. The workflow also persists `.next/cache` to speed up repeat builds in line with the current Next.js CI caching guidance.
 
 ## Notes
 
