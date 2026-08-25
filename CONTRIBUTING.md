@@ -60,6 +60,7 @@ npm run check
 
 ## Issues and contributor tasks
 
+- Read the [issue labels and triage guide](docs/issues.md) to understand what each label means, how issues become ready for work, and how assignment works.
 - Use the bug report template for regressions and broken behavior.
 - Use the feature request template for roadmap or product ideas.
 - Use the contributor task template to define scoped implementation work that external contributors can pick up quickly.
