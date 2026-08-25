@@ -28,6 +28,10 @@ Thanks for helping build Lily Protocol.
 6. Update docs when behavior, contributor workflow, or repo expectations change.
 7. Validate the branch locally before asking for review.
 
+## Editor settings
+
+The repository includes a root `.editorconfig` so editors use the same formatting defaults. Use UTF-8, LF line endings, final newlines, trimmed trailing whitespace, and 2-space indentation for TypeScript, CSS, JSON, MJS, and YAML files.
+
 ## Validation checklist
 
 Run these commands before opening a pull request:
