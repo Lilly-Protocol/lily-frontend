@@ -1,8 +1,8 @@
+import "./globals.css";
+
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { createSiteMetadata } from "@/config/site";
-
-import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
