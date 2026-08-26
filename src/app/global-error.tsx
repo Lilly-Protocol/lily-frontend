@@ -32,29 +32,29 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "var(--color-surface, #f7f7f5)",
-          color: "var(--color-ink, #111827)",
-          fontFamily: "var(--font-space-grotesk, sans-serif)",
+          background: "#f7f7f5",
+          color: "#111827",
+          fontFamily: "var(--font-space-grotesk), sans-serif",
         }}
       >
         <div
           style={{
             maxWidth: "32rem",
             padding: "2rem",
-            border: "1px solid var(--color-line, #d1d5db)",
+            border: "1px solid #d1d5db",
             borderRadius: "0.75rem",
-            background: "var(--color-panel, #ffffff)",
-            boxShadow: "var(--shadow-soft, 0 16px 40px rgba(17,24,39,0.06))",
+            background: "#ffffff",
+            boxShadow: "0 16px 40px rgba(17,24,39,0.06)",
             textAlign: "center",
           }}
         >
           <p
             style={{
-              fontFamily: "var(--font-ibm-plex-mono, monospace)",
+              fontFamily: "var(--font-ibm-plex-mono), monospace",
               fontSize: "0.78rem",
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "var(--color-muted, #4b5563)",
+              color: "#4b5563",
               marginBottom: "0.75rem",
             }}
           >
@@ -71,7 +71,7 @@ export default function GlobalError({
           </h1>
           <p
             style={{
-              color: "var(--color-muted, #4b5563)",
+              color: "#4b5563",
               margin: "0 0 1.5rem",
               lineHeight: 1.6,
             }}
@@ -81,9 +81,9 @@ export default function GlobalError({
           {error.digest && (
             <p
               style={{
-                fontFamily: "var(--font-ibm-plex-mono, monospace)",
+                fontFamily: "var(--font-ibm-plex-mono), monospace",
                 fontSize: "0.75rem",
-                color: "var(--color-muted, #4b5563)",
+                color: "#4b5563",
                 marginBottom: "1.5rem",
               }}
             >
@@ -100,9 +100,9 @@ export default function GlobalError({
               padding: "0.625rem 1.25rem",
               borderRadius: "0.5rem",
               border: "none",
-              background: "var(--color-accent, #0f766e)",
+              background: "#0f766e",
               color: "#ffffff",
-              fontFamily: "var(--font-space-grotesk, sans-serif)",
+              fontFamily: "var(--font-space-grotesk), sans-serif",
               fontWeight: 500,
               fontSize: "0.95rem",
               cursor: "pointer",
