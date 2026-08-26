@@ -117,3 +117,26 @@ GitHub Actions runs linting, type-checking, tests with coverage, and production 
 ## Notes
 
 This repo uses the `src/` directory convention supported by Next.js 16. Keep App Router routes under `src/app`, route metadata in `src/config`, and reusable scaffold boundaries under `src/components/scaffold` and `src/features/scaffold`.
+
+## E2E Testing
+
+This project uses [Playwright](https://playwright.dev/) for end-to-end smoke tests.
+
+### Prerequisites
+
+```bash
+npm install
+npx playwright install --with-deps chromium
+```
+
+### Running Tests
+
+```bash
+# Run e2e tests against a production build
+npm run test:e2e
+
+# Run with UI mode for debugging
+npx playwright test --ui
+```
+
+Tests are configured in `playwright.config.ts` and located in the `e2e/` directory.
