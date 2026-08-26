@@ -16,9 +16,11 @@ describe("SectionLayout", () => {
       </SectionLayout>,
     );
 
-    expect(
-      screen.getByRole("link", { name: /lily protocol/i }),
-    ).toHaveAttribute("href", "/");
+    // Both SiteHeader and SiteFooter render a "Lily Protocol" brand link;
+    // assert at least the first one (header) points home.
+    const brandLinks = screen.getAllByRole("link", { name: /lily protocol/i });
+    expect(brandLinks.length).toBeGreaterThanOrEqual(1);
+    expect(brandLinks[0]).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
       "href",
       "/docs",
