@@ -9,7 +9,22 @@ describe("site config", () => {
       default: siteConfig.name,
       template: `%s | ${siteConfig.name}`,
     });
+    expect(metadata.title).toEqual(
+      expect.objectContaining({ template: expect.stringContaining("%s") }),
+    );
     expect(metadata.metadataBase?.toString()).toBe(`${siteConfig.url}/`);
+    expect(metadata.openGraph).toEqual({
+      title: siteConfig.name,
+      description: siteConfig.tagline,
+      type: "website",
+      siteName: siteConfig.name,
+      url: siteConfig.url,
+    });
+    expect(metadata.twitter).toEqual({
+      card: "summary_large_image",
+      title: siteConfig.name,
+      description: siteConfig.tagline,
+    });
   });
 
   it("builds absolute page urls from typed routes", () => {
