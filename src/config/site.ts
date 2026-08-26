@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-import { staticSitePages } from "@/config/routes";
+import { routeScaffolds, staticSitePages } from "@/config/routes";
 
-import type { SitePage, StaticSiteRoute } from "@/types/site";
+import type { RouteSection, SitePage, StaticSiteRoute } from "@/types/site";
 
 export const routes = {
   home: "/",
@@ -32,6 +32,24 @@ export const siteConfig = {
   ],
   pages: staticSitePages as readonly SitePage[],
 } as const;
+
+const siteHeaderSections = new Set<RouteSection>([
+  "marketing",
+  "legal",
+  "docs",
+]);
+const siteHeaderEntryIds = new Set(["signin", "dashboard-overview"]);
+
+export const siteHeaderLinks = routeScaffolds
+  .filter(
+    (route) =>
+      route.path !== routes.home &&
+      (siteHeaderSections.has(route.section) || siteHeaderEntryIds.has(route.id)),
+  )
+  .map((route) => ({
+    href: route.path as StaticSiteRoute,
+    label: route.title,
+  }));
 
 export function createSiteMetadata(): Metadata {
   return {

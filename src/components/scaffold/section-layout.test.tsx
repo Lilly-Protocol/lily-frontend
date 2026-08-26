@@ -19,10 +19,9 @@ describe("SectionLayout", () => {
     expect(
       screen.getByRole("link", { name: /lily protocol/i }),
     ).toHaveAttribute("href", "/");
-    expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
-      "href",
-      "/docs",
-    );
+    expect(
+      screen.getByRole("link", { name: /documentation/i }),
+    ).toHaveAttribute("href", "/docs");
     expect(
       screen.getByRole("link", { name: /landing page/i }),
     ).toHaveAttribute("href", "/");
