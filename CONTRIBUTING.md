@@ -70,6 +70,10 @@ npm run check
 - Small PRs move faster than wide refactors, so prefer incremental improvements when possible.
 - If a decision has non-obvious tradeoffs, document it in the PR instead of relying on review comments to provide context.
 
+## Code of conduct
+
+All contributors are expected to follow the [Code of Conduct](./CODE_OF_CONDUCT.md). Report conduct concerns privately through the Lily Protocol contact channel listed on the project website or GitHub organization profile rather than opening a public issue.
+
 ## Reporting issues
 
 Use the GitHub issue templates for bugs, features, and contributor-scoped tasks. Reproduction steps, expected behavior, acceptance criteria, and screenshots help us move faster.
