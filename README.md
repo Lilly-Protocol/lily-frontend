@@ -27,7 +27,7 @@ Contributor-ready frontend foundation for Lily Protocol. This repository is inte
 
 ## Current scope
 
-- Stabilized Next.js foundation
+- Stabilized Next.js foundation with strict security headers (`Referrer-Policy`, `Permissions-Policy`, `X-Content-Type-Options`, `X-Frame-Options`)
 - Strict TypeScript, linting, tests, and CI
 - Contributor workflow and GitHub templates
 - Shared layout scaffolds for marketing, auth, support, and dashboard surfaces
