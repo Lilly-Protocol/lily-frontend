@@ -1,0 +1,74 @@
+2026-08-27 10:44:39.387 INFO    lilly-protocol-lily-frontend-18_e837 - strix.core.runner: Starting Strix scan lilly-protocol-lily-frontend-18_e837 (image=ghcr.io/usestrix/strix-sandbox:1.3.0, max_turns=10, interactive=False, run_dir=/mnt/c/MikoBuild/workspaces/bounty_hunter_editable/Lilly-Protocol__lily-frontend__18__0538a3f6b5__issue_18__0f9fa25485/strix_runs/lilly-protocol-lily-frontend-18_e837)
+2026-08-27 10:44:39.387 INFO    lilly-protocol-lily-frontend-18_e837 - strix.core.runner: LLM model resolved: ollama/qwen3:8b
+2026-08-27 10:44:39.389 INFO    lilly-protocol-lily-frontend-18_e837 - strix.core.runner: Bringing up sandbox session for scan lilly-protocol-lily-frontend-18_e837
+2026-08-27 10:44:39.389 DEBUG   lilly-protocol-lily-frontend-18_e837 - strix.runtime.backends: Selected sandbox backend: docker
+2026-08-27 10:44:39.394 INFO    lilly-protocol-lily-frontend-18_e837 - strix.runtime.session_manager: Creating sandbox session for scan lilly-protocol-lily-frontend-18_e837 (backend=docker, image=ghcr.io/usestrix/strix-sandbox:1.3.0)
+2026-08-27 10:44:39.535 DEBUG   lilly-protocol-lily-frontend-18_e837 - strix.runtime.docker_client: Creating sandbox container: image=ghcr.io/usestrix/strix-sandbox:1.3.0 caps=['NET_ADMIN', 'NET_RAW'] exposed_ports=[48080]
+2026-08-27 10:44:39.652 INFO    lilly-protocol-lily-frontend-18_e837 - strix.runtime.docker_client: Sandbox container created: id=41456456271b image=ghcr.io/usestrix/strix-sandbox:1.3.0
+2026-08-27 10:44:41.249 DEBUG   lilly-protocol-lily-frontend-18_e837 - strix.runtime.session_manager: cleanup(lilly-protocol-lily-frontend-18_e837): no cached session
+2026-08-27 10:44:42.536 DEBUG   - - strix.telemetry.posthog: posthog event sent: error
+2026-08-27 10:44:44.434 DEBUG   - - strix.telemetry.scarf: scarf event sent: error
+2026-08-27 10:44:44.440 INFO    - - strix.report.sarif: Wrote SARIF 2.1.0 report: /mnt/c/MikoBuild/workspaces/bounty_hunter_editable/Lilly-Protocol__lily-frontend__18__0538a3f6b5__issue_18__0f9fa25485/strix_runs/lilly-protocol-lily-frontend-18_e837/findings.sarif (0 results)
+2026-08-27 10:44:44.444 INFO    - - strix.report.state: Essential scan data saved to: /mnt/c/MikoBuild/workspaces/bounty_hunter_editable/Lilly-Protocol__lily-frontend__18__0538a3f6b5__issue_18__0f9fa25485/strix_runs/lilly-protocol-lily-frontend-18_e837
+2026-08-27 10:44:46.392 DEBUG   - - strix.telemetry.posthog: posthog event sent: scan_ended
+2026-08-27 10:44:49.685 DEBUG   - - strix.telemetry.scarf: scarf send failed for event scan_ended
+Traceback (most recent call last):
+  File "main.py", line 457, in main
+  File "asyncio/runners.py", line 195, in run
+  File "asyncio/runners.py", line 118, in run
+  File "asyncio/base_events.py", line 691, in run_until_complete
+  File "strix/interface/cli.py", line 191, in run_cli
+  File "strix/core/runner.py", line 227, in run_strix_scan
+  File "strix/runtime/session_manager.py", line 169, in create_or_reuse
+  File "strix/runtime/backends.py", line 49, in _docker_backend
+  File "agents/sandbox/session/sandbox_session.py", line 61, in _wrapped
+  File "agents/sandbox/session/sandbox_session.py", line 405, in _annotate
+  File "agents/sandbox/session/sandbox_session.py", line 518, in start
+  File "agents/sandbox/session/base_sandbox_session.py", line 229, in start
+  File "agents/sandbox/session/base_sandbox_session.py", line 326, in _start_workspace
+  File "agents/sandbox/session/base_sandbox_session.py", line 1196, in _apply_manifest
+  File "agents/sandbox/session/manifest_ops.py", line 29, in apply_manifest
+  File "agents/sandbox/session/base_sandbox_session.py", line 1299, in _manifest_base_dir
+  File "pathlib.py", line 1195, in cwd
+  File "pathlib.py", line 1216, in absolute
+FileNotFoundError: [Errno 2] No such file or directory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "urllib3/connectionpool.py", line 464, in _make_request
+  File "urllib3/connectionpool.py", line 1106, in _validate_conn
+  File "urllib3/connection.py", line 796, in connect
+  File "urllib3/connection.py", line 975, in _ssl_wrap_socket_and_match_hostname
+  File "urllib3/util/ssl_.py", line 433, in ssl_wrap_socket
+  File "urllib3/util/ssl_.py", line 477, in _ssl_wrap_socket_impl
+  File "ssl.py", line 455, in wrap_socket
+  File "ssl.py", line 1041, in _create
+  File "ssl.py", line 1319, in do_handshake
+TimeoutError: _ssl.c:993: The handshake operation timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "requests/adapters.py", line 696, in send
+  File "urllib3/connectionpool.py", line 842, in urlopen
+  File "urllib3/util/retry.py", line 498, in increment
+  File "urllib3/util/util.py", line 39, in reraise
+  File "urllib3/connectionpool.py", line 788, in urlopen
+  File "urllib3/connectionpool.py", line 488, in _make_request
+  File "urllib3/connectionpool.py", line 466, in _make_request
+  File "urllib3/connectionpool.py", line 367, in _raise_timeout
+urllib3.exceptions.ReadTimeoutError: HTTPSConnectionPool(host='strix.gateway.scarf.sh', port=443): Read timed out. (read timeout=2.0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "strix/telemetry/scarf.py", line 47, in _send
+  File "requests/api.py", line 134, in post
+  File "requests/api.py", line 71, in request
+  File "requests/sessions.py", line 651, in request
+  File "requests/sessions.py", line 784, in send
+  File "requests/adapters.py", line 742, in send
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='strix.gateway.scarf.sh', port=443): Read timed out. (read timeout=2.0)
+2026-08-27 10:44:49.705 INFO    - - strix.report.sarif: Wrote SARIF 2.1.0 report: /mnt/c/MikoBuild/workspaces/bounty_hunter_editable/Lilly-Protocol__lily-frontend__18__0538a3f6b5__issue_18__0f9fa25485/strix_runs/lilly-protocol-lily-frontend-18_e837/findings.sarif (0 results)
+2026-08-27 10:44:49.709 INFO    - - strix.report.state: Essential scan data saved to: /mnt/c/MikoBuild/workspaces/bounty_hunter_editable/Lilly-Protocol__lily-frontend__18__0538a3f6b5__issue_18__0f9fa25485/strix_runs/lilly-protocol-lily-frontend-18_e837
