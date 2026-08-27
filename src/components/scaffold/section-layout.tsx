@@ -6,6 +6,9 @@ import type { RouteScaffold } from "@/types/site";
 type SectionLayoutProps = {
   readonly title: string;
   readonly description: string;
+  /**
+   * Empty route arrays are valid for sections whose navigation is configured later.
+   */
   readonly routes: readonly RouteScaffold[];
   readonly children: React.ReactNode;
 };
