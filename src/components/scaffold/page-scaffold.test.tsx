@@ -16,4 +16,25 @@ describe("PageScaffold", () => {
       screen.getByText(/contributors should implement the real experience from the approved figma design/i),
     ).toBeInTheDocument();
   });
+
+  it("renders the route section eyebrow and h1 title", () => {
+    const route = getRouteScaffold("docs");
+
+    render(<PageScaffold route={route} />);
+
+    expect(screen.getByText(route.section)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 1, name: route.title }),
+    ).toBeInTheDocument();
+  });
+
+  it("uses dynamicLabel instead of the default route path", () => {
+    const route = getRouteScaffold("agent-detail");
+    const dynamicLabel = "/app/agents/agent-123";
+
+    render(<PageScaffold route={route} dynamicLabel={dynamicLabel} />);
+
+    expect(screen.getByText(dynamicLabel)).toBeInTheDocument();
+    expect(screen.queryByText(route.path)).not.toBeInTheDocument();
+  });
 });
