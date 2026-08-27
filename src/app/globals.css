@@ -8,6 +8,7 @@
   --color-muted: #4b5563;
   --color-line: #d1d5db;
   --color-accent: #0f766e;
+  --focus-ring: var(--color-accent);
   --shadow-soft: 0 16px 40px rgba(17, 24, 39, 0.06);
 }
 
@@ -34,6 +35,15 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+:where(a, button, [role="button"], input, select, textarea, summary):focus {
+  outline: none;
+}
+
+:where(a, button, [role="button"], input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
 ::selection {

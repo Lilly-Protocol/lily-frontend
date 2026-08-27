@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 
+import { focusRingClassName } from "@/components/scaffold/focus-styles";
 import type { RouteScaffold } from "@/types/site";
 
 type SectionNavProps = {
@@ -22,7 +23,7 @@ export function SectionNav({ routes }: SectionNavProps) {
               </div>
             ) : (
               <Link
-                className="flex items-center justify-between rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 text-sm hover:border-[var(--color-accent)]"
+                className={`${focusRingClassName} flex items-center justify-between rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 text-sm hover:border-[var(--color-accent)]`}
                 href={route.path as Route}
               >
                 <span>{route.title}</span>
