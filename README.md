@@ -91,6 +91,10 @@ Each route is scaffolded with:
 - a note that implementation should follow approved Figma work
 - natural issue slices contributors can pick up
 
+## Empty state pattern
+
+Use `EmptyState` from `src/components/ui/empty-state.tsx` for planned list surfaces such as `/app/wallets`, `/app/agents`, `/app/activity`, `/blog`, and `/careers`. Pass a decorative icon slot, a route-specific title, a concise description, and an optional CTA link when there is a clear next action.
+
 ## Contributor workflow
 
 1. Pick up a scoped issue or create one using the contributor task template.
