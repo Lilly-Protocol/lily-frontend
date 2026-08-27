@@ -1,5 +1,8 @@
 import { render, screen } from "@testing-library/react";
 
+import { routeScaffolds } from "@/config/routes";
+import { expectSingleHeading } from "@/test/assertions";
+
 import { createScaffoldPage } from "./page-factory";
 
 describe("createScaffoldPage", () => {
@@ -11,5 +14,13 @@ describe("createScaffoldPage", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: /documentation/i }),
     ).toBeInTheDocument();
+  });
+
+  it.each(routeScaffolds)("renders one h1 for $id", (route) => {
+    const ScaffoldPage = createScaffoldPage(route.id);
+
+    render(<ScaffoldPage />);
+
+    expectSingleHeading(route.title);
   });
 });
