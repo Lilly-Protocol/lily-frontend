@@ -12,9 +12,9 @@ export default defineConfig({
     setupFiles: ["./src/test/setup.ts"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "html"],
+      reporter: ["text", "html", "lcov"],
       include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/app/**/*", "src/test/**/*"],
+      exclude: ["**/*.test.{ts,tsx}", "src/test/**/*"],
       thresholds: {
         statements: 70,
         branches: 60,
