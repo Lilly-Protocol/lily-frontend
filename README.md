@@ -72,10 +72,15 @@ src/
   features/scaffold/    Generic scaffold page helpers
   test/                 Shared test setup
   types/                Shared TypeScript types
+docs/
+  adr/                  Architecture Decision Records (see ADR 0001: Route-Scaffold Architecture)
 .github/
   workflows/            CI automation
   ISSUE_TEMPLATE/       GitHub issue templates
 ```
+
+See [ADR 0001: Route-Scaffold Architecture](./docs/adr/0001-route-scaffold-architecture.md) for detailed rationale on the centralized route registry and page factory pattern.
+
 
 ## Route scaffold map
 
