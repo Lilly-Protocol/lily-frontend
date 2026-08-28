@@ -68,6 +68,7 @@ npm run check
 src/
   app/                  App Router routes, route groups, and layouts
   components/scaffold/  Shared route-shell and layout primitives
+  components/ui/        Reusable UI primitives (timeline, etc.)
   config/               Site metadata and route registry
   features/scaffold/    Generic scaffold page helpers
   test/                 Shared test setup
