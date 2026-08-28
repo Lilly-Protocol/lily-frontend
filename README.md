@@ -70,12 +70,14 @@ src/
   components/scaffold/  Shared route-shell and layout primitives
   config/               Site metadata and route registry
   features/scaffold/    Generic scaffold page helpers
+  middleware.ts         Request ID assignment and header propagation
   test/                 Shared test setup
   types/                Shared TypeScript types
 .github/
   workflows/            CI automation
   ISSUE_TEMPLATE/       GitHub issue templates
 ```
+
 
 ## Route scaffold map
 
