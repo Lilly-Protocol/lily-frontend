@@ -8,6 +8,7 @@ Thanks for helping build Lily Protocol.
 - Install dependencies with `npm install`.
 - Run `npm run dev` for local work.
 - Run `npm run check` before opening a pull request.
+- Editor formatting is standardized by the root `.editorconfig`; use an EditorConfig-compatible editor or extension.
 
 ## Project shape
 
