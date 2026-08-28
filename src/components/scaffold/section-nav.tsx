@@ -1,5 +1,8 @@
+"use client";
+
 import type { Route } from "next";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import type { RouteScaffold } from "@/types/site";
 
@@ -8,32 +11,44 @@ type SectionNavProps = {
 };
 
 export function SectionNav({ routes }: SectionNavProps) {
+  const pathname = usePathname();
+
   return (
     <nav aria-label="Section routes">
       <ul className="grid gap-2">
-        {routes.map((route) => (
-          <li key={route.id}>
-            {route.path === "/app/agents/[id]" ? (
-              <div className="flex items-center justify-between rounded-2xl border border-dashed border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 text-sm">
-                <span>{route.title}</span>
-                <span className="font-mono text-xs text-[var(--color-muted)]">
-                  {route.path}
-                </span>
-              </div>
-            ) : (
-              <Link
-                className="flex items-center justify-between rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 text-sm hover:border-[var(--color-accent)]"
-                href={route.path as Route}
-              >
-                <span>{route.title}</span>
-                <span className="font-mono text-xs text-[var(--color-muted)]">
-                  {route.path}
-                </span>
-              </Link>
-            )}
-          </li>
-        ))}
+        {routes.map((route) => {
+          const isActive = pathname === route.path;
+
+          return (
+            <li key={route.id}>
+              {route.path === "/app/agents/[id]" ? (
+                <div className="flex items-center justify-between rounded-2xl border border-dashed border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 text-sm">
+                  <span>{route.title}</span>
+                  <span className="font-mono text-xs text-[var(--color-muted)]">
+                    {route.path}
+                  </span>
+                </div>
+              ) : (
+                <Link
+                  aria-current={isActive ? "page" : undefined}
+                  className={`flex items-center justify-between rounded-2xl border px-4 py-3 text-sm transition-colors ${
+                    isActive
+                      ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10 font-semibold text-[var(--color-accent)]"
+                      : "border-[var(--color-line)] bg-[var(--color-panel-muted)] hover:border-[var(--color-accent)]"
+                  }`}
+                  href={route.path as Route}
+                >
+                  <span>{route.title}</span>
+                  <span className="font-mono text-xs text-[var(--color-muted)]">
+                    {route.path}
+                  </span>
+                </Link>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );
 }
+
