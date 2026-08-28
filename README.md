@@ -70,6 +70,7 @@ src/
   components/scaffold/  Shared route-shell and layout primitives
   config/               Site metadata and route registry
   features/scaffold/    Generic scaffold page helpers
+  instrumentation.ts    Server-side error observability and telemetry hook
   test/                 Shared test setup
   types/                Shared TypeScript types
 .github/
