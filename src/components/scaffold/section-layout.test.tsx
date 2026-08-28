@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
 import { getSectionRoutes } from "@/config/routes";
+import { checkA11y } from "@/test/a11y";
 
 import { SectionLayout } from "./section-layout";
 
@@ -42,4 +43,19 @@ describe("SectionLayout", () => {
 
     expect(screen.getByText("/app/agents/[id]")).toBeInTheDocument();
   });
+
+  it("passes automated accessibility audit with zero axe violations", async () => {
+    const { container } = render(
+      <SectionLayout
+        title="Public marketing"
+        description="Public-facing route group."
+        routes={getSectionRoutes("marketing")}
+      >
+        <div>Section content</div>
+      </SectionLayout>,
+    );
+
+    await checkA11y(container);
+  });
 });
+
