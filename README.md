@@ -58,9 +58,12 @@ npm run typecheck
 npm run test:run
 npm run build
 npm run check
+npm run format
+npm run clean
 ```
 
 `npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
+`npm run format` applies Prettier to supported repository files. `npm run clean` removes the generated `.next`, `coverage`, and `tsconfig.tsbuildinfo` artifacts.
 
 ## Project structure
 
