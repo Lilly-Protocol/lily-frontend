@@ -1,15 +1,15 @@
 import type { RouteScaffold } from "@/types/site";
 
 type PageScaffoldProps = {
-  readonly route: RouteScaffold;
+      <div className="flex flex-wrap items-start justify-between gap-4 min-w-0">
   readonly dynamicLabel?: string;
 };
 
-export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
+        <span className="font-mono text-sm bg-muted px-2 py-1 rounded min-w-0 truncate max-w-full">
   return (
     <main className="surface rounded-[1.75rem] p-8 sm:p-10">
       <p className="eyebrow text-[var(--color-accent)]">{route.section}</p>
-      <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+      <div className="mt-8 grid gap-8 md:grid-cols-[1.2fr_0.8fr]">
         <div>
           <h1 className="text-4xl font-semibold tracking-tight">{route.title}</h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-[var(--color-muted)]">
