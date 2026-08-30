@@ -20,19 +20,19 @@ export function SiteHeader() {
         </div>
         <nav aria-label="Global" className="flex flex-wrap gap-2 text-sm">
           <Link
-            className="rounded-full border border-[var(--color-line)] px-4 py-2 hover:border-[var(--color-accent)]"
+            className="rounded-full border border-[var(--color-line)] px-4 py-2 transition-colors duration-[var(--duration-base)] ease-[var(--ease-standard)] hover:border-[var(--color-accent)] motion-reduce:transition-none"
             href={routes.docs as Route}
           >
             Docs
           </Link>
           <Link
-            className="rounded-full border border-[var(--color-line)] px-4 py-2 hover:border-[var(--color-accent)]"
+            className="rounded-full border border-[var(--color-line)] px-4 py-2 transition-colors duration-[var(--duration-base)] ease-[var(--ease-standard)] hover:border-[var(--color-accent)] motion-reduce:transition-none"
             href={routes.signin as Route}
           >
             Sign in
           </Link>
           <Link
-            className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-white hover:opacity-90"
+            className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-white transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] hover:opacity-90 motion-reduce:transition-none"
             href={routes.dashboard as Route}
           >
             Dashboard
