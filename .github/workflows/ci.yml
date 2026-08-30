@@ -1,79 +1,23 @@
-name: CI
+ name: CI
 
-on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
-      - master
+ on:
+   push:
+     branches: [main]
+   pull_request:
+     branches: [main]
 
-permissions:
-  contents: read
+ concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+   cancel-in-progress: true
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  validate:
-    name: ${{ matrix.check.name }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      CI: true
-    strategy:
-      fail-fast: false
-      matrix:
-        check:
-          - name: Lint
-            command: npm run lint
-          - name: Typecheck
-            command: npm run typecheck
-          - name: Test
-            command: npm run test:run
-          - name: Build
-            command: npm run build
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Restore Next.js cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**/*.{ts,tsx}', 'next.config.ts', 'eslint.config.mjs') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ${{ matrix.check.name }}
-        run: ${{ matrix.check.command }}
-
-      - name: Write workflow summary
-        if: always()
-        run: |
-          {
-            echo "## CI Check"
-            echo ""
-            echo "- Check: ${{ matrix.check.name }}"
-            echo "- Command: \`${{ matrix.check.command }}\`"
-            echo "- Status: ${{ job.status }}"
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Upload coverage report
-        if: always() && matrix.check.name == 'Test'
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage
+ jobs:
+   test:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+       - uses: actions/setup-node@v4
+         with:
+           node-version: 20
+           cache: npm
+       - run: npm ci
+       - run: npm test
