@@ -42,6 +42,10 @@ npm run check
 
 `npm run check` is the fastest way to mirror CI end-to-end.
 
+## Issue labels and triage
+
+See [docs/issues.md](docs/issues.md) for the full label reference and triage workflow.
+
 ## Pull requests
 
 - Explain the problem being solved, not only the code that changed.
