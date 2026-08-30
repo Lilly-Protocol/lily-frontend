@@ -7,7 +7,7 @@ type PageScaffoldProps = {
 
 export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
   return (
-    <main className="surface rounded-[1.75rem] p-8 sm:p-10">
+    <main className="surface wrap-anywhere rounded-[1.75rem] p-8 sm:p-10">
       <p className="eyebrow text-[var(--color-accent)]">{route.section}</p>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -16,7 +16,7 @@ export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
             {route.purpose}
           </p>
         </div>
-        <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 font-mono text-sm text-[var(--color-muted)]">
+        <div className="min-w-0 max-w-full rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-muted)] px-4 py-3 font-mono text-sm text-[var(--color-muted)]">
           {dynamicLabel ?? route.path}
         </div>
       </div>

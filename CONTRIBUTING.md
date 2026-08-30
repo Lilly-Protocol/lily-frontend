@@ -42,6 +42,20 @@ npm run check
 
 `npm run check` is the fastest way to mirror CI end-to-end.
 
+For scaffold layout changes, also run the Chromium regression suite:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+This builds and serves the current production code on port 4319, then checks
+every registered route at 320px and desktop widths. It includes a long agent ID
+and checks real browser layout and readable, wrapped text. Keep port 4319 free;
+the suite does not reuse an existing server. JSDOM does not calculate layout,
+so a JSDOM `scrollWidth` assertion cannot replace this test. CI installs Chromium
+and runs the same command in a separate layout job.
+
 ## Pull requests
 
 - Explain the problem being solved, not only the code that changed.
