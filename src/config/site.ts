@@ -20,7 +20,7 @@ export const siteConfig = {
     "Contributor-ready frontend foundation for Lily Protocol, designed for issue-driven UI and product development.",
   tagline:
     "A stable Next.js frontend foundation for issue-driven open source contribution.",
-  url: "https://lilyprotocol.dev",
+  url: "https://www.agent-lily.online",
   keywords: [
     "Stellar",
     "frontend",
