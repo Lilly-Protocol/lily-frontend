@@ -1,6 +1,5 @@
 import { SectionNav } from "@/components/scaffold/section-nav";
 import { SiteHeader } from "@/components/scaffold/site-header";
-
 import type { RouteScaffold } from "@/types/site";
 
 type SectionLayoutProps = {

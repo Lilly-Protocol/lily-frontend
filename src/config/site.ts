@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { staticSitePages } from "@/config/routes";
-
 import type { SitePage, StaticSiteRoute } from "@/types/site";
 
 export const routes = {
