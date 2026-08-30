@@ -2,6 +2,7 @@ import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { createSiteMetadata } from "@/config/site";
 
+import { SiteFooter } from "@/components/scaffold/site-footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -29,6 +30,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-[var(--color-surface)] text-[var(--color-ink)]">
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
