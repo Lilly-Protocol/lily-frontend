@@ -73,3 +73,55 @@ npm run check
 ## Reporting issues
 
 Use the GitHub issue templates for bugs, features, and contributor-scoped tasks. Reproduction steps, expected behavior, acceptance criteria, and screenshots help us move faster.
+
+## Adding a new route
+
+Adding a route requires coordinated changes across configuration, types, and the app directory. Follow this checklist to ensure the new route is registered, typed, and discoverable.
+
+### Files to modify
+
+1. **`src/config/routes.ts`** — Add a new entry to `routeScaffolds` with `id`, `title`, `path`, `section`, `purpose`, `figmaScope`, `implementationAreas`, and `includeInSitemap`.
+2. **`src/types/site.ts`** — If the route is static, add its path to the `StaticSiteRoute` union. If dynamic, add to `DynamicSiteRoute`. Update `SiteRoute` if introducing a new category.
+3. **`src/app/<path>/page.tsx`** — Create the page component. Use `PageScaffold` and `getRouteScaffold("<id>")` for consistency. For dynamic routes, validate params and call `notFound()` for invalid input.
+4. **`src/app/sitemap.ts`** (if applicable) — Ensure the route filter includes or excludes the new path based on `includeInSitemap`.
+5. **`src/__tests__/routes.test.ts`** — Update the route count assertion to match the new total.
+
+### Worked example: `/app/developers`
+
+```ts
+// src/config/routes.ts
+{
+  id: "developers",
+  title: "Developer Portal",
+  path: "/app/developers",
+  section: "dashboard",
+  purpose: "API docs, SDKs, and integration guides.",
+  figmaScope: "Build from approved Figma developer hub frames.",
+  implementationAreas: ["Navigation sidebar", "Doc rendering", "Search"],
+  includeInSitemap: true,
+}
+```
+
+```ts
+// src/types/site.ts
+export type StaticSiteRoute =
+  | /* ...existing routes... */
+  | "/app/developers";
+```
+
+```tsx
+// src/app/app/developers/page.tsx
+import { PageScaffold } from "@/components/scaffold/page-scaffold";
+import { getRouteScaffold } from "@/config/routes";
+
+export default function DevelopersPage() {
+  return (
+    <PageScaffold
+      route={getRouteScaffold("developers")}
+      dynamicLabel="/app/developers"
+    />
+  );
+}
+```
+
+After making these changes, run `npm run check` to verify types, linting, tests, and build pass before opening a PR.
