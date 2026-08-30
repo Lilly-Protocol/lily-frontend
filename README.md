@@ -77,6 +77,13 @@ src/
   ISSUE_TEMPLATE/       GitHub issue templates
 ```
 
+## API error handling
+
+Use `lilyFetch` from `src/lib/api/client.ts` for API requests. It throws a
+`LilyApiError` with a stable `status`, `code`, and `message`, plus optional
+`details`. Transport failures use status `0` and code `NETWORK_ERROR`. Use
+`isLilyApiError` when narrowing errors in route-level error UI.
+
 ## Route scaffold map
 
 - `Public marketing`: `/`, `/about`, `/blog`, `/changelog`, `/ecosystem`, `/security`, `/grants`, `/careers`, `/contact`
