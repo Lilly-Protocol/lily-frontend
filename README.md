@@ -37,6 +37,13 @@ The main dashboard, landing experience, and protocol-facing UI should be introdu
 
 ## Local development
 
+Ensure you are using Node.js 22 (matches `engines` and CI):
+
+```bash
+nvm install
+nvm use
+```
+
 Install dependencies and start the dev server:
 
 ```bash
