@@ -1,0 +1,35 @@
+DX:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.editorconfig'
+          - '.eslintrc*'
+          - '.prettierrc*'
+          - 'tsconfig*.json'
+          - '.github/**'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**'
+
+feature:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/components/**'
+          - 'src/features/**'
+          - 'src/app/**'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'package-lock.json'
+          - 'pnpm-lock.yaml'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.test.*'
+          - '**/*.spec.*'
+          - '__tests__/**'
