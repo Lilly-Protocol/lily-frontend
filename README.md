@@ -64,6 +64,8 @@ npm run check
 
 ## Project structure
 
+See [ADR-0001: Route Scaffold Architecture](docs/adr/0001-route-scaffold-architecture.md) for the architectural decision behind this structure.
+
 ```text
 src/
   app/                  App Router routes, route groups, and layouts
