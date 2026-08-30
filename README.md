@@ -14,6 +14,7 @@ Contributor-ready frontend foundation for Lily Protocol. This repository is inte
 
 **Website:** [agent-lily.online](https://www.agent-lily.online)  
 **Design:** [Figma — Lily Protocol](https://www.figma.com/design/GRBeDGDHzCGXefm3xmlbHF/Lily-Protocol?node-id=0-1&t=SiCYBGotCg7HcXhe-1)
+**Design Tokens:** [docs/design-tokens.md](./docs/design-tokens.md) — CSS custom properties reference and Figma mapping
 
 ## Stack
 
