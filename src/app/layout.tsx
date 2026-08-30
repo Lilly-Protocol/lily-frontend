@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { createSiteMetadata } from "@/config/site";
@@ -14,6 +15,13 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#f7f7f5",
+  colorScheme: "light",
+};
 
 export const metadata = createSiteMetadata();
 
