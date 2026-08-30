@@ -52,6 +52,14 @@ Docker is not configured in this repository yet. The badge above marks it as pla
 
 ## Quality checks
 
+## Legacy route redirects
+
+This project uses Next.js `redirects()` in `next.config.ts` to map legacy URLs
+(e.g. `/dash`, `/sign-up`, `/agents/:id`) to their current canonical paths under
+`/app`. When adding new routes or renaming existing ones, append a permanent
+redirect entry to the `redirects()` array in `next.config.ts` so old bookmarks
+and external links continue to work.
+
 ```bash
 npm run lint
 npm run typecheck
