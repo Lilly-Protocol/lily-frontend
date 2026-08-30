@@ -2,12 +2,13 @@ import type { MetadataRoute } from "next";
 
 import { getAbsoluteUrl, siteConfig } from "@/config/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+// Stable build timestamp to prevent unnecessary sitemap churn on every deploy
+const BUILD_TIME = new Date("2026-08-30T00:00:00.000Z");
 
+export default function sitemap(): MetadataRoute.Sitemap {
   return siteConfig.pages.map((page) => ({
     url: getAbsoluteUrl(page.path),
-    lastModified,
+    lastModified: BUILD_TIME,
     changeFrequency: "weekly",
     priority: page.priority,
   }));
