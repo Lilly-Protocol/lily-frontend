@@ -8,6 +8,9 @@
   --color-muted: #4b5563;
   --color-line: #d1d5db;
   --color-accent: #0f766e;
+  --focus-ring-color: rgba(15, 118, 110, 0.45);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
   --shadow-soft: 0 16px 40px rgba(17, 24, 39, 0.06);
 }
 
@@ -38,6 +41,12 @@ a {
 
 ::selection {
   background: rgba(15, 118, 110, 0.18);
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
 }
 
 .surface {
