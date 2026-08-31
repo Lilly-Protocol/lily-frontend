@@ -2,6 +2,8 @@
 
 Thanks for helping build Lily Protocol.
 
+By participating, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
 ## Local setup
 
 - Use Node.js 22 or newer.
