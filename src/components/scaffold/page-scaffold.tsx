@@ -40,7 +40,7 @@ export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
             {route.implementationAreas.map((area) => (
               <li
                 key={area}
-                className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-muted)]"
+                className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-solid)] px-4 py-3 text-sm text-[var(--color-muted)]"
               >
                 {area}
               </li>

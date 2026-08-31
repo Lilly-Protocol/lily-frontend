@@ -3,6 +3,7 @@
 :root {
   --color-surface: #f7f7f5;
   --color-panel: #ffffff;
+  --color-panel-solid: #ffffff;
   --color-panel-muted: #f1f3f5;
   --color-ink: #111827;
   --color-muted: #4b5563;
