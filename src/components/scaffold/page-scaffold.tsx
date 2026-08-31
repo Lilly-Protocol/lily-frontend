@@ -1,4 +1,5 @@
 import type { RouteScaffold } from "@/types/site";
+import { ImplementationAreasWrapper } from "./implementation-areas-wrapper";
 
 type PageScaffoldProps = {
   readonly route: RouteScaffold;
@@ -36,16 +37,7 @@ export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
 
         <article className="rounded-[1.5rem] border border-[var(--color-line)] bg-[var(--color-panel-muted)] p-6">
           <h2 className="text-xl font-semibold">Natural issue slices</h2>
-          <ul className="mt-4 grid gap-3">
-            {route.implementationAreas.map((area) => (
-              <li
-                key={area}
-                className="rounded-2xl border border-[var(--color-line)] bg-white px-4 py-3 text-sm text-[var(--color-muted)]"
-              >
-                {area}
-              </li>
-            ))}
-          </ul>
+          <ImplementationAreasWrapper areas={route.implementationAreas} />
         </article>
       </section>
     </main>
