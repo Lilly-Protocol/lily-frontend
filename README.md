@@ -39,6 +39,10 @@ The main dashboard, landing experience, and protocol-facing UI should be introdu
 
 Install dependencies and start the dev server:
 
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@lily-protocol.dev.
+
 ```bash
 npm install
 npm run dev
