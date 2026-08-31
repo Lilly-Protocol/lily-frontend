@@ -1,4 +1,5 @@
 import { SectionLayout } from "@/components/scaffold/section-layout";
+import { SiteFooter } from "@/components/scaffold/site-footer";
 import { getSectionRoutes, sectionDefinitions } from "@/config/routes";
 
 const marketingSection = sectionDefinitions.find(
@@ -15,12 +16,15 @@ export default function MarketingLayout({
   }
 
   return (
-    <SectionLayout
-      title={marketingSection.label}
-      description={marketingSection.description}
-      routes={getSectionRoutes("marketing")}
-    >
-      {children}
-    </SectionLayout>
+    <>
+      <SectionLayout
+        title={marketingSection.label}
+        description={marketingSection.description}
+        routes={getSectionRoutes("marketing")}
+      >
+        {children}
+      </SectionLayout>
+      <SiteFooter />
+    </>
   );
 }
