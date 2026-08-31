@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
           fixStyle: "inline-type-imports",
         },
       ],
+      "react/jsx-no-target-blank": ["error", { enforceDynamicLinks: "always" }],
     },
   },
   // Override default ignores of eslint-config-next.
