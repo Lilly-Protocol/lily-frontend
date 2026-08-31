@@ -27,7 +27,7 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} h-full scroll-smooth`}
     >
-      <body className="min-h-full bg-[var(--color-surface)] text-[var(--color-ink)]">
+      <body className="min-h-full bg-(--color-surface) text-(--color-ink)">
         {children}
       </body>
     </html>
