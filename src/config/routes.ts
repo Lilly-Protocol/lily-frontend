@@ -35,6 +35,20 @@ export const sectionDefinitions: readonly SectionDefinition[] = [
 
 export const routeScaffolds = [
   {
+    id: "contribute",
+    title: "Contribute",
+    path: "/contribute",
+    section: "marketing",
+    purpose: "Onboard new contributors with setup instructions, workflow guidance, and validation steps.",
+    figmaScope: "Implement contributor onboarding content from CONTRIBUTING.md until Figma defines a dedicated design.",
+    implementationAreas: [
+      "Local setup and dependency installation steps",
+      "Issue selection and branching workflow",
+      "Validation checklist and PR expectations",
+    ],
+    includeInSitemap: true,
+  },
+  {
     id: "landing",
     title: "Landing Page",
     path: "/",

@@ -8,6 +8,7 @@ export type RouteSection =
 export type StaticSiteRoute =
   | "/"
   | "/about"
+  | "/contribute"
   | "/blog"
   | "/changelog"
   | "/ecosystem"
