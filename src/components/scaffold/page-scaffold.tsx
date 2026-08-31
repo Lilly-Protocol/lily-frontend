@@ -1,4 +1,4 @@
-import type { RouteScaffold } from "@/types/site";
+import type { RouteScaffold } from '@/types/site';
 
 type PageScaffoldProps = {
   readonly route: RouteScaffold;
@@ -25,13 +25,10 @@ export function PageScaffold({ route, dynamicLabel }: PageScaffoldProps) {
         <article className="rounded-[1.5rem] border border-[var(--color-line)] bg-[var(--color-panel-muted)] p-6">
           <h2 className="text-xl font-semibold">Contributor implementation note</h2>
           <p className="mt-3 text-base leading-7 text-[var(--color-muted)]">
-            This route is intentionally scaffolded. Contributors should implement
-            the real experience from the approved Figma design rather than reuse
-            removed demo content.
+            This route is intentionally scaffolded. Contributors should implement the real
+            experience from the approved Figma design rather than reuse removed demo content.
           </p>
-          <p className="mt-4 text-base leading-7 text-[var(--color-muted)]">
-            {route.figmaScope}
-          </p>
+          <p className="mt-4 text-base leading-7 text-[var(--color-muted)]">{route.figmaScope}</p>
         </article>
 
         <article className="rounded-[1.5rem] border border-[var(--color-line)] bg-[var(--color-panel-muted)] p-6">
