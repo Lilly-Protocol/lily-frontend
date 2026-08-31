@@ -36,6 +36,9 @@ export const siteConfig = {
 export function createSiteMetadata(): Metadata {
   return {
     metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical: siteConfig.url,
+    },
     title: {
       default: siteConfig.name,
       template: `%s | ${siteConfig.name}`,
