@@ -1,41 +1,70 @@
 import type { Route } from "next";
 import Link from "next/link";
 
-import { getSectionRoutes } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { routes, siteConfig } from "@/config/site";
+import type { RouteScaffold } from "@/types/site";
 
-export function SiteFooter() {
-  const legalRoutes = getSectionRoutes("legal");
-  const docsRoutes = getSectionRoutes("docs");
+type SiteFooterProps = {
+  readonly legalRoutes: readonly RouteScaffold[];
+  readonly supportRoutes: readonly RouteScaffold[];
+};
+
+export function SiteFooter({ legalRoutes, supportRoutes }: SiteFooterProps) {
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[var(--color-line)] bg-white/50 py-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
+    <footer className="border-t border-[var(--color-line)] bg-white/90">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <div>
-            <span className="eyebrow text-xs text-[var(--color-accent)] font-semibold">
+            <Link
+              className="text-lg font-semibold tracking-tight"
+              href={routes.home as Route}
+            >
               {siteConfig.name}
-            </span>
-            <p className="mt-1 text-xs text-[var(--color-muted)]">
+            </Link>
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
               {siteConfig.description}
             </p>
           </div>
 
-          <nav aria-label="Footer" className="flex flex-wrap gap-4 text-xs text-[var(--color-muted)]">
-            {[...docsRoutes, ...legalRoutes].map((route) => (
-              <Link
-                key={route.id}
-                className="hover:text-[var(--color-ink)] hover:underline"
-                href={route.path as Route}
-              >
-                {route.title}
-              </Link>
-            ))}
+          <nav aria-label="Legal">
+            <p className="eyebrow text-[var(--color-accent)]">Legal</p>
+            <ul className="mt-4 grid gap-2">
+              {legalRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
+                  >
+                    {route.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Support">
+            <p className="eyebrow text-[var(--color-accent)]">Support</p>
+            <ul className="mt-4 grid gap-2">
+              {supportRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
+                  >
+                    {route.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </nav>
         </div>
 
-        <div className="border-t border-[var(--color-line)] pt-4 text-xs text-[var(--color-muted)]">
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+        <div className="border-t border-[var(--color-line)] pt-6">
+          <p className="text-sm text-[var(--color-muted)]">
+            &copy; {currentYear} {siteConfig.name}. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

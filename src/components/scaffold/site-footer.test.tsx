@@ -1,21 +1,43 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteFooter } from "./site-footer";
 
-describe("SiteFooter Component", () => {
-  it("renders brand metadata and all legal and docs route links from registry", () => {
-    render(<SiteFooter />);
+describe("SiteFooter", () => {
+  const legalRoutes = routeScaffolds.filter((route) => route.section === "legal");
+  const supportRoutes = routeScaffolds.filter(
+    (route) => route.section === "docs",
+  );
 
-    // Brand and copyright
-    expect(screen.getByText("Lily Protocol")).toBeInTheDocument();
-    expect(screen.getByText(/All rights reserved/i)).toBeInTheDocument();
+  it("renders the brand mark linking home", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
 
-    // Legal & Support Links
-    expect(screen.getByRole("link", { name: /terms of service/i })).toHaveAttribute("href", "/terms");
-    expect(screen.getByRole("link", { name: /privacy policy/i })).toHaveAttribute("href", "/privacy");
-    expect(screen.getByRole("link", { name: /cookie policy/i })).toHaveAttribute("href", "/cookies");
-    expect(screen.getByRole("link", { name: /documentation/i })).toHaveAttribute("href", "/docs");
-    expect(screen.getByRole("link", { name: /status page/i })).toHaveAttribute("href", "/status");
+    const brand = screen.getByRole("link", { name: /lily protocol/i });
+    expect(brand).toHaveAttribute("href", "/");
+  });
+
+  it("renders every legal route as a footer link", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
+
+    for (const route of legalRoutes) {
+      const link = screen.getByRole("link", { name: route.title });
+      expect(link).toHaveAttribute("href", route.path);
+    }
+  });
+
+  it("renders every support route as a footer link", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
+
+    for (const route of supportRoutes) {
+      const link = screen.getByRole("link", { name: route.title });
+      expect(link).toHaveAttribute("href", route.path);
+    }
+  });
+
+  it("displays a copyright line", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
+
+    expect(screen.getByText(/all rights reserved/i)).toBeInTheDocument();
   });
 });
