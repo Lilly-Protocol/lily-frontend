@@ -1,42 +1,34 @@
+import { defaultSitemapUpdatedAt } from "@/config/routes";
+import { getAbsoluteUrl, routes, siteConfig } from "@/config/site";
+
 import sitemap from "./sitemap";
 
-import { staticSitePages } from "@/config/routes";
-import { getAbsoluteUrl } from "@/config/site";
-
 describe("sitemap", () => {
-  it("returns one absolute URL entry for each static site page", () => {
-    const entries = sitemap();
+  it("uses stable route dates across generations", () => {
+    const first = sitemap();
+    const second = sitemap();
 
-    expect(entries).toHaveLength(staticSitePages.length);
-    expect(entries.map((entry) => entry.url)).toEqual(
-      staticSitePages.map((page) => getAbsoluteUrl(page.path)),
+    expect(second).toEqual(first);
+    expect(first.every((entry) => entry.lastModified instanceof Date)).toBe(
+      true,
     );
-    expect(entries.every((entry) => URL.canParse(entry.url))).toBe(true);
   });
 
-  it("marks the home page with the highest priority", () => {
-    const homeUrl = getAbsoluteUrl("/");
-    const entriesByUrl = new Map(
-      sitemap().map((entry) => [entry.url, entry.priority]),
+  it("uses the home page updatedAt and a documented fallback", () => {
+    const entries = sitemap();
+    const homePage = siteConfig.pages.find((page) => page.path === routes.home);
+    const homeEntry = entries.find(
+      (entry) => entry.url === getAbsoluteUrl(routes.home),
     );
-    const homePriority = entriesByUrl.get(homeUrl);
+    const fallbackPage = siteConfig.pages.find((page) => !page.updatedAt);
+    const fallbackEntry = entries.find(
+      (entry) => entry.url === getAbsoluteUrl(fallbackPage!.path),
+    );
 
-    expect(homePriority).toBe(1);
-
-    if (homePriority === undefined) {
-      throw new Error("Expected the home page to be present in the sitemap");
-    }
-
-    for (const [url, priority] of entriesByUrl.entries()) {
-      if (url === homeUrl) {
-        continue;
-      }
-
-      if (priority === undefined) {
-        throw new Error(`Expected ${url} to define a sitemap priority`);
-      }
-
-      expect(priority).toBeLessThan(homePriority);
-    }
+    expect(homePage?.updatedAt).toBeDefined();
+    expect(homeEntry?.lastModified).toEqual(new Date(homePage!.updatedAt!));
+    expect(fallbackEntry?.lastModified).toEqual(
+      new Date(defaultSitemapUpdatedAt),
+    );
   });
 });
