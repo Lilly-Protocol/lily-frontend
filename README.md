@@ -1,4 +1,5 @@
 # Lily Frontend
+
 <img width="1197" height="407" alt="image" src="https://github.com/user-attachments/assets/1cbfb0fe-3668-4e82-8fda-68b1cc4efc25" />
 
 Contributor-ready frontend foundation for Lily Protocol. This repository is intentionally light on shipped product UI so contributors can build features through scoped issues and pull requests.
@@ -39,6 +40,14 @@ The main dashboard, landing experience, and protocol-facing UI should be introdu
 
 Install dependencies and start the dev server:
 
+1. Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL`.
+2. Run `npm install`.
+3. Run `npm run dev`.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@lily-protocol.dev.
+
 ```bash
 npm install
 npm run dev
@@ -77,6 +86,13 @@ src/
   ISSUE_TEMPLATE/       GitHub issue templates
 ```
 
+## API error handling
+
+Use `lilyFetch` from `src/lib/api/client.ts` for API requests. It throws a
+`LilyApiError` with a stable `status`, `code`, and `message`, plus optional
+`details`. Transport failures use status `0` and code `NETWORK_ERROR`. Use
+`isLilyApiError` when narrowing errors in route-level error UI.
+
 ## Route scaffold map
 
 - `Public marketing`: `/`, `/about`, `/blog`, `/changelog`, `/ecosystem`, `/security`, `/grants`, `/careers`, `/contact`
@@ -86,6 +102,7 @@ src/
 - `Dashboard`: `/app`, `/app/agents`, `/app/agents/[id]`, `/app/payments`, `/app/wallets`, `/app/activity`, `/app/developers`, `/app/settings`
 
 Each route is scaffolded with:
+
 - the route name
 - intended screen purpose
 - a note that implementation should follow approved Figma work
@@ -101,7 +118,8 @@ Each route is scaffolded with:
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage, and PR guidance.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage, and PR guidance. Please review our [Code of Conduct](./CODE_OF_CONDUCT.md) before participating.
+
 
 ## Contributor-ready focus
 
