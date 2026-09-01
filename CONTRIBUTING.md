@@ -2,7 +2,9 @@
 
 Thanks for helping build Lily Protocol.
 
-By participating, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
+## Code of Conduct
+
+Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 
 ## Local setup
 
@@ -44,6 +46,18 @@ npm run check
 
 `npm run check` is the fastest way to mirror CI end-to-end.
 
+CI also runs `npm audit --omit=dev --audit-level=high` after installing from `package-lock.json`. The audit job fails only on high-severity advisories in production dependencies; dev-only advisories are excluded via `--omit=dev`.
+
+### Dependency audit triage
+
+When the dependency audit job fails locally or in CI:
+
+1. Reproduce with `npm ci` then `npm audit --omit=dev --audit-level=high` so results match CI (do not use `npm install`, which can drift from the lockfile).
+2. Identify whether each advisory affects a direct dependency or a transitive one (`npm audit` lists the dependency chain).
+3. Prefer upgrading to a patched release within the project's supported range. Use Dependabot PRs when they exist, or bump `package.json` and regenerate the lockfile with `npm install <package>@<version>`.
+4. If no fix is available yet, assess exploitability in this app (server vs client, dev-only tooling vs production runtime). Document the risk and link the advisory in the PR; do not merge with a failing audit unless maintainers explicitly accept the exception.
+5. Do not use `npm audit fix --force` without review—it can jump to major versions outside the stated dependency range.
+
 ## Pull requests
 
 - Explain the problem being solved, not only the code that changed.
@@ -75,3 +89,8 @@ npm run check
 ## Reporting issues
 
 Use the GitHub issue templates for bugs, features, and contributor-scoped tasks. Reproduction steps, expected behavior, acceptance criteria, and screenshots help us move faster.
+
+## Code of Conduct
+
+Please review and adhere to our [Code of Conduct](./CODE_OF_CONDUCT.md) in all project spaces and discussions.
+
