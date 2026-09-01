@@ -13,16 +13,13 @@ export default function Icon() {
           justifyContent: "center",
           width: "100%",
           height: "100%",
-          background: "#06b6d4",
-          borderRadius: "25%",
-          color: "white",
-          fontSize: 20,
-          fontWeight: 700,
+          backgroundColor: "#0f766e",
+          borderRadius: "50%",
         }}
       >
-        L
+        <span style={{ color: "white", fontSize: 20, fontWeight: 700 }}>L</span>
       </div>
     ),
-    { ...size }
+    { ...size },
   );
 }
