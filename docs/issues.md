@@ -1,33 +1,37 @@
-# Issue labels and triage
+# Issue Labels and Triage Workflow
 
-This guide explains the labels added by the repository's issue templates and how issues move from a report or proposal to assigned work.
+This document describes the labels used across issue templates and how issues are triaged in the Lily Frontend repository.
 
-## Template labels
+## Label Reference
 
-| Label | Meaning | Contributor guidance |
-| --- | --- | --- |
-| `bug` | A reproducible problem or regression in the Lily frontend. | Reports need clear reproduction steps, expected behavior, and enough environment details or screenshots to investigate. A `bug` label does not by itself mean the issue is ready to implement. |
-| `enhancement` | A proposed product, user-experience, or engineering improvement. | Maintainers must confirm the scope and direction before implementation. Contributors should wait until the proposal has acceptance criteria and is marked ready for assignment. |
-| `contributor-friendly` | A scoped implementation task intended for community contributors. | These are the best issues for a first contribution. The issue should contain an expected outcome, implementation notes, and acceptance criteria before anyone is assigned. |
+| Label | Description | When to Apply |
+|-------|-------------|---------------|
+| `bug` | Something isn't working | Reproducible defects, regressions, or broken behavior |
+| `enhancement` | New feature or request | New functionality, improvements, or capability additions |
+| `documentation` | Improvements or additions to documentation | Docs-only changes, missing guides, or clarification needs |
+| `accessibility` | Barrier affecting people with disabilities | WCAG violations, screen reader issues, keyboard navigation gaps |
+| `good first issue` | Good for newcomers | Well-scoped tasks with clear acceptance criteria and minimal context needed |
+| `help wanted` | Extra attention is needed | Stalled issues, complex problems needing fresh perspectives |
+| `dependencies` | Pull requests that update a dependency file | Automated or manual dep updates (Dependabot, npm audit) |
+| `javascript` | Pull requests that update javascript code | Auto-applied by labeler for JS/TS file changes |
+| `duplicate` | This issue or pull request already exists | Exact duplicate of an existing open or closed issue |
+| `invalid` | This doesn't seem right | Spam, off-topic, or fundamentally unactionable reports |
+| `question` | Further information is requested | Needs clarification from the author before triage can proceed |
+| `wontfix` | This will not be worked on | Out of scope, deprecated surface, or intentionally unsupported |
 
-Labels describe the kind of issue; they do not guarantee priority, approval, or assignment. In particular, `contributor-friendly` is this repository's signal for work suitable for a first-time contributor.
+## Triage Expectations
 
-## Triage workflow
+1. **New issues** should receive at least one category label (`bug`, `enhancement`, `documentation`) within 48 hours.
+2. **Bounty issues** are tagged via the title pattern `[Bounty: $XX]` and do not require a separate bounty label.
+3. **Good first issues** must have complete acceptance criteria and linked reference files before the label is applied.
+4. **Assignment** is self-service: comment `/claim #NNN` on the issue and open a draft PR within 7 days to retain the claim.
+5. **Stale claims** are released if no PR activity occurs within 14 days of the claim comment.
+6. **Priority** is signaled by bounty amount when applicable; non-bounty issues are prioritized by maintainer discretion and `help wanted` status.
 
-Maintainers triage new issues before implementation begins:
+## Template-to-Label Mapping
 
-1. Confirm that the issue belongs in the frontend repository and is not a duplicate.
-2. Check that the selected template and label match the request. Maintainers may update labels as the issue becomes clearer.
-3. Request missing information. Bug reports should be reproducible, feature requests should explain the problem and proposed direction, and contributor tasks should have testable acceptance criteria.
-4. Confirm priority, dependencies, design or product decisions, and a sufficiently narrow scope.
-5. Mark the issue ready in the discussion and assign it to a contributor when work can begin. Issues that still need investigation or a decision remain unassigned.
-
-## Picking up and assigning work
-
-- Start with an unassigned `contributor-friendly` issue when looking for a first issue.
-- Before writing code, comment on the issue to confirm availability and wait for a maintainer to assign it. Assignment avoids duplicated work and indicates that the scope is ready.
-- Do not assume that an unassigned `bug` or `enhancement` is ready to build. Ask whether triage is complete if the issue does not have clear acceptance criteria or maintainer approval.
-- Keep work within the agreed scope. Raise newly discovered requirements on the issue before expanding the change.
-- If an assignee can no longer continue, they should let maintainers know so the issue can be made available again.
-
-When opening a new issue, choose the closest available template. Maintainers will handle any label changes needed during triage.
+| Issue Template | Default Labels | Notes |
+|----------------|----------------|-------|
+| Bug report | `bug` | Add `accessibility` if the defect affects assistive tech |
+| Feature request | `enhancement` | Add `documentation` if the request is docs-only |
+| Contributor task | *(none)* | Apply `good first issue` only after verifying scope and criteria |
