@@ -1,43 +1,71 @@
 import type { Route } from "next";
 import Link from "next/link";
 
-import { siteConfig } from "@/config/site";
-import { routeScaffolds } from "@/config/routes";
+import { routes, siteConfig } from "@/config/site";
+import type { RouteScaffold } from "@/types/site";
 
-const FOOTER_ROUTE_IDS = ["terms", "privacy", "cookies", "docs", "status"] as const;
+type SiteFooterProps = {
+  readonly legalRoutes: readonly RouteScaffold[];
+  readonly supportRoutes: readonly RouteScaffold[];
+};
 
-export function SiteFooter() {
-  const footerRoutes = routeScaffolds.filter((r) =>
-    (FOOTER_ROUTE_IDS as readonly string[]).includes(r.id),
-  );
+export function SiteFooter({ legalRoutes, supportRoutes }: SiteFooterProps) {
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-[var(--color-line)] bg-[var(--color-panel-muted)]">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold tracking-tight">
-            {siteConfig.name}
-          </span>
-          <p className="text-xs text-[var(--color-muted)]">
-            {siteConfig.tagline}
-          </p>
+    <footer className="border-t border-[var(--color-line)] bg-white/90">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <Link
+              className="text-lg font-semibold tracking-tight"
+              href={routes.home as Route}
+            >
+              {siteConfig.name}
+            </Link>
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              {siteConfig.description}
+            </p>
+          </div>
+
+          <nav aria-label="Legal">
+            <p className="eyebrow text-[var(--color-accent)]">Legal</p>
+            <ul className="mt-4 grid gap-2">
+              {legalRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
+                  >
+                    {route.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Support">
+            <p className="eyebrow text-[var(--color-accent)]">Support</p>
+            <ul className="mt-4 grid gap-2">
+              {supportRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
+                  >
+                    {route.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
-        <nav aria-label="Legal and support" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          {footerRoutes.map((route) => (
-            <Link
-              key={route.id}
-              className="text-[var(--color-muted)] hover:text-[var(--color-accent)] hover:underline"
-              href={route.path as Route}
-            >
-              {route.title}
-            </Link>
-          ))}
-        </nav>
-
-        <p className="text-xs text-[var(--color-muted)]">
-          © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-        </p>
+        <div className="border-t border-[var(--color-line)] pt-6">
+          <p className="text-sm text-[var(--color-muted)]">
+            &copy; {currentYear} {siteConfig.name}. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
