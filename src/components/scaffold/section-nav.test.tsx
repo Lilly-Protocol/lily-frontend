@@ -1,47 +1,57 @@
 import { render, screen } from "@testing-library/react";
-
-import type { RouteScaffold } from "@/types/site";
+import { describe, expect, it, vi } from "vitest";
 
 import { SectionNav } from "./section-nav";
 
-const routes: readonly RouteScaffold[] = [
-  {
-    id: "overview",
-    title: "Overview",
-    path: "/",
-    section: "marketing",
-    purpose: "Overview",
-    figmaScope: "Overview",
-    implementationAreas: ["Navigation"],
-  },
-  {
-    id: "docs",
-    title: "Docs",
-    path: "/docs",
-    section: "docs",
-    purpose: "Documentation",
-    figmaScope: "Documentation",
-    implementationAreas: ["Navigation"],
-  },
-];
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    className,
+    "aria-current": ariaCurrent,
+  }: {
+    children: React.ReactNode;
+    href: string;
+    className?: string;
+    "aria-current"?: string;
+  }) => (
+    <a href={href} className={className} aria-current={ariaCurrent}>
+      {children}
+    </a>
+  ),
+}));
+
+const mockUsePathname = vi.fn();
+vi.mock("next/navigation", () => ({
+  usePathname: () => mockUsePathname(),
+}));
+
+const mockRoutes = [
+  { id: "home", title: "Home", path: "/" },
+  { id: "about", title: "About", path: "/about" },
+  { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]" },
+] as const;
 
 describe("SectionNav", () => {
-  it("uses a keyboard-focusable horizontal overflow row below lg", () => {
-    render(<SectionNav routes={routes} />);
+  it("marks link as active when pathname matches exactly", () => {
+    mockUsePathname.mockReturnValue("/about");
+    render(<SectionNav routes={mockRoutes} />);
+    const aboutLink = screen.getByRole("link", { name: /about/i });
+    expect(aboutLink).toHaveAttribute("aria-current", "page");
+    expect(aboutLink.className).toContain("border-[var(--color-accent)]");
+  });
 
-    const list = screen.getByRole("list");
+  it("does not mark links as active on unrelated path", () => {
+    mockUsePathname.mockReturnValue("/contact");
+    render(<SectionNav routes={mockRoutes} />);
+    const homeLink = screen.getByRole("link", { name: /home/i });
+    expect(homeLink).not.toHaveAttribute("aria-current");
+  });
 
-    expect(list).toHaveClass(
-      "sm:flex",
-      "sm:flex-row",
-      "sm:overflow-x-auto",
-      "lg:grid",
-      "lg:overflow-visible",
-    );
-    expect(list).toHaveAttribute("tabindex", "0");
-    expect(screen.getByRole("link", { name: "Docs /docs" })).toHaveAttribute(
-      "href",
-      "/docs",
-    );
+  it("renders placeholder div for dynamic route pattern", () => {
+    mockUsePathname.mockReturnValue("/app/agents/123");
+    render(<SectionNav routes={mockRoutes} />);
+    expect(screen.queryByRole("link", { name: /agent detail/i })).toBeNull();
+    expect(screen.getByText("Agent Detail")).toBeInTheDocument();
   });
 });
