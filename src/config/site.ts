@@ -44,6 +44,7 @@ export function createSiteMetadata(
     },
     description: siteConfig.description,
     applicationName: siteConfig.name,
+    manifest: siteConfig.manifestPath,
     keywords: [...siteConfig.keywords],
     alternates: {
       canonical,
