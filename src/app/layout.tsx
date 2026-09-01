@@ -1,6 +1,6 @@
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
-import { createSiteMetadata } from "@/config/site";
+import { createOrganizationJsonLd, createSiteMetadata } from "@/config/site";
 
 import "./globals.css";
 
@@ -17,6 +17,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata = createSiteMetadata();
 
+const jsonLd = createOrganizationJsonLd();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,9 +29,16 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} h-full scroll-smooth`}
     >
-      <body className="min-h-full bg-(--color-surface) text-(--color-ink)">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="min-h-full bg-[var(--color-surface)] text-[var(--color-ink)]">
         {children}
       </body>
     </html>
   );
 }
+

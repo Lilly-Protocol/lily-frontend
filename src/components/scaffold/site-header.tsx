@@ -5,8 +5,8 @@ import { routes, siteConfig } from "@/config/site";
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-(--color-line) bg-white/90">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 p-4 sm:px-6 lg:px-8">
+    <header className="border-b border-[var(--color-line)] bg-[var(--color-header-bg)]">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div>
           <Link
             className="text-lg font-semibold tracking-tight"
@@ -32,7 +32,7 @@ export function SiteHeader() {
             Sign in
           </Link>
           <Link
-            className="rounded-full bg-(--color-ink) px-4 py-2 text-white hover:opacity-90"
+            className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-[var(--color-panel-contrast)] hover:opacity-90"
             href={routes.dashboard as Route}
           >
             Dashboard
