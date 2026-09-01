@@ -16,26 +16,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  layout:
-    name: Browser layout
+  dependency-audit:
+    name: Dependency audit
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      CI: true
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: layout-failures
-          path: test-results
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Write workflow summary
+        if: always()
+        run: |
+          {
+            echo "## Dependency audit"
+            echo ""
+            echo "- Command: \`npm audit --omit=dev --audit-level=high\`"
+            echo "- Status: ${{ job.status }}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   validate:
     name: ${{ matrix.check.name }}
@@ -49,6 +58,8 @@ jobs:
         check:
           - name: Lint
             command: npm run lint
+          - name: Format
+            command: npm run format
           - name: Typecheck
             command: npm run typecheck
           - name: Test

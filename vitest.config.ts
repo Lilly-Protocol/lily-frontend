@@ -1,21 +1,20 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-import { configDefaults, defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   test: {
-    exclude: [...configDefaults.exclude, "tests/e2e/**"],
-    environment: "jsdom",
+    environment: 'jsdom',
     globals: true,
-    setupFiles: ["./src/test/setup.ts"],
+    setupFiles: ['./src/test/setup.ts'],
     coverage: {
-      provider: "v8",
-      reporter: ["text", "html"],
-      include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/app/**/*", "src/test/**/*"],
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/app/**/*', 'src/test/**/*'],
       thresholds: {
         statements: 70,
         branches: 60,
@@ -26,7 +25,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(rootDir, "./src"),
+      '@': path.resolve(rootDir, './src'),
     },
   },
 });

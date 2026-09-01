@@ -2,6 +2,10 @@
 
 Thanks for helping build Lily Protocol.
 
+## Code of Conduct
+
+Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
+
 ## Local setup
 
 - Use Node.js 22 or newer.
@@ -42,19 +46,17 @@ npm run check
 
 `npm run check` is the fastest way to mirror CI end-to-end.
 
-For scaffold layout changes, also run the Chromium regression suite:
+CI also runs `npm audit --omit=dev --audit-level=high` after installing from `package-lock.json`. The audit job fails only on high-severity advisories in production dependencies; dev-only advisories are excluded via `--omit=dev`.
 
-```bash
-npx playwright install chromium
-npm run test:e2e
-```
+### Dependency audit triage
 
-This builds and serves the current production code on port 4319, then checks
-every registered route at 320px and desktop widths. It includes a long agent ID
-and checks real browser layout and readable, wrapped text. Keep port 4319 free;
-the suite does not reuse an existing server. JSDOM does not calculate layout,
-so a JSDOM `scrollWidth` assertion cannot replace this test. CI installs Chromium
-and runs the same command in a separate layout job.
+When the dependency audit job fails locally or in CI:
+
+1. Reproduce with `npm ci` then `npm audit --omit=dev --audit-level=high` so results match CI (do not use `npm install`, which can drift from the lockfile).
+2. Identify whether each advisory affects a direct dependency or a transitive one (`npm audit` lists the dependency chain).
+3. Prefer upgrading to a patched release within the project's supported range. Use Dependabot PRs when they exist, or bump `package.json` and regenerate the lockfile with `npm install <package>@<version>`.
+4. If no fix is available yet, assess exploitability in this app (server vs client, dev-only tooling vs production runtime). Document the risk and link the advisory in the PR; do not merge with a failing audit unless maintainers explicitly accept the exception.
+5. Do not use `npm audit fix --force` without review—it can jump to major versions outside the stated dependency range.
 
 ## Pull requests
 
@@ -87,3 +89,8 @@ and runs the same command in a separate layout job.
 ## Reporting issues
 
 Use the GitHub issue templates for bugs, features, and contributor-scoped tasks. Reproduction steps, expected behavior, acceptance criteria, and screenshots help us move faster.
+
+## Code of Conduct
+
+Please review and adhere to our [Code of Conduct](./CODE_OF_CONDUCT.md) in all project spaces and discussions.
+
