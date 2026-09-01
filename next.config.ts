@@ -1,4 +1,11 @@
 import type { NextConfig } from "next";
+import withSerwistInit from '@serwist/next';
+
+const withSerwist = withSerwistInit({
+  swSrc: 'app/sw.ts',
+  swDest: 'public/sw.js',
+  disable: process.env.NODE_ENV !== 'production',
+});
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
@@ -6,16 +13,18 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "opengraph.example.com",
-        pathname: "/**",
+        hostname: "**.githubusercontent.com",
       },
       {
         protocol: "https",
-        hostname: "*.cdn.example.com",
-        pathname: "/assets/**",
+        hostname: "**.lillyprotocol.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.lillyprotocol.dev",
       },
     ],
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);
