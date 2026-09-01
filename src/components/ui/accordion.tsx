@@ -1,70 +1,90 @@
 "use client";
 
-import { useState, useId, KeyboardEvent } from "react";
+import { useState, useId, useCallback, useRef, useEffect, type KeyboardEvent } from "react";
 
-interface AccordionItemProps {
+export interface AccordionItemProps {
   title: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
-  className?: string;
 }
 
-export function AccordionItem({
-  title,
-  children,
-  defaultOpen = false,
-  className = "",
-}: AccordionItemProps) {
+export function AccordionItem({ title, children, defaultOpen = false }: AccordionItemProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const id = useId();
-  const triggerId = `${id}-trigger`;
-  const contentId = `${id}-content`;
+  const headerId = `${id}-header`;
+  const panelId = `${id}-panel`;
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | undefined>(
+    defaultOpen ? undefined : 0
+  );
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setIsOpen((prev) => !prev);
+  useEffect(() => {
+    if (!contentRef.current) return;
+    if (isOpen) {
+      const h = contentRef.current.scrollHeight;
+      setHeight(h);
+      const timer = setTimeout(() => setHeight(undefined), 300);
+      return () => clearTimeout(timer);
+    } else {
+      const h = contentRef.current.scrollHeight;
+      setHeight(h);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setHeight(0);
+        });
+      });
     }
-  };
+  }, [isOpen]);
+
+  const toggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    },
+    [toggle]
+  );
 
   return (
-    <div className={`border-b border-[var(--color-line)] ${className}`}>
+    <div className="border-b border-[var(--color-border)]">
       <h3>
         <button
-          id={triggerId}
+          id={headerId}
           type="button"
           aria-expanded={isOpen}
-          aria-controls={contentId}
-          onClick={() => setIsOpen((prev) => !prev)}
+          aria-controls={panelId}
+          onClick={toggle}
           onKeyDown={handleKeyDown}
-          className="flex w-full items-center justify-between py-4 text-left text-base font-medium text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
+          className="flex w-full items-center justify-between py-4 text-left font-medium text-[var(--color-foreground)] hover:text-[var(--color-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
         >
-          <span>{title}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`h-5 w-5 shrink-0 transition-transform duration-200 motion-reduce:transition-none ${
+          {title}
+          <span
+            className={`ml-4 transition-transform duration-300 motion-reduce:transition-none ${
               isOpen ? "rotate-180" : ""
             }`}
             aria-hidden="true"
           >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
+            ▼
+          </span>
         </button>
       </h3>
       <div
-        id={contentId}
+        id={panelId}
         role="region"
-        aria-labelledby={triggerId}
-        hidden={!isOpen}
-        className="overflow-hidden transition-all duration-200 motion-reduce:transition-none"
+        aria-labelledby={headerId}
+        ref={contentRef}
+        style={{
+          height: height === undefined ? "auto" : `${height}px`,
+          overflow: height === undefined ? "visible" : "hidden",
+        }}
+        className="transition-[height] duration-300 ease-in-out motion-reduce:transition-none"
       >
-        <div className="pb-4 text-sm text-[var(--color-text-muted)]">
+        <div className="pb-4 text-[var(--color-muted-foreground)]">
           {children}
         </div>
       </div>
@@ -72,11 +92,15 @@ export function AccordionItem({
   );
 }
 
-interface AccordionProps {
+export interface AccordionProps {
   children: React.ReactNode;
   className?: string;
 }
 
 export function Accordion({ children, className = "" }: AccordionProps) {
-  return <div className={className}>{children}</div>;
+  return (
+    <div className={`divide-y divide-[var(--color-border)] ${className}`}>
+      {children}
+    </div>
+  );
 }

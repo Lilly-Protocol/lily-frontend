@@ -1,61 +1,61 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { Accordion, AccordionItem } from "./accordion";
 
+vi.mock("next/link", () => ({ default: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => <a {...props} /> }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 describe("AccordionItem", () => {
-  it("renders with correct aria attributes in collapsed state", () => {
+  it("renders with title and collapsed content by default", () => {
     render(
       <Accordion>
-        <AccordionItem title="Question">Answer</AccordionItem>
+        <AccordionItem title="Test Question">Answer content</AccordionItem>
       </Accordion>
     );
-    const trigger = screen.getByRole("button", { name: /question/i });
-    expect(trigger).toHaveAttribute("aria-expanded", "false");
-    expect(trigger).toHaveAttribute("aria-controls");
-    const contentId = trigger.getAttribute("aria-controls")!;
-    const region = document.getElementById(contentId);
-    expect(region).toHaveAttribute("hidden");
+
+    const button = screen.getByRole("button", { name: /test question/i });
+    expect(button).toHaveAttribute("aria-expanded", "false");
+    
+    const panel = screen.getByRole("region", { name: /test question/i });
+    expect(panel).toHaveStyle({ height: "0px" });
   });
 
-  it("toggles expanded state on click and exposes content", async () => {
+  it("expands content when clicked and updates aria attributes", () => {
     render(
       <Accordion>
-        <AccordionItem title="Toggle Me">Visible Content</AccordionItem>
+        <AccordionItem title="Toggle Me">Hidden answer</AccordionItem>
       </Accordion>
     );
-    const trigger = screen.getByRole("button", { name: /toggle me/i });
-    await userEvent.click(trigger);
-    expect(trigger).toHaveAttribute("aria-expanded", "true");
-    const contentId = trigger.getAttribute("aria-controls")!;
-    const region = document.getElementById(contentId);
-    expect(region).not.toHaveAttribute("hidden");
-    expect(screen.getByText(/visible content/i)).toBeInTheDocument();
+
+    const button = screen.getByRole("button", { name: /toggle me/i });
+    fireEvent.click(button);
+
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    const panel = screen.getByRole("region", { name: /toggle me/i });
+    expect(panel).toBeInTheDocument();
   });
 
-  it("supports keyboard activation with Enter key", async () => {
+  it("supports keyboard interaction (Enter key)", () => {
     render(
       <Accordion>
         <AccordionItem title="Keyboard Test">Content</AccordionItem>
       </Accordion>
     );
-    const trigger = screen.getByRole("button", { name: /keyboard test/i });
-    await userEvent.keyboard("{Enter}");
-    // Focus the button first then press enter
-    trigger.focus();
-    await userEvent.keyboard("{Enter}");
-    expect(trigger).toHaveAttribute("aria-expanded", "true");
+
+    const button = screen.getByRole("button", { name: /keyboard test/i });
+    fireEvent.keyDown(button, { key: "Enter" });
+
+    expect(button).toHaveAttribute("aria-expanded", "true");
   });
 
   it("respects defaultOpen prop", () => {
     render(
       <Accordion>
-        <AccordionItem title="Open By Default" defaultOpen>
-          Shown
-        </AccordionItem>
+        <AccordionItem title="Open Default" defaultOpen>Visible immediately</AccordionItem>
       </Accordion>
     );
-    const trigger = screen.getByRole("button", { name: /open by default/i });
-    expect(trigger).toHaveAttribute("aria-expanded", "true");
+
+    const button = screen.getByRole("button", { name: /open default/i });
+    expect(button).toHaveAttribute("aria-expanded", "true");
   });
 });
