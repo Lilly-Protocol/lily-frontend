@@ -1,7 +1,7 @@
-# Deliverable for issue #50
+# Deliverable for issue #72
 
-GH discussion — reward $45
+GH discussion — reward $20
 
 ## Code
 
-See `gh-disc-50-Lilly-Protocol-lily-frontend.md`.
+See `gh-disc-72-Lilly-Protocol-lily-frontend.tsx`.
