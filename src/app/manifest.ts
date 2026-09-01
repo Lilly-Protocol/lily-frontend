@@ -1,29 +1,25 @@
 import type { MetadataRoute } from "next";
 
-import { routes, siteConfig } from "@/config/site";
-
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: siteConfig.name,
-    short_name: siteConfig.shortName,
-    description: siteConfig.description,
-    start_url: routes.home,
-    scope: routes.home,
+    name: "Lily Protocol",
+    short_name: "Lily",
+    description:
+      "Contributor-ready frontend foundation for Lily Protocol, designed for issue-driven UI and product development.",
+    start_url: "/",
     display: "standalone",
-    background_color: siteConfig.themeColor,
-    theme_color: siteConfig.themeColor,
+    background_color: "#f7f7f5",
+    theme_color: "#f7f7f5",
     icons: [
       {
-        src: "/icons/lily-icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "any",
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
       },
       {
-        src: "/icons/lily-maskable-icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "maskable",
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
       },
     ],
   };
