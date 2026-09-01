@@ -17,6 +17,16 @@ describe('site config', () => {
       template: `%s | ${siteConfig.name}`,
     });
     expect(metadata.metadataBase?.toString()).toBe(`${siteConfig.url}/`);
+    expect(metadata.alternates?.canonical).toBe(siteConfig.url);
+  });
+
+  it("creates route-specific canonical metadata", () => {
+    expect(createPageMetadata(routes.home).alternates?.canonical).toBe(
+      siteConfig.url,
+    );
+    expect(createPageMetadata(routes.docs).alternates?.canonical).toBe(
+      `${siteConfig.url}${routes.docs}`,
+    );
   });
 
   it('builds absolute page urls from typed routes', () => {

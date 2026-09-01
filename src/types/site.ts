@@ -40,11 +40,13 @@ export type RouteScaffold = {
   readonly figmaScope: string;
   readonly implementationAreas: readonly string[];
   readonly includeInSitemap?: boolean;
+  readonly updatedAt?: string;
 };
 
 export type SitePage = {
   readonly path: StaticSiteRoute;
   readonly priority: number;
+  readonly updatedAt?: string;
 };
 
 export type SectionDefinition = {

@@ -16,6 +16,13 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ['400', '500'],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#f7f7f5",
+  colorScheme: "light",
+};
+
 export const metadata = createSiteMetadata();
 
 const jsonLd = createOrganizationJsonLd();
@@ -25,10 +32,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationJsonLd = serializeJsonLd(createOrganizationJsonLd());
+
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} h-full scroll-smooth`}
+      className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} h-full`}
     >
       <head>
         <script
@@ -37,6 +46,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full bg-[var(--color-surface)] text-[var(--color-ink)]">
+        <script
+          dangerouslySetInnerHTML={{ __html: organizationJsonLd }}
+          id="organization-json-ld"
+          type="application/ld+json"
+        />
         {children}
         <SiteFooter />
       </body>

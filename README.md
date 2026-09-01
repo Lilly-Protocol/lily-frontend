@@ -77,6 +77,14 @@ Docker is not configured in this repository yet. The badge above marks it as pla
 
 ## Quality checks
 
+## Legacy route redirects
+
+This project uses Next.js `redirects()` in `next.config.ts` to map legacy URLs
+(e.g. `/dash`, `/sign-up`, `/agents/:id`) to their current canonical paths under
+`/app`. When adding new routes or renaming existing ones, append a permanent
+redirect entry to the `redirects()` array in `next.config.ts` so old bookmarks
+and external links continue to work.
+
 ```bash
 npm run lint
 npm run typecheck
@@ -86,6 +94,14 @@ npm run check
 ```
 
 `npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
+
+## Motion tokens
+
+Motion values live in `src/app/globals.css`. Use `--duration-fast` for hover
+feedback, `--duration-base` for ordinary state changes, and `--duration-slow`
+for larger transitions. Pair them with `--ease-standard`; interactive links can
+use the shared `motion-link` class, which becomes instant when the user prefers
+reduced motion.
 
 ## Project structure
 
@@ -169,3 +185,5 @@ GitHub Actions runs linting, type-checking, tests with coverage, and production 
 ## Notes
 
 This repo uses the `src/` directory convention supported by Next.js 16. Keep App Router routes under `src/app`, route metadata in `src/config`, and reusable scaffold boundaries under `src/components/scaffold` and `src/features/scaffold`.
+
+Shared scaffold dimensions live in `src/app/globals.css`. The layout container is `72rem`, responsive gutters are `1rem`/`1.5rem`/`2rem`, section spacing is `2rem`, and the radius scale is `sm` (`1rem`), `md` (`1.5rem`), `lg` (`1.75rem`), and `xl` (`2rem`). Components should reference these tokens instead of repeating arbitrary values.

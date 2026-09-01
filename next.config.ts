@@ -59,6 +59,19 @@ const securityHeaders = [
   },
 ];
 
+export const legacyRedirects = [
+  {
+    source: "/dash",
+    destination: "/app",
+    permanent: true,
+  },
+  {
+    source: "/sign-up",
+    destination: "/signup",
+    permanent: true,
+  },
+] as const;
+
 const nextConfig: NextConfig = {
   output: "standalone",
   typedRoutes: true,

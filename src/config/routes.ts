@@ -1,5 +1,7 @@
 import type { RouteScaffold, SectionDefinition, SitePage, StaticSiteRoute } from '@/types/site';
 
+export const defaultSitemapUpdatedAt = "2026-08-25";
+
 export const sectionDefinitions: readonly SectionDefinition[] = [
   {
     key: "marketing",
@@ -60,6 +62,7 @@ export const routeScaffolds = [
       'CTA strategy, empty states, and footer content',
     ],
     includeInSitemap: true,
+    updatedAt: "2026-08-25",
   },
   {
     id: "about",
