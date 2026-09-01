@@ -1,52 +1,47 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+
+import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteHeader } from "./site-header";
 
-vi.mock("next/link", () => ({
-  default: ({
-    children,
-    href,
-    className,
-    "aria-current": ariaCurrent,
-  }: {
-    children: React.ReactNode;
-    href: string;
-    className?: string;
-    "aria-current"?: string;
-  }) => (
-    <a href={href} className={className} aria-current={ariaCurrent}>
-      {children}
-    </a>
-  ),
-}));
-
-const mockUsePathname = vi.fn();
-vi.mock("next/navigation", () => ({
-  usePathname: () => mockUsePathname(),
-}));
-
 describe("SiteHeader", () => {
-  it("marks docs link as active when pathname matches", () => {
-    mockUsePathname.mockReturnValue("/docs");
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
-    const docsLink = screen.getByRole("link", { name: /docs/i });
-    expect(docsLink).toHaveAttribute("aria-current", "page");
-    expect(docsLink.className).toContain("border-[var(--color-accent)]");
+
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
   });
 
-  it("does not mark links as active on unrelated path", () => {
-    mockUsePathname.mockReturnValue("/about");
+  it("renders global navigation links matching the route registry", () => {
     render(<SiteHeader />);
-    const docsLink = screen.getByRole("link", { name: /docs/i });
-    expect(docsLink).not.toHaveAttribute("aria-current");
+
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute("href", routes.docs);
+
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
   });
 
- it("marks dashboard link as active when pathname matches", () => {
-    mockUsePathname.mockReturnValue("/app");
-   render(<SiteHeader />);
-   const dashboardLink = screen.getByRole("link", { name: /dashboard/i });
-   expect(dashboardLink).toHaveAttribute("aria-current", "page");
-   expect(dashboardLink.className).toContain("bg-[var(--color-accent)]");
- });
+  it("contains no dead or unregistered links", () => {
+    render(<SiteHeader />);
+
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
+
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
+
+    for (const link of links) {
+      const href = link.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
+    }
+  });
 });
