@@ -1,0 +1,63 @@
+name: "PR Description Check"
+description: "Validates PR description completeness against the repository template"
+inputs:
+  body:
+    description: "The PR body text"
+    required: true
+  mode:
+    description: "Enforcement mode: error or warn"
+    required: false
+    default: "error"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Validate PR description
+      shell: bash
+      env:
+        PR_BODY: ${{ inputs.body }}
+        MODE: ${{ inputs.mode }}
+      run: |
+        set -euo pipefail
+        
+        errors=()
+        warnings=()
+        
+        # Check for empty body
+        if [ -z "$(echo "$PR_BODY" | tr -d '[:space:]')" ]; then
+          errors+=("PR description is empty")
+        fi
+        
+        # Check for related issue reference (Closes #, Fixes #, Resolves #)
+        if ! echo "$PR_BODY" | grep -qiE '(closes|fixes|resolves)\s+#[0-9]+'; then
+          warnings+=("No related issue reference found (expected 'Closes #N', 'Fixes #N', or 'Resolves #N')")
+        fi
+        
+        # Check for at least one testing checkbox ticked
+        if ! echo "$PR_BODY" | grep -q '\[x\]'; then
+          warnings+=("No testing checklist items are checked")
+        fi
+        
+        # Output results
+        if [ ${#warnings[@]} -gt 0 ]; then
+          echo "::notice::PR Description Warnings:"
+          for w in "${warnings[@]}"; do
+            echo "::notice::$w"
+          done
+        fi
+        
+        if [ ${#errors[@]} -gt 0 ]; then
+          for e in "${errors[@]}"; do
+            if [ "$MODE" = "warn" ]; then
+              echo "::warning::$e"
+            else
+              echo "::error::$e"
+            fi
+          done
+          
+          if [ "$MODE" = "error" ]; then
+            exit 1
+          fi
+        fi
+        
+        echo "PR description check completed successfully"
