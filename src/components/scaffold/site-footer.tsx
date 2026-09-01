@@ -1,70 +1,70 @@
+import type { Route } from "next";
 import Link from "next/link";
 
 import { routes, siteConfig } from "@/config/site";
+import type { RouteScaffold } from "@/types/site";
 
-const legalLinks = [
-  { label: "Terms", href: "/terms" },
-  { label: "Privacy", href: "/privacy" },
-  { label: "Cookies", href: "/cookies" },
-] as const;
+type SiteFooterProps = {
+  readonly legalRoutes: readonly RouteScaffold[];
+  readonly supportRoutes: readonly RouteScaffold[];
+};
 
-const supportLinks = [
-  { label: "Docs", href: routes.docs },
-  { label: "Status", href: routes.status },
-  { label: "Contact", href: "/contact" },
-] as const;
+export function SiteFooter({ legalRoutes, supportRoutes }: SiteFooterProps) {
+  const currentYear = new Date().getFullYear();
 
-export function SiteFooter() {
   return (
     <footer className="border-t border-[var(--color-line)] bg-white/90">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-3">
-            <p className="text-sm font-semibold tracking-tight">{siteConfig.name}</p>
-            <p className="text-sm leading-6 text-[var(--color-muted)]">
-              {siteConfig.tagline}
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <Link
+              className="text-lg font-semibold tracking-tight"
+              href={routes.home as Route}
+            >
+              {siteConfig.name}
+            </Link>
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              {siteConfig.description}
             </p>
           </div>
-          <nav aria-label="Legal" className="space-y-3">
-            <p className="text-sm font-semibold tracking-tight">Legal</p>
-            <ul className="space-y-2 text-sm text-[var(--color-muted)]">
-              {legalLinks.map((link) => (
-                <li key={link.href}>
+
+          <nav aria-label="Legal">
+            <p className="eyebrow text-[var(--color-accent)]">Legal</p>
+            <ul className="mt-4 grid gap-2">
+              {legalRoutes.map((route) => (
+                <li key={route.id}>
                   <Link
-                    className="hover:text-[var(--color-accent)]"
-                    href={link.href}
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
                   >
-                    {link.label}
+                    {route.title}
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-          <nav aria-label="Support" className="space-y-3">
-            <p className="text-sm font-semibold tracking-tight">Support</p>
-            <ul className="space-y-2 text-sm text-[var(--color-muted)]">
-              {supportLinks.map((link) => (
-                <li key={link.href}>
+
+          <nav aria-label="Support">
+            <p className="eyebrow text-[var(--color-accent)]">Support</p>
+            <ul className="mt-4 grid gap-2">
+              {supportRoutes.map((route) => (
+                <li key={route.id}>
                   <Link
-                    className="hover:text-[var(--color-accent)]"
-                    href={link.href}
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
                   >
-                    {link.label}
+                    {route.title}
                   </Link>
                 </li>
               ))}
             </ul>
           </nav>
-          <div className="space-y-3">
-            <p className="text-sm font-semibold tracking-tight">Connect</p>
-            <p className="text-sm leading-6 text-[var(--color-muted)]">
-              Built for contributors. Open source on GitHub.
-            </p>
-          </div>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-line)] pt-6 text-xs text-[var(--color-muted)]">
-          <p>&copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
-          <p>Designed for issue-driven development.</p>
+
+        <div className="border-t border-[var(--color-line)] pt-6">
+          <p className="text-sm text-[var(--color-muted)]">
+            &copy; {currentYear} {siteConfig.name}. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
