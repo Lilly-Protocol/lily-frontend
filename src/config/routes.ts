@@ -9,7 +9,8 @@ export const sectionDefinitions: readonly SectionDefinition[] = [
   {
     key: "marketing",
     label: "Public marketing",
-    description: "Top-level public pages that communicate the product and ecosystem.",
+    description:
+      "Top-level public pages that communicate the product and ecosystem.",
   },
   {
     key: "auth",
@@ -29,18 +30,35 @@ export const sectionDefinitions: readonly SectionDefinition[] = [
   {
     key: "dashboard",
     label: "Dashboard",
-    description: "Signed-in product surfaces for agents, wallets, payments, and settings.",
+    description:
+      "Signed-in product surfaces for agents, wallets, payments, and settings.",
   },
 ] as const;
 
 export const routeScaffolds = [
   {
+    id: "contribute",
+    title: "Contribute",
+    path: "/contribute",
+    section: "marketing",
+    purpose: "Onboard new contributors with setup instructions, workflow guidance, and validation steps.",
+    figmaScope: "Implement contributor onboarding content from CONTRIBUTING.md until Figma defines a dedicated design.",
+    implementationAreas: [
+      "Local setup and dependency installation steps",
+      "Issue selection and branching workflow",
+      "Validation checklist and PR expectations",
+    ],
+    includeInSitemap: true,
+  },
+  {
     id: "landing",
     title: "Landing Page",
     path: "/",
     section: "marketing",
-    purpose: "Primary public entry point for the product narrative and onboarding funnel.",
-    figmaScope: "Build the approved landing experience from Figma instead of the removed demo implementation.",
+    purpose:
+      "Primary public entry point for the product narrative and onboarding funnel.",
+    figmaScope:
+      "Build the approved landing experience from Figma instead of the removed demo implementation.",
     implementationAreas: [
       "Hero and primary messaging hierarchy",
       "Section ordering and responsive layout system",
@@ -54,7 +72,8 @@ export const routeScaffolds = [
     path: "/about",
     section: "marketing",
     purpose: "Explain the team, mission, and protocol context.",
-    figmaScope: "Implement the approved editorial and brand structure from Figma.",
+    figmaScope:
+      "Implement the approved editorial and brand structure from Figma.",
     implementationAreas: [
       "Mission and company narrative blocks",
       "Leadership or ecosystem credibility sections",
@@ -68,7 +87,8 @@ export const routeScaffolds = [
     path: "/blog",
     section: "marketing",
     purpose: "Publish updates, educational articles, and ecosystem news.",
-    figmaScope: "Use Figma to define list, featured post, and editorial navigation patterns.",
+    figmaScope:
+      "Use Figma to define list, featured post, and editorial navigation patterns.",
     implementationAreas: [
       "Post listing layout and filters",
       "Featured article treatment",
@@ -81,7 +101,8 @@ export const routeScaffolds = [
     title: "Changelog",
     path: "/changelog",
     section: "marketing",
-    purpose: "Surface product and protocol updates in a structured release log.",
+    purpose:
+      "Surface product and protocol updates in a structured release log.",
     figmaScope: "Implement the release timeline and detail pattern from Figma.",
     implementationAreas: [
       "Release entry cards or timeline",
@@ -110,7 +131,8 @@ export const routeScaffolds = [
     path: "/security",
     section: "marketing",
     purpose: "Communicate security posture, process, and disclosures.",
-    figmaScope: "Translate the trust and assurance page from Figma into reusable sections.",
+    figmaScope:
+      "Translate the trust and assurance page from Figma into reusable sections.",
     implementationAreas: [
       "Security overview blocks",
       "Disclosure or contact flow",
@@ -124,7 +146,8 @@ export const routeScaffolds = [
     path: "/grants",
     section: "marketing",
     purpose: "Describe grant opportunities and program requirements.",
-    figmaScope: "Use Figma to shape the grant overview and application pathway.",
+    figmaScope:
+      "Use Figma to shape the grant overview and application pathway.",
     implementationAreas: [
       "Eligibility and program criteria layout",
       "Application flow content blocks",
@@ -166,7 +189,8 @@ export const routeScaffolds = [
     path: "/signin",
     section: "auth",
     purpose: "Authenticate returning users into the dashboard experience.",
-    figmaScope: "Implement the sign-in layout, states, and error flows from Figma.",
+    figmaScope:
+      "Implement the sign-in layout, states, and error flows from Figma.",
     implementationAreas: [
       "Authentication form structure",
       "Validation, loading, and failure states",
@@ -194,7 +218,8 @@ export const routeScaffolds = [
     path: "/terms",
     section: "legal",
     purpose: "Present service terms and usage expectations.",
-    figmaScope: "Implement the legal document layout from Figma or editorial guidance.",
+    figmaScope:
+      "Implement the legal document layout from Figma or editorial guidance.",
     implementationAreas: [
       "Readable long-form document layout",
       "Section navigation or anchors",
@@ -208,7 +233,8 @@ export const routeScaffolds = [
     path: "/privacy",
     section: "legal",
     purpose: "Explain privacy and data handling commitments.",
-    figmaScope: "Build the policy reading experience from Figma or legal content guidance.",
+    figmaScope:
+      "Build the policy reading experience from Figma or legal content guidance.",
     implementationAreas: [
       "Long-form policy layout",
       "Section anchors or sticky nav",
@@ -222,7 +248,8 @@ export const routeScaffolds = [
     path: "/cookies",
     section: "legal",
     purpose: "Document cookie and tracking usage.",
-    figmaScope: "Implement the cookie policy reading pattern from Figma or editorial guidance.",
+    figmaScope:
+      "Implement the cookie policy reading pattern from Figma or editorial guidance.",
     implementationAreas: [
       "Long-form policy layout",
       "Section navigation",
@@ -236,7 +263,8 @@ export const routeScaffolds = [
     path: "/docs",
     section: "docs",
     purpose: "Host product and developer documentation entry points.",
-    figmaScope: "Translate the docs IA, navigation, and overview screens from Figma.",
+    figmaScope:
+      "Translate the docs IA, navigation, and overview screens from Figma.",
     implementationAreas: [
       "Docs landing and navigation patterns",
       "Search or category affordances",
@@ -264,7 +292,8 @@ export const routeScaffolds = [
     path: "/app",
     section: "dashboard",
     purpose: "Primary authenticated overview of the product workspace.",
-    figmaScope: "Build the overview information architecture from Figma, not from legacy demo UI.",
+    figmaScope:
+      "Build the overview information architecture from Figma, not from legacy demo UI.",
     implementationAreas: [
       "Summary cards and dashboard layout",
       "Primary navigation and responsive shell behavior",
@@ -292,7 +321,8 @@ export const routeScaffolds = [
     path: "/app/agents/[id]",
     section: "dashboard",
     purpose: "Inspect and manage a specific agent.",
-    figmaScope: "Use Figma for the detail tabs, summary state, and deeper workflows.",
+    figmaScope:
+      "Use Figma for the detail tabs, summary state, and deeper workflows.",
     implementationAreas: [
       "Header summary and detail layout",
       "Nested sections or tabs",
@@ -348,7 +378,8 @@ export const routeScaffolds = [
     path: "/app/developers",
     section: "dashboard",
     purpose: "Provide developer-specific tooling and references.",
-    figmaScope: "Translate the developer workspace patterns from Figma into reusable modules.",
+    figmaScope:
+      "Translate the developer workspace patterns from Figma into reusable modules.",
     implementationAreas: [
       "Console navigation and utility panels",
       "Credential, SDK, or API-related surfaces",
