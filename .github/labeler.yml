@@ -1,19 +1,31 @@
- documentation:
-   - changed-files:
-       - any-glob-to-any-file: ['**/*.md', 'docs/**']
- 
- ci:
-   - changed-files:
-       - any-glob-to-any-file: ['.github/workflows/**']
- 
- dependencies:
-   - changed-files:
-       - any-glob-to-any-file: ['package.json', 'package-lock.json']
- 
- config:
-   - changed-files:
-       - any-glob-to-any-file: ['*.config.*', '.eslintrc*', '.prettierrc*', 'tsconfig.json', 'next.config.*']
- 
- source:
-   - changed-files:
-       - any-glob-to-any-file: ['src/**']
+config:
+  - changed-files:
+      - any-glob-to-any-file: ["src/config/**"]
+
+components:
+  - changed-files:
+      - any-glob-to-any-file: ["src/components/**"]
+
+features:
+  - changed-files:
+      - any-glob-to-any-file: ["src/features/**"]
+
+app:
+  - changed-files:
+      - any-glob-to-any-file: ["src/app/**"]
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**"]
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file: ["docs/**", "**/*.md"]
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "src/test/**"]
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file: ["**/*.css", "tailwind.config.*"]
