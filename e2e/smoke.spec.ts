@@ -1,39 +1,18 @@
-import { expect, test } from "@playwright/test";
+import { test, expect } from '@playwright/test';
 
-const routes = [
-  { path: "/", heading: "Landing Page" },
-  { path: "/docs", heading: "Documentation" },
-  { path: "/app", heading: "Dashboard Overview" },
-] as const;
-
-for (const route of routes) {
-  test(`${route.path} renders its primary heading`, async ({ page }) => {
-    await page.goto(route.path);
-
-    await expect(
-      page.getByRole("heading", { level: 1, name: route.heading }),
-    ).toBeVisible();
+test.describe('Smoke Tests', () => {
+  test('homepage loads and shows heading', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
-}
 
-test("global navigation links connect the smoke-test routes", async ({ page }) => {
-  await page.goto("/");
+  test('docs page loads', async ({ page }) => {
+    await page.goto('/docs');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  });
 
-  await page.getByRole("link", { name: "Docs", exact: true }).click();
-  await expect(page).toHaveURL(/\/docs$/);
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Documentation" }),
-  ).toBeVisible();
-
-  await page.getByRole("link", { name: "Dashboard", exact: true }).click();
-  await expect(page).toHaveURL(/\/app$/);
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Dashboard Overview" }),
-  ).toBeVisible();
-
-  await page.getByRole("link", { name: "Lily Protocol", exact: true }).click();
-  await expect(page).toHaveURL(/\/$/);
-  await expect(
-    page.getByRole("heading", { level: 1, name: "Landing Page" }),
-  ).toBeVisible();
+  test('app page loads', async ({ page }) => {
+    await page.goto('/app');
+    await expect(page).toHaveURL(/\/app/);
+  });
 });

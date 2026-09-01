@@ -1,31 +1,26 @@
-import { defineConfig, devices } from "@playwright/test";
-
-const port = process.env.PORT ?? "3000";
-const baseURL = `http://127.0.0.1:${port}`;
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: './e2e',
   fullyParallel: true,
-  forbidOnly: Boolean(process.env.CI),
+  forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI
-    ? [["github"], ["html", { open: "never" }]]
-    : "list",
+  workers: process.env.CI ? 1 : 1,
+  reporter: 'html',
   use: {
-    baseURL,
-    trace: "on-first-retry",
-    screenshot: "only-on-failure",
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
   },
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
   ],
   webServer: {
-    command: "npm run start",
-    url: baseURL,
+    command: 'npm run start',
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 120 * 1000,
   },
 });
