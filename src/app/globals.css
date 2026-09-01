@@ -1,10 +1,15 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
+  /* Surface and layout colors */
   --color-surface: #f7f7f5;
   --color-panel: #ffffff;
   --color-panel-solid: #ffffff;
   --color-panel-muted: #f1f3f5;
+  --color-panel-contrast: #ffffff;
+  --color-header-bg: rgba(255, 255, 255, 0.9);
+
+  /* Typography and interactive colors */
   --color-ink: #111827;
   --color-muted: #4b5563;
   --color-line: #d1d5db;
