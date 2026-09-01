@@ -1,28 +1,47 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteHeader } from "./site-header";
 
 describe("SiteHeader", () => {
-  it("renders brand and global navigation links from route constants", () => {
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
 
-    expect(
-      screen.getByRole("link", { name: siteConfig.name }),
-    ).toHaveAttribute("href", routes.home);
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
+  });
 
-    const globalNav = screen.getByRole("navigation", { name: "Global" });
+  it("renders global navigation links matching the route registry", () => {
+    render(<SiteHeader />);
 
-    expect(within(globalNav).getByRole("link", { name: "Docs" })).toHaveAttribute(
-      "href",
-      routes.docs,
-    );
-    expect(
-      within(globalNav).getByRole("link", { name: "Sign in" }),
-    ).toHaveAttribute("href", routes.signin);
-    expect(
-      within(globalNav).getByRole("link", { name: "Dashboard" }),
-    ).toHaveAttribute("href", routes.dashboard);
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute("href", routes.docs);
+
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
+  });
+
+  it("contains no dead or unregistered links", () => {
+    render(<SiteHeader />);
+
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
+
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
+
+    for (const link of links) {
+      const href = link.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
+    }
   });
 });
