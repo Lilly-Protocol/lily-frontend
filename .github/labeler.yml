@@ -1,35 +1,31 @@
-DX:
+config:
   - changed-files:
-      - any-glob-to-any-file:
-          - '.editorconfig'
-          - '.eslintrc*'
-          - '.prettierrc*'
-          - 'tsconfig*.json'
-          - '.github/**'
+      - any-glob-to-any-file: ["src/config/**"]
 
-documentation:
+components:
   - changed-files:
-      - any-glob-to-any-file:
-          - '**/*.md'
-          - 'docs/**'
+      - any-glob-to-any-file: ["src/components/**"]
 
-feature:
+features:
   - changed-files:
-      - any-glob-to-any-file:
-          - 'src/components/**'
-          - 'src/features/**'
-          - 'src/app/**'
+      - any-glob-to-any-file: ["src/features/**"]
 
-dependencies:
+app:
   - changed-files:
-      - any-glob-to-any-file:
-          - 'package.json'
-          - 'package-lock.json'
-          - 'pnpm-lock.yaml'
+      - any-glob-to-any-file: ["src/app/**"]
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: [".github/**"]
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file: ["docs/**", "**/*.md"]
 
 tests:
   - changed-files:
-      - any-glob-to-any-file:
-          - '**/*.test.*'
-          - '**/*.spec.*'
-          - '__tests__/**'
+      - any-glob-to-any-file: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx", "src/test/**"]
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file: ["**/*.css", "tailwind.config.*"]
