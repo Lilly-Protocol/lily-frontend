@@ -6,19 +6,19 @@ export const contentType = "image/png";
 export default function Icon() {
   return new ImageResponse(
     (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 32 32"
-        fill="none"
-        width="32"
-        height="32"
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#0f766e",
+          borderRadius: "50%",
+        }}
       >
-        <rect width="32" height="32" rx="6" fill="#06b6d4" />
-        <path
-          d="M10 22V10h4v8h6v4H10Z"
-          fill="#fff"
-        />
-      </svg>
+        <span style={{ color: "white", fontSize: 20, fontWeight: 700 }}>L</span>
+      </div>
     ),
     { ...size },
   );
