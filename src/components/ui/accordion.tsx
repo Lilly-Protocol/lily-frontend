@@ -1,84 +1,90 @@
 "use client";
 
-import * as React from "react";
+import { useState, useId, useCallback, useRef, useEffect, type KeyboardEvent } from "react";
 
-type AccordionItemProps = {
-  readonly title: string;
-  readonly children: React.ReactNode;
-  readonly defaultOpen?: boolean;
-};
+export interface AccordionItemProps {
+  title: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}
 
-export function AccordionItem({
-  title,
-  children,
-  defaultOpen = false,
-}: AccordionItemProps) {
-  const [isOpen, setIsOpen] = React.useState(defaultOpen);
-  const contentId = React.useId();
-  const triggerId = React.useId();
+export function AccordionItem({ title, children, defaultOpen = false }: AccordionItemProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const id = useId();
+  const headerId = `${id}-header`;
+  const panelId = `${id}-panel`;
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | undefined>(
+    defaultOpen ? undefined : 0
+  );
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      const items = Array.from(
-        document.querySelectorAll<HTMLButtonElement>(
-          '[data-accordion-trigger="true"]'
-        )
-      );
-      const currentIndex = items.indexOf(event.currentTarget);
-      const nextIndex =
-        event.key === "ArrowDown"
-          ? (currentIndex + 1) % items.length
-          : (currentIndex - 1 + items.length) % items.length;
-      items[nextIndex]?.focus();
-    } else if (event.key === "Home") {
-      event.preventDefault();
-      document
-        .querySelectorAll<HTMLButtonElement>(
-          '[data-accordion-trigger="true"]'
-        )[0]
-        ?.focus();
-    } else if (event.key === "End") {
-      event.preventDefault();
-      const all = document.querySelectorAll<HTMLButtonElement>(
-        '[data-accordion-trigger="true"]'
-      );
-      all[all.length - 1]?.focus();
+  useEffect(() => {
+    if (!contentRef.current) return;
+    if (isOpen) {
+      const h = contentRef.current.scrollHeight;
+      setHeight(h);
+      const timer = setTimeout(() => setHeight(undefined), 300);
+      return () => clearTimeout(timer);
+    } else {
+      const h = contentRef.current.scrollHeight;
+      setHeight(h);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setHeight(0);
+        });
+      });
     }
-  };
+  }, [isOpen]);
+
+  const toggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLButtonElement>) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    },
+    [toggle]
+  );
 
   return (
-    <div className="border-b border-[var(--color-line)]">
+    <div className="border-b border-[var(--color-border)]">
       <h3>
         <button
+          id={headerId}
           type="button"
-          data-accordion-trigger="true"
-          id={triggerId}
           aria-expanded={isOpen}
-          aria-controls={contentId}
-          onClick={() => setIsOpen((prev) => !prev)}
+          aria-controls={panelId}
+          onClick={toggle}
           onKeyDown={handleKeyDown}
-          className="flex w-full items-center justify-between py-4 text-left font-[family-name:var(--font-space-grotesk)] text-sm font-medium text-[var(--color-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+          className="flex w-full items-center justify-between py-4 text-left font-medium text-[var(--color-foreground)] hover:text-[var(--color-accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2"
         >
-          <span>{title}</span>
+          {title}
           <span
-            aria-hidden="true"
-            className={`ml-4 transition-transform duration-200 motion-reduce:transition-none ${
+            className={`ml-4 transition-transform duration-300 motion-reduce:transition-none ${
               isOpen ? "rotate-180" : ""
             }`}
+            aria-hidden="true"
           >
             ▼
           </span>
         </button>
       </h3>
       <div
-        id={contentId}
+        id={panelId}
         role="region"
-        aria-labelledby={triggerId}
-        hidden={!isOpen}
-        className="overflow-hidden"
+        aria-labelledby={headerId}
+        ref={contentRef}
+        style={{
+          height: height === undefined ? "auto" : `${height}px`,
+          overflow: height === undefined ? "visible" : "hidden",
+        }}
+        className="transition-[height] duration-300 ease-in-out motion-reduce:transition-none"
       >
-        <div className="pb-4 pt-0 font-[family-name:var(--font-ibm-plex-mono)] text-sm leading-relaxed text-[var(--color-ink)] opacity-90">
+        <div className="pb-4 text-[var(--color-muted-foreground)]">
           {children}
         </div>
       </div>
@@ -86,6 +92,15 @@ export function AccordionItem({
   );
 }
 
-export function Accordion({ children }: { readonly children: React.ReactNode }) {
-  return <div className="w-full">{children}</div>;
+export interface AccordionProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Accordion({ children, className = "" }: AccordionProps) {
+  return (
+    <div className={`divide-y divide-[var(--color-border)] ${className}`}>
+      {children}
+    </div>
+  );
 }
