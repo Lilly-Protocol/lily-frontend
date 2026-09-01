@@ -43,4 +43,19 @@ describe('SectionLayout', () => {
 
     expect(screen.getByText('/app/agents/[id]')).toBeInTheDocument();
   });
+
+  it("passes automated accessibility audit with zero axe violations", async () => {
+    const { container } = render(
+      <SectionLayout
+        title="Public marketing"
+        description="Public-facing route group."
+        routes={getSectionRoutes("marketing")}
+      >
+        <div>Section content</div>
+      </SectionLayout>,
+    );
+
+    await checkA11y(container);
+  });
 });
+
