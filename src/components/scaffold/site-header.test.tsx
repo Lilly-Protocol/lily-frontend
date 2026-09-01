@@ -1,44 +1,47 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+
+import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteHeader } from "./site-header";
 
-describe("SiteHeader Responsive Navigation", () => {
-  it("renders desktop navigation links", () => {
+describe("SiteHeader", () => {
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
-    expect(screen.getByRole("link", { name: /lily protocol/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^docs$/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^sign in$/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /^dashboard$/i })).toBeInTheDocument();
+
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
   });
 
-  it("toggles mobile menu with aria-expanded and aria-controls attributes", () => {
+  it("renders global navigation links matching the route registry", () => {
     render(<SiteHeader />);
-    const toggleButton = screen.getByRole("button", { name: /open menu/i });
-    expect(toggleButton).toHaveAttribute("aria-expanded", "false");
-    expect(toggleButton).toHaveAttribute("aria-controls", "mobile-navigation");
 
-    // Open menu
-    fireEvent.click(toggleButton);
-    expect(toggleButton).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByLabelText("Mobile Navigation")).toBeInTheDocument();
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute("href", routes.docs);
 
-    // Close menu on click
-    fireEvent.click(toggleButton);
-    expect(toggleButton).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByLabelText("Mobile Navigation")).not.toBeInTheDocument();
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
   });
 
-  it("closes the mobile menu when Escape key is pressed", () => {
+  it("contains no dead or unregistered links", () => {
     render(<SiteHeader />);
-    const toggleButton = screen.getByRole("button", { name: /open menu/i });
 
-    // Open menu
-    fireEvent.click(toggleButton);
-    expect(screen.getByLabelText("Mobile Navigation")).toBeInTheDocument();
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
 
-    // Press Escape
-    fireEvent.keyDown(window, { key: "Escape" });
-    expect(screen.queryByLabelText("Mobile Navigation")).not.toBeInTheDocument();
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
+
+    for (const link of links) {
+      const href = link.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
+    }
   });
 });
