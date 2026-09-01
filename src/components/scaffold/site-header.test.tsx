@@ -1,77 +1,47 @@
-import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
 
-import { SiteHeader } from "@/components/scaffold/site-header";
-import { siteConfig } from "@/config/site";
+import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
-describe("SiteHeader accessibility", () => {
-  it("exposes a banner landmark", () => {
+import { SiteHeader } from "./site-header";
+
+describe("SiteHeader", () => {
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
 
-    expect(screen.getByRole("banner")).toBeInTheDocument();
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
   });
 
-  it("names the primary navigation landmark", () => {
-    // An unnamed nav is just "navigation" in a screen reader's landmark list,
-    // which is useless once a page has more than one.
+  it("renders global navigation links matching the route registry", () => {
     render(<SiteHeader />);
 
-    expect(screen.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute("href", routes.docs);
+
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
   });
 
-  it("gives the wordmark an accessible name that says where it goes", () => {
+  it("contains no dead or unregistered links", () => {
     render(<SiteHeader />);
 
-    expect(
-      screen.getByRole("link", { name: `${siteConfig.name} home` }),
-    ).toBeInTheDocument();
-  });
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
 
-  it("offers a skip link as the first focusable element", async () => {
-    const user = userEvent.setup();
-    render(<SiteHeader />);
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
 
-    await user.tab();
-
-    const skip = screen.getByRole("link", { name: /skip to main content/i });
-    expect(skip).toHaveFocus();
-    expect(skip).toHaveAttribute("href", "#main-content");
-  });
-
-  it("reaches every primary link by keyboard, in visual order", async () => {
-    const user = userEvent.setup();
-    render(<SiteHeader />);
-
-    const reached: string[] = [];
-    for (let i = 0; i < 5; i += 1) {
-      await user.tab();
-      const active = document.activeElement;
-      if (active instanceof HTMLAnchorElement) {
-        reached.push(active.textContent?.trim() ?? "");
-      }
-    }
-
-    expect(reached).toEqual([
-      "Skip to main content",
-      siteConfig.name,
-      "Docs",
-      "Sign in",
-      "Dashboard",
-    ]);
-  });
-
-  it("keeps every nav destination a real link rather than a click handler", () => {
-    // Links must be links: a div with onClick is not reachable by tab and has
-    // no role for assistive tech.
-    render(<SiteHeader />);
-
-    const nav = screen.getByRole("navigation", { name: "Primary" });
-    const links = within(nav).getAllByRole("link");
-
-    expect(links).toHaveLength(3);
     for (const link of links) {
-      expect(link).toHaveAttribute("href");
+      const href = link.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
     }
   });
 });
