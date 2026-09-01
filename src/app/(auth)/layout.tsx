@@ -1,7 +1,9 @@
 import { SectionLayout } from '@/components/scaffold/section-layout';
 import { getSectionRoutes, sectionDefinitions } from '@/config/routes';
 
-const authSection = sectionDefinitions.find((section) => section.key === 'auth');
+const authSection = sectionDefinitions.find(
+  (section) => section.key === "auth",
+);
 
 export default function AuthLayout({
   children,

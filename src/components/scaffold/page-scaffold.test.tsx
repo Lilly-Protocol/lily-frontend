@@ -11,6 +11,10 @@ describe('PageScaffold', () => {
     expect(screen.getByRole('heading', { level: 1, name: /landing page/i })).toBeInTheDocument();
     expect(screen.getByText('/')).toBeInTheDocument();
     expect(
+      screen.getByRole("heading", { level: 1, name: /landing page/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("/")).toBeInTheDocument();
+    expect(
       screen.getByText(
         /contributors should implement the real experience from the approved figma design/i,
       ),

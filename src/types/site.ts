@@ -1,29 +1,31 @@
-export type RouteSection = 'marketing' | 'auth' | 'legal' | 'docs' | 'dashboard';
+export type RouteSection =
+  "marketing" | "auth" | "legal" | "docs" | "dashboard";
 
 export type StaticSiteRoute =
-  | '/'
-  | '/about'
-  | '/blog'
-  | '/changelog'
-  | '/ecosystem'
-  | '/security'
-  | '/grants'
-  | '/careers'
-  | '/contact'
-  | '/signin'
-  | '/signup'
-  | '/terms'
-  | '/privacy'
-  | '/cookies'
-  | '/docs'
-  | '/status'
-  | '/app'
-  | '/app/agents'
-  | '/app/payments'
-  | '/app/wallets'
-  | '/app/activity'
-  | '/app/developers'
-  | '/app/settings';
+  | "/"
+  | "/about"
+  | "/contribute"
+  | "/blog"
+  | "/changelog"
+  | "/ecosystem"
+  | "/security"
+  | "/grants"
+  | "/careers"
+  | "/contact"
+  | "/signin"
+  | "/signup"
+  | "/terms"
+  | "/privacy"
+  | "/cookies"
+  | "/docs"
+  | "/status"
+  | "/app"
+  | "/app/agents"
+  | "/app/payments"
+  | "/app/wallets"
+  | "/app/activity"
+  | "/app/developers"
+  | "/app/settings";
 
 export type DynamicSiteRoute = '/app/agents/[id]';
 

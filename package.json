@@ -15,13 +15,13 @@
     "test": "vitest",
     "test:run": "vitest run --coverage",
     "check": "npm run lint && npm run typecheck && npm run test:run && npm run build",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "test:e2e": "playwright test"
   },
   "dependencies": {
-    "next": "16.2.6",
+    "next": "16.3.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "serwist": "^9.5.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -31,9 +31,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vercel/og": "^1.0.2",
     "@vitest/coverage-v8": "^4.0.8",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.3.3",
     "jsdom": "^26.1.0",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
