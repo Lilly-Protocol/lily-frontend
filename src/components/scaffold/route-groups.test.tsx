@@ -1,71 +1,61 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
 
-import MarketingLayout from "@/app/(marketing)/layout";
-import AuthLayout from "@/app/(auth)/layout";
-import SupportLayout from "@/app/(support)/layout";
-import DashboardLayout from "@/app/app/layout";
+import { PageScaffold } from "@/components/scaffold/page-scaffold";
+import { getRouteScaffold } from "@/config/routes";
 
-vi.mock("next/link", () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode;
-    href: string;
-    [key: string]: unknown;
-  }) => <a href={href} {...props}>{children}</a>,
-}));
+import AuthLayout from "../../app/(auth)/layout";
+import MarketingLayout from "../../app/(marketing)/layout";
+import SupportLayout from "../../app/(support)/layout";
+import DashboardLayout from "../../app/app/layout";
 
-vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
-  useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
-}));
-
-describe("Route group layouts", () => {
-  it("renders marketing layout landmarks for marketing pages", () => {
+describe("route group layouts", () => {
+  it("renders the marketing layout with its site header and section label", () => {
     render(
       <MarketingLayout>
-        <div>Marketing content</div>
+        <PageScaffold route={getRouteScaffold("landing")} />
       </MarketingLayout>,
     );
 
     expect(screen.getByRole("link", { name: /lily protocol/i })).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: /section routes/i })).toBeInTheDocument();
-    expect(screen.getByText("Marketing content")).toBeInTheDocument();
+    expect(screen.getByText("Public marketing")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /landing page/i })).toBeInTheDocument();
   });
 
-  it("renders auth layout shell for authentication pages", () => {
+  it("renders the auth layout with its site header and section label", () => {
     render(
       <AuthLayout>
-        <div>Auth content</div>
+        <PageScaffold route={getRouteScaffold("signin")} />
       </AuthLayout>,
     );
 
     expect(screen.getByRole("link", { name: /lily protocol/i })).toBeInTheDocument();
-    expect(screen.getByText("Auth content")).toBeInTheDocument();
+    expect(screen.getByText("Auth")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /sign in/i })).toBeInTheDocument();
   });
 
-  it("renders support layout shell for legal and docs pages", () => {
+  it("renders the support layout with its site header and combined section label", () => {
     render(
       <SupportLayout>
-        <div>Support content</div>
+        <PageScaffold route={getRouteScaffold("docs")} />
       </SupportLayout>,
     );
 
     expect(screen.getByRole("link", { name: /lily protocol/i })).toBeInTheDocument();
-    expect(screen.getByText("Support content")).toBeInTheDocument();
+    expect(screen.getByText("Docs, status, and legal")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /documentation/i })).toBeInTheDocument();
   });
 
-  it("renders dashboard layout shell for app pages", () => {
+  it("renders the dashboard layout with its site header and section label", () => {
     render(
       <DashboardLayout>
-        <div>Dashboard content</div>
+        <PageScaffold route={getRouteScaffold("dashboard-overview")} />
       </DashboardLayout>,
     );
 
     expect(screen.getByRole("link", { name: /lily protocol/i })).toBeInTheDocument();
-    expect(screen.getByText("Dashboard content")).toBeInTheDocument();
+    expect(
+      screen.getByText("Signed-in product surfaces for agents, wallets, payments, and settings."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /dashboard overview/i })).toBeInTheDocument();
   });
 });
