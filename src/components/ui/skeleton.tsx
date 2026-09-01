@@ -1,140 +1,65 @@
-import type { ComponentPropsWithoutRef } from "react";
+import { cn } from "@/lib/utils";
 
-const skeletonVariants = {
-  block: "h-4 w-full rounded-[0.875rem]",
-  text: "h-3 w-full rounded-full",
-  avatar: "h-10 w-10 rounded-full",
-  card: "min-h-32 w-full rounded-[1.5rem]",
-} as const;
-
-const avatarSizes = {
-  sm: "h-8 w-8",
-  md: "h-10 w-10",
-  lg: "h-14 w-14",
-} as const;
-
-type SkeletonVariant = keyof typeof skeletonVariants;
-type SkeletonAvatarSize = keyof typeof avatarSizes;
-
-export type SkeletonProps = ComponentPropsWithoutRef<"div"> & {
-  variant?: SkeletonVariant;
-  animated?: boolean;
-};
-
-export type SkeletonTextProps = ComponentPropsWithoutRef<"div"> & {
-  lines?: number;
-  widths?: readonly string[];
-  lineClassName?: string;
-  animated?: boolean;
-};
-
-export type SkeletonAvatarProps = Omit<SkeletonProps, "variant"> & {
-  size?: SkeletonAvatarSize;
-};
-
-export type SkeletonCardProps = ComponentPropsWithoutRef<"div"> & {
-  rows?: number;
-  showAvatar?: boolean;
-  animated?: boolean;
-};
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: "default" | "text" | "avatar" | "card";
+}
 
 export function Skeleton({
   className,
-  variant = "block",
-  animated = true,
+  variant = "default",
   ...props
 }: SkeletonProps) {
+  const base = "bg-[var(--color-line)] motion-reduce:animate-none animate-pulse rounded";
+
+  const variants = {
+    default: "",
+    text: "h-4 w-full",
+    avatar: "h-10 w-10 rounded-full",
+    card: "h-32 w-full rounded-lg",
+  };
+
   return (
     <div
+      className={cn(base, variants[variant], className)}
+      aria-hidden="true"
       {...props}
-      aria-hidden={props["aria-hidden"] ?? true}
-      className={cx(
-        "bg-[var(--color-panel-muted)]",
-        "motion-reduce:animate-none",
-        animated && "motion-safe:animate-pulse",
-        skeletonVariants[variant],
-        className,
-      )}
     />
   );
 }
 
 export function SkeletonText({
-  className,
   lines = 3,
-  widths = ["100%", "92%", "76%"],
-  lineClassName,
-  animated = true,
+  className,
   ...props
-}: SkeletonTextProps) {
+}: { lines?: number } & Omit<SkeletonProps, "variant">) {
   return (
-    <div
-      {...props}
-      aria-label={props["aria-label"] ?? "Loading text"}
-      role={props.role ?? "status"}
-      className={cx("space-y-2", className)}
-    >
-      {Array.from({ length: Math.max(1, lines) }, (_, index) => (
+    <div className={cn("space-y-2", className)} {...props}>
+      {Array.from({ length: lines }).map((_, i) => (
         <Skeleton
-          key={index}
-          animated={animated}
-          className={cx(lineClassName)}
-          style={{ width: widths[index % widths.length] }}
+          key={i}
           variant="text"
+          className={i === lines - 1 ? "w-3/4" : undefined}
         />
       ))}
     </div>
   );
 }
 
-export function SkeletonAvatar({
-  className,
-  size = "md",
-  animated = true,
-  ...props
-}: SkeletonAvatarProps) {
-  return (
-    <Skeleton
-      {...props}
-      animated={animated}
-      className={cx(avatarSizes[size], className)}
-      variant="avatar"
-    />
-  );
-}
-
 export function SkeletonCard({
   className,
-  rows = 3,
-  showAvatar = true,
-  animated = true,
   ...props
-}: SkeletonCardProps) {
+}: Omit<SkeletonProps, "variant">) {
   return (
-    <div
-      {...props}
-      aria-label={props["aria-label"] ?? "Loading card"}
-      role={props.role ?? "status"}
-      className={cx(
-        "rounded-[1.5rem] border border-[var(--color-line)] bg-[var(--color-panel)] p-5 shadow-[var(--shadow-soft)]",
-        className,
-      )}
-    >
-      <div className="flex items-start gap-4">
-        {showAvatar && <SkeletonAvatar animated={animated} size="lg" />}
-        <div className="min-w-0 flex-1 space-y-3">
-          <Skeleton animated={animated} className="max-w-48" />
-          <SkeletonText
-            animated={animated}
-            aria-label="Loading card details"
-            lines={rows}
-          />
+    <div className={cn("space-y-3 p-4", className)} {...props}>
+      <div className="flex items-center space-x-3">
+        <Skeleton variant="avatar" />
+        <div className="flex-1 space-y-2">
+          <Skeleton variant="text" className="w-1/2" />
+          <Skeleton variant="text" className="w-1/3" />
         </div>
       </div>
+      <Skeleton variant="text" />
+      <Skeleton variant="text" className="w-4/5" />
     </div>
   );
-}
-
-function cx(...classes: Array<string | false | null | undefined>) {
-  return classes.filter(Boolean).join(" ");
 }

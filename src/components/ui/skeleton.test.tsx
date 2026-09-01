@@ -1,57 +1,47 @@
-import { render, screen, within } from "@testing-library/react";
-
-import {
-  Skeleton,
-  SkeletonAvatar,
-  SkeletonCard,
-  SkeletonText,
-} from "./skeleton";
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { Skeleton, SkeletonText, SkeletonCard } from "./skeleton";
 
 describe("Skeleton", () => {
-  it("renders a token-based placeholder that respects reduced motion", () => {
-    render(<Skeleton data-testid="skeleton" />);
-
-    const skeleton = screen.getByTestId("skeleton");
-    expect(skeleton).toHaveAttribute("aria-hidden", "true");
-    expect(skeleton.className).toContain("bg-[var(--color-panel-muted)]");
-    expect(skeleton.className).toContain("motion-safe:animate-pulse");
-    expect(skeleton.className).toContain("motion-reduce:animate-none");
+  it("renders default skeleton with aria-hidden", () => {
+    const { container } = render(<Skeleton />);
+    const el = container.firstChild as HTMLElement;
+    expect(el).toHaveAttribute("aria-hidden", "true");
+    expect(el.className).toContain("animate-pulse");
   });
 
-  it("can render without animation", () => {
-    render(<Skeleton animated={false} data-testid="skeleton" />);
-
-    expect(screen.getByTestId("skeleton").className).not.toContain(
-      "motion-safe:animate-pulse",
-    );
+  it("renders text variant with correct height", () => {
+    const { container } = render(<Skeleton variant="text" />);
+    expect(container.firstChild).toHaveClass("h-4");
   });
 
-  it("covers text and avatar variants", () => {
-    render(
-      <>
-        <SkeletonText data-testid="text-loader" lines={3} />
-        <SkeletonAvatar data-testid="avatar-loader" size="lg" />
-      </>,
-    );
-
-    expect(screen.getByTestId("text-loader")).toHaveAccessibleName(
-      "Loading text",
-    );
-    expect(
-      within(screen.getByTestId("text-loader")).getAllByRole("generic", {
-        hidden: true,
-      }),
-    ).toHaveLength(3);
-    expect(screen.getByTestId("avatar-loader").className).toContain("h-14 w-14");
+  it("renders avatar variant as circle", () => {
+    const { container } = render(<Skeleton variant="avatar" />);
+    expect(container.firstChild).toHaveClass("rounded-full");
   });
 
-  it("renders a card variant with optional avatar and text rows", () => {
-    render(<SkeletonCard data-testid="card-loader" rows={2} />);
+  it("respects motion-reduce via class", () => {
+    const { container } = render(<Skeleton />);
+    expect(container.firstChild?.className).toContain("motion-reduce:animate-none");
+  });
+});
 
-    const card = screen.getByTestId("card-loader");
-    expect(card).toHaveAccessibleName("Loading card");
-    expect(card.className).toContain("bg-[var(--color-panel)]");
-    expect(card.className).toContain("border-[var(--color-line)]");
-    expect(screen.getByLabelText("Loading card details")).toBeInTheDocument();
+describe("SkeletonText", () => {
+  it("renders specified number of lines", () => {
+    const { container } = render(<SkeletonText lines={4} />);
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(4);
+  });
+
+  it("defaults to 3 lines", () => {
+    const { container } = render(<SkeletonText />);
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
+  });
+});
+
+describe("SkeletonCard", () => {
+  it("renders avatar and text placeholders", () => {
+    const { container } = render(<SkeletonCard />);
+    const skeletons = container.querySelectorAll('[aria-hidden="true"]');
+    expect(skeletons.length).toBeGreaterThan(3);
   });
 });
