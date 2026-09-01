@@ -1,21 +1,18 @@
 import { describe, expect, it } from "vitest";
-
 import robots from "./robots";
+import { siteConfig } from "@/config/site";
 
-describe("robots", () => {
-  it("disallows /app routes for all user agents", () => {
-    const result = robots();
-    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
-    const catchAll = rules.find((r) => r.userAgent === "*");
+describe("robots.txt configuration", () => {
+  it("disallows authenticated /app routes while allowing public crawling", () => {
+    const config = robots();
 
-    expect(catchAll).toBeDefined();
-    expect(catchAll?.allow).toContain("/");
-    expect(catchAll?.disallow).toContain("/app");
-    expect(catchAll?.disallow).toContain("/app/");
-  });
+    expect(config.host).toBe(siteConfig.url);
+    expect(config.sitemap).toBe(`${siteConfig.url}/sitemap.xml`);
 
-  it("keeps sitemap reference intact", () => {
-    const result = robots();
-    expect(result.sitemap).toMatch(/\/sitemap\.xml$/);
+    const rules = Array.isArray(config.rules) ? config.rules[0] : config.rules;
+    expect(rules).toBeDefined();
+    expect(rules?.userAgent).toBe("*");
+    expect(rules?.allow).toBe("/");
+    expect(rules?.disallow).toEqual(["/app", "/app/"]);
   });
 });
