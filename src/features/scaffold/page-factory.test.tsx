@@ -11,16 +11,11 @@ describe('createScaffoldPage', () => {
     expect(screen.getByRole('heading', { level: 1, name: /documentation/i })).toBeInTheDocument();
   });
 
-  it.each(routeScaffolds)(
-    "renders the $id scaffold page heading",
-    (route) => {
-      const ScaffoldPage = createScaffoldPage(route.id);
+  it.each(routeScaffolds)("renders one h1 for $id", (route) => {
+    const ScaffoldPage = createScaffoldPage(route.id);
 
-      render(<ScaffoldPage />);
+    render(<ScaffoldPage />);
 
-      expect(
-        screen.getByRole("heading", { level: 1, name: route.title }),
-      ).toBeInTheDocument();
-    },
-  );
+    expectSingleHeading(route.title);
+  });
 });
