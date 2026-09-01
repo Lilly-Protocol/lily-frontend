@@ -1,11 +1,16 @@
-import type { Metadata } from "next";
+import { PageScaffold } from '@/components/scaffold/page-scaffold';
+import { getRouteScaffold } from '@/config/routes';
 
-import { PageScaffold } from "@/components/scaffold/page-scaffold";
-import { getRouteScaffold } from "@/config/routes";
+export default async function AgentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
-export function generateStaticParams() {
-  // Placeholder ids for static prerendering; replace with real agent list later.
-  return [{ id: "placeholder" }];
+  if (!id || !AGENT_ID_PATTERN.test(id)) {
+    notFound();
+  }
+
+  return (
+    <PageScaffold route={getRouteScaffold('agent-detail')} dynamicLabel={`/app/agents/${id}`} />
+  );
 }
 
 export async function generateMetadata({
@@ -14,25 +19,24 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const scaffold = getRouteScaffold("agent-detail");
+  const route = getRouteScaffold("agent-detail");
+  const title = `${route.title} ${id}`;
+  const description = route.purpose;
 
   return {
-    title: `${scaffold.title} — ${id}`,
-    description: scaffold.purpose,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      siteName: siteConfig.name,
+      url: new URL(route.path.replace("[id]", id), siteConfig.url).toString(),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
-}
-
-export default async function AgentDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
-  return (
-    <PageScaffold
-      route={getRouteScaffold("agent-detail")}
-      dynamicLabel={`/app/agents/${id}`}
-    />
-  );
 }
