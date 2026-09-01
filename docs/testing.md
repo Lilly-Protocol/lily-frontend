@@ -1,94 +1,90 @@
-# Testing Conventions
+# Testing conventions
 
-This project uses Vitest, Testing Library, and `@testing-library/jest-dom` for unit and component coverage. Keep tests close to the code they protect so future contributors can read the behavior and implementation together.
+Lily Frontend uses Vitest, Testing Library, jsdom, and the matchers from
+`@testing-library/jest-dom`. Keep tests focused on behavior that contributors
+and users can observe.
 
-## File Placement
+## File placement and naming
 
-- Put tests next to the source file they cover.
-- Use `*.test.ts` for non-React TypeScript modules.
-- Use `*.test.tsx` for React components and route-facing helpers.
-- Reuse typed scaffold fixtures from `src/config/routes.ts` instead of rebuilding route objects in each test.
+- Put a test next to the source file it covers and name it `*.test.ts` or
+  `*.test.tsx`.
+- Use `.test.ts` for data and configuration modules and `.test.tsx` for React
+  components.
+- Reuse the `@/` alias for cross-directory imports. Use relative imports for the
+  source file under test.
+- Shared test setup belongs in `src/test/setup.ts`; do not repeat global matcher
+  imports in each test.
 
-Current examples:
+## Route fixtures
 
-```text
-src/config/routes.test.ts
-src/config/site.test.ts
-src/components/scaffold/page-scaffold.test.tsx
-src/components/scaffold/section-layout.test.tsx
-src/features/scaffold/page-factory.test.tsx
-```
+Use the typed route registry instead of recreating route objects in tests:
 
-## Component Tests
+- `getRouteScaffold(id)` supplies one complete route fixture.
+- `getSectionRoutes(section)` supplies the routes owned by a layout section.
 
-Render components with Testing Library and assert the user-visible contract: roles, labels, links, headings, and visible text. `src/test/setup.ts` loads `@testing-library/jest-dom/vitest`, so matchers such as `toBeInTheDocument` and `toHaveAttribute` are available in every test.
+These helpers keep tests aligned with the same route data used by the app.
 
-Prefer route fixtures such as `getRouteScaffold` and `getSectionRoutes` when testing scaffold components. Those helpers keep tests aligned with the same route registry used by the app.
+## Worked component example
+
+This example follows the existing scaffold tests by rendering a component with
+a registry fixture and asserting its accessible output:
 
 ```tsx
 import { render, screen } from "@testing-library/react";
 
-import { getSectionRoutes } from "@/config/routes";
+import { getRouteScaffold } from "@/config/routes";
 
-import { SectionLayout } from "./section-layout";
+import { PageScaffold } from "./page-scaffold";
 
-describe("SectionLayout", () => {
-  it("renders global nav and section route links", () => {
-    render(
-      <SectionLayout
-        title="Public marketing"
-        description="Public-facing route group."
-        routes={getSectionRoutes("marketing")}
-      >
-        <div>Section content</div>
-      </SectionLayout>,
-    );
+describe("PageScaffold", () => {
+  it("renders the selected route heading and path", () => {
+    render(<PageScaffold route={getRouteScaffold("landing")} />);
 
     expect(
-      screen.getByRole("link", { name: /lily protocol/i }),
-    ).toHaveAttribute("href", "/");
-    expect(
-      screen.getByRole("link", { name: /landing page/i }),
-    ).toHaveAttribute("href", "/");
-    expect(screen.getByText("Section content")).toBeInTheDocument();
+      screen.getByRole("heading", { level: 1, name: /landing page/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("/")).toBeInTheDocument();
   });
 });
 ```
 
-## Config Tests
+Prefer semantic queries such as `getByRole` and `getByText` over implementation
+details. The jest-dom matchers are loaded once by `src/test/setup.ts`, so tests
+can use assertions such as `toBeInTheDocument` and `toHaveAttribute` directly.
+For user interactions, use `@testing-library/user-event` and assert the visible
+result or callback rather than internal component state.
 
-For typed configuration, assert exported helpers and derived collections rather than internal implementation details. Examples include:
+## Running tests
 
-- `getRouteScaffold` for named route lookup behavior
-- `getSectionRoutes` for section grouping behavior
-- `staticSitePages` for sitemap eligibility
-- `getAbsoluteUrl` for canonical URL generation
-- `createSiteMetadata` for metadata shape and defaults
+Use watch mode while developing:
 
-## Coverage
+```bash
+npm test
+```
 
-Run coverage locally with:
+Run the same coverage command used by CI before opening a pull request:
 
 ```bash
 npm run test:run
 ```
 
-`vitest.config.ts` uses the V8 coverage provider and prints both text and HTML reports. Coverage includes `src/**/*.{ts,tsx}` and excludes:
+Run `npm run check` for the full lint, typecheck, test, and production build
+sequence.
 
-- `src/app/**/*`, because route modules mostly compose scaffolded pages and are validated by route-level smoke coverage when needed
-- `src/test/**/*`, because test setup files should not count toward application coverage
+## Coverage
 
-Minimum thresholds are:
+`vitest.config.ts` collects V8 coverage for `src/**/*.{ts,tsx}` and reports both
+text and HTML output. It excludes App Router composition files under `src/app`
+and shared test setup under `src/test`.
 
-```text
-statements: 70
-branches: 60
-functions: 70
-lines: 70
-```
+The repository-wide minimums are:
 
-Run the full contribution check before opening a PR:
+| Metric | Minimum |
+| --- | ---: |
+| Statements | 70% |
+| Branches | 60% |
+| Functions | 70% |
+| Lines | 70% |
 
-```bash
-npm run check
-```
+Coverage is a baseline, not a substitute for useful assertions. Add regression
+coverage for changed reusable behavior, configuration, and rendering paths.

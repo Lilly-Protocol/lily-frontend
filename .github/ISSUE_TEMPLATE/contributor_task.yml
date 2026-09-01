@@ -1,6 +1,6 @@
 name: Contributor task
 description: Define a scoped task that community contributors can pick up
-title: "[Task]: "
+title: '[Task]: '
 labels:
   - contributor-friendly
 body:
