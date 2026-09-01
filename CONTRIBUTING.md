@@ -35,9 +35,60 @@ Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before contribu
 6. Update docs when behavior, contributor workflow, or repo expectations change.
 7. Validate the branch locally before asking for review.
 
-## Editor settings
+## Adding a new route
 
-The repository includes a root `.editorconfig` so editors use the same formatting defaults. Use UTF-8, LF line endings, final newlines, trimmed trailing whitespace, and 2-space indentation for TypeScript, CSS, JSON, MJS, and YAML files.
+Routes are registered centrally so that their metadata, scaffold page, route types,
+and sitemap behavior stay in sync. The following minimal example shows how the
+static dashboard route `/app/developers` is wired:
+
+1. Add the path to `StaticSiteRoute` in `src/types/site.ts`. If the new path has a
+   dynamic segment (for example, `/app/agents/[id]`), add it to
+   `DynamicSiteRoute` instead. `SiteRoute` is defined as the union of those two
+   types, so it includes the new path without another literal entry.
+2. Add a `RouteScaffold` entry to `routeScaffolds` in `src/config/routes.ts`. Give
+   it a unique `id`, assign the appropriate `section`, and document its purpose,
+   Figma scope, and implementation areas. Decide whether the route belongs in the
+   generated sitemap: set `includeInSitemap: true` for public, indexable static
+   pages and `false` for authenticated, private, or dynamic pages. The
+   `staticSitePages` filter uses this flag, so `src/app/sitemap.ts` does not need a
+   separate route entry.
+
+   ```ts
+   {
+     id: "developers",
+     title: "Developer Console",
+     path: "/app/developers",
+     section: "dashboard",
+     purpose: "Provide developer-specific tooling and references.",
+     figmaScope: "Translate the approved developer workspace from Figma.",
+     implementationAreas: ["Console navigation", "API and SDK tooling"],
+     includeInSitemap: false,
+   }
+   ```
+
+3. Create the matching App Router page at
+   `src/app/app/developers/page.tsx` (route groups such as `(marketing)` may also
+   be used where appropriate). Keep the route file as a small wrapper around the
+   shared scaffold factory, passing the registry `id`:
+
+   ```tsx
+   import { createScaffoldPage } from "@/features/scaffold/page-factory";
+
+   export default createScaffoldPage("developers");
+   ```
+
+4. Update `src/config/routes.test.ts`. Increment the `routeScaffolds`
+   `toHaveLength(...)` assertion for every registry entry added, and add focused
+   assertions when the route introduces new sitemap or section behavior.
+5. Run the validation commands below. Type checking catches paths missing from
+   the route unions, while the route tests catch registry count and sitemap
+   regressions.
+
+In summary, every new route changes `src/types/site.ts`,
+`src/config/routes.ts`, its page under `src/app`, and
+`src/config/routes.test.ts`. Sitemap membership is controlled by
+`includeInSitemap` in the registry; only change `src/app/sitemap.ts` if the
+sitemap generation logic itself needs to change.
 
 ## Validation checklist
 
@@ -98,6 +149,10 @@ npm run dev
 - Reviewers will prioritize correctness, maintainability, and contributor clarity.
 - Small PRs move faster than wide refactors, so prefer incremental improvements when possible.
 - If a decision has non-obvious tradeoffs, document it in the PR instead of relying on review comments to provide context.
+
+## Code of conduct
+
+All contributors are expected to follow the [Code of Conduct](./CODE_OF_CONDUCT.md). Report conduct concerns privately through the Lily Protocol contact channel listed on the project website or GitHub organization profile rather than opening a public issue.
 
 ## Reporting issues
 
