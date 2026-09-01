@@ -1,7 +1,7 @@
-# Deliverable for issue #88
+# Deliverable for issue #72
 
-GH mega-sweep — created 2026-08-25, 2 comments, labels: 
+GH discussion — reward $20
 
 ## Code
 
-See `github-88-Lilly-Protocol-lily-frontend.ts`.
+See `gh-disc-72-Lilly-Protocol-lily-frontend.tsx`.
