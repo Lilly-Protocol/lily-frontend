@@ -1,6 +1,6 @@
-import type { MetadataRoute } from "next";
+import type { MetadataRoute } from 'next';
 
-import { getAbsoluteUrl, siteConfig } from "@/config/site";
+import { getAbsoluteUrl, siteConfig } from '@/config/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return siteConfig.pages.map((page) => ({
     url: getAbsoluteUrl(page.path),
     lastModified,
-    changeFrequency: "weekly",
+    changeFrequency: 'weekly',
     priority: page.priority,
   }));
 }
