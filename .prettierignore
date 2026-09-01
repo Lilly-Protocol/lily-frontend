@@ -1,6 +1,5 @@
-.next
-build
-coverage
 node_modules
-out
-*.tsbuildinfo
+.next
+coverage
+dist
+*.min.js
