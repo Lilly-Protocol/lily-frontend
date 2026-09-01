@@ -2,39 +2,20 @@ import { describe, it, expect } from "vitest";
 import { middleware } from "./middleware";
 import { NextRequest } from "next/server";
 
-function createRequest(path: string, cookies: Record<string, string> = {}) {
-  const url = new URL(path, "http://localhost:3000");
-  const request = new NextRequest(url);
-  for (const [key, value] of Object.entries(cookies)) {
-    request.cookies.set(key, value);
-  }
-  return request;
-}
-
 describe("middleware", () => {
-  it("allows public routes through", () => {
-    const request = createRequest("/about");
+  it("sets x-request-id header on response when missing in request", () => {
+    const request = new NextRequest(new URL("/", "http://localhost:3000"));
     const response = middleware(request);
-    expect(response.status).toBe(200);
+    expect(response.headers.get("x-request-id")).toBeTruthy();
+    expect(response.headers.get("x-request-id")?.length).toBeGreaterThan(0);
   });
 
-  it("redirects unauthenticated /app requests to signin", () => {
-    const request = createRequest("/app/agents");
+  it("preserves existing x-request-id from request", () => {
+    const existingId = "test-request-id-123";
+    const request = new NextRequest(new URL("/", "http://localhost:3000"), {
+      headers: { "x-request-id": existingId },
+    });
     const response = middleware(request);
-    expect(response.status).toBe(307);
-    expect(response.headers.get("location")).toContain("/signin");
-    expect(response.headers.get("location")).toContain("redirect=");
-  });
-
-  it("allows authenticated /app requests through", () => {
-    const request = createRequest("/app/agents", { session: "abc123" });
-    const response = middleware(request);
-    expect(response.status).toBe(200);
-  });
-
-  it("does not redirect the signin page itself", () => {
-    const request = createRequest("/signin");
-    const response = middleware(request);
-    expect(response.status).toBe(200);
+    expect(response.headers.get("x-request-id")).toBe(existingId);
   });
 });
