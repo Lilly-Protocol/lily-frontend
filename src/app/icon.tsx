@@ -13,27 +13,13 @@ export default function Icon() {
           justifyContent: "center",
           width: "100%",
           height: "100%",
-          background: "#0ea5e9",
-          borderRadius: "20%",
+          backgroundColor: "#0f766e",
+          borderRadius: "50%",
         }}
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <span style={{ color: "white", fontSize: 20, fontWeight: 700 }}>L</span>
       </div>
     ),
-    { ...size }
+    { ...size },
   );
 }
