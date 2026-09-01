@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "EditorConfig.EditorConfig",
+    "vitest.explorer"
+  ]
+}
