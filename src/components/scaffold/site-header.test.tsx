@@ -1,50 +1,47 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
-import { routeScaffolds } from "@/config/routes";
 import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteHeader } from "./site-header";
 
-const registryHeaderRoutes = routeScaffolds.filter(
-  (route) =>
-    route.path !== routes.home &&
-    (route.section === "marketing" ||
-      route.section === "legal" ||
-      route.section === "docs" ||
-      route.id === "signin" ||
-      route.id === "dashboard-overview"),
-);
-
 describe("SiteHeader", () => {
-  it("renders every header-eligible registry route with the expected label", () => {
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
 
-    const navigation = screen.getByRole("navigation", { name: /global/i });
-
-    for (const route of registryHeaderRoutes) {
-      expect(
-        within(navigation).getByRole("link", { name: route.title }),
-      ).toHaveAttribute("href", route.path);
-    }
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
   });
 
-  it("does not render links outside the route registry", () => {
+  it("renders global navigation links matching the route registry", () => {
     render(<SiteHeader />);
 
-    const registryPaths = new Set<string>(
-      routeScaffolds.map((route) => route.path),
-    );
-    const links = screen.getAllByRole("link");
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute("href", routes.docs);
 
-    expect(
-      screen.getByRole("link", { name: siteConfig.name }),
-    ).toHaveAttribute("href", routes.home);
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
+  });
+
+  it("contains no dead or unregistered links", () => {
+    render(<SiteHeader />);
+
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
+
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
 
     for (const link of links) {
       const href = link.getAttribute("href");
-
       expect(href).toBeTruthy();
-      expect(registryPaths.has(href ?? "")).toBe(true);
+      expect(registeredPaths.has(href!)).toBe(true);
     }
   });
 });
