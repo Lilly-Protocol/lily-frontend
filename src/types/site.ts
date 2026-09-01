@@ -1,13 +1,10 @@
 export type RouteSection =
-  | "marketing"
-  | "auth"
-  | "legal"
-  | "docs"
-  | "dashboard";
+  "marketing" | "auth" | "legal" | "docs" | "dashboard";
 
 export type StaticSiteRoute =
   | "/"
   | "/about"
+  | "/contribute"
   | "/blog"
   | "/changelog"
   | "/ecosystem"

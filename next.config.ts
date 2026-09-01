@@ -9,7 +9,22 @@ const withSerwist = withSerwistInit({
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
-  turbopack: {},
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.lillyprotocol.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.lillyprotocol.dev",
+      },
+    ],
+  },
 };
 
 export default withSerwist(nextConfig);
