@@ -1,25 +1,30 @@
 import type { NextConfig } from "next";
+import withSerwistInit from '@serwist/next';
+
+const withSerwist = withSerwistInit({
+  swSrc: 'app/sw.ts',
+  swDest: 'public/sw.js',
+  disable: process.env.NODE_ENV !== 'production',
+});
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
-  poweredByHeader: false,
-  async headers() {
-    return [
+  images: {
+    remotePatterns: [
       {
-        source: "/(.*)",
-        headers: [
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          {
-            key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https:; frame-ancestors 'none';",
-          },
-        ],
+        protocol: "https",
+        hostname: "**.githubusercontent.com",
       },
-    ];
+      {
+        protocol: "https",
+        hostname: "**.lillyprotocol.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.lillyprotocol.dev",
+      },
+    ],
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);
