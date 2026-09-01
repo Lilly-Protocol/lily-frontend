@@ -1,28 +1,83 @@
+import withSerwistInit from "@serwist/next";
+
+const withSerwist = withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+  disable: process.env.NODE_ENV === "development",
+});
+
 import type { NextConfig } from "next";
+import withSerwistInit from '@serwist/next';
+
+const withSerwist = withSerwistInit({
+  swSrc: 'app/sw.ts',
+  swDest: 'public/sw.js',
+  disable: process.env.NODE_ENV !== 'production',
+});
+
+const securityHeaders = [
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "DENY",
+  },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=()",
+  },
+  {
+    key: "Content-Security-Policy",
+    value:
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+  },
+];
+
+const securityHeaders = [
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "DENY",
+  },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "Content-Security-Policy",
+    value:
+      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+  },
+];
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   typedRoutes: true,
-  async redirects() {
-    return [
-      // Legacy dashboard routes → new app shell
-      { source: "/dash/:path*", destination: "/app/:path*", permanent: true },
-      { source: "/dashboard/:path*", destination: "/app/:path*", permanent: true },
-
-      // Auth route normalization
-      { source: "/sign-up", destination: "/signup", permanent: true },
-      { source: "/sign-in", destination: "/signin", permanent: true },
-      { source: "/log-in", destination: "/signin", permanent: true },
-      { source: "/login", destination: "/signin", permanent: true },
-
-      // Legacy domain aliases (agent-lily.online → lilyprotocol.dev canonical paths)
-      { source: "/agents/:id", destination: "/app/agents/:id", permanent: true },
-      { source: "/payments/:path*", destination: "/app/payments/:path*", permanent: true },
-      { source: "/wallets/:path*", destination: "/app/wallets/:path*", permanent: true },
-      { source: "/activity", destination: "/app/activity", permanent: true },
-      { source: "/settings/:path*", destination: "/app/settings/:path*", permanent: true },
-      { source: "/developers", destination: "/app/developers", permanent: true },
-    ];
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.lillyprotocol.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.lillyprotocol.dev",
+      },
+    ],
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);
