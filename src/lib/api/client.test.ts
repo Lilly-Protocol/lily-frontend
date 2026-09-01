@@ -1,72 +1,96 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { request } from './client';
+import { lilyFetch, toLilyApiError } from "./client";
+import { isLilyApiError, LilyApiError } from "./errors";
 
-describe('request', () => {
-  beforeEach(() => {
-    global.fetch = vi.fn();
-  });
-
+describe("Lily API errors", () => {
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
-  it('returns parsed JSON on success', async () => {
-    const data = { id: 1, name: 'test' };
-    (global.fetch as any).mockResolvedValue({
-      ok: true,
+  it("maps network failures to a typed error", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
+
+    await expect(lilyFetch("/api/agents")).rejects.toMatchObject({
+      name: "LilyApiError",
+      status: 0,
+      code: "NETWORK_ERROR",
+      message: "Unable to reach the Lily API.",
+      details: { cause: "offline" },
+    });
+  });
+
+  it("maps a JSON 4xx response and preserves validation details", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            code: "INVALID_AGENT_ID",
+            message: "Agent id is invalid.",
+            details: { field: "id" },
+          }),
+          {
+            status: 422,
+            headers: { "content-type": "application/json" },
+          },
+        ),
+      ),
+    );
+
+    await expect(lilyFetch("/api/agents/nope")).rejects.toMatchObject({
+      status: 422,
+      code: "INVALID_AGENT_ID",
+      message: "Agent id is invalid.",
+      details: { field: "id" },
+    });
+  });
+
+  it("maps a plain-text 5xx response to a stable fallback code", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response("Service temporarily unavailable.", { status: 503 }),
+      ),
+    );
+
+    await expect(lilyFetch("/api/payments")).rejects.toMatchObject({
+      status: 503,
+      code: "HTTP_503",
+      message: "Service temporarily unavailable.",
+    });
+  });
+
+  it("returns successful responses unchanged", async () => {
+    const response = new Response(JSON.stringify({ ok: true }), {
       status: 200,
-      json: async () => data,
+      headers: { "content-type": "application/json" },
     });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response));
 
-    const result = await request<typeof data>('/api/test');
-    expect(result).toEqual(data);
-    expect(global.fetch).toHaveBeenCalledWith('/api/test', expect.objectContaining({
-      headers: expect.objectContaining({ 'Content-Type': 'application/json' }),
-    }));
+    await expect(lilyFetch("/api/status")).resolves.toBe(response);
   });
 
-  it('throws ApiError on non-2xx response', async () => {
-    (global.fetch as any).mockResolvedValue({
-      ok: false,
+  it("recognizes and normalizes unknown errors", () => {
+    const typed = new LilyApiError({
       status: 404,
-      json: async () => ({ message: 'Not found', code: 'NOT_FOUND' }),
+      code: "NOT_FOUND",
+      message: "Missing",
     });
 
-    await expect(request('/api/missing')).rejects.toMatchObject({
-      message: 'Not found',
-      status: 404,
-      code: 'NOT_FOUND',
+    expect(isLilyApiError(typed)).toBe(true);
+    expect(
+      isLilyApiError({
+        name: "LilyApiError",
+        status: 401,
+        code: "UNAUTHORIZED",
+        message: "No",
+      }),
+    ).toBe(true);
+    expect(isLilyApiError(new Error("No"))).toBe(false);
+    expect(toLilyApiError(typed)).toBe(typed);
+    expect(toLilyApiError(new Error("Unexpected"))).toMatchObject({
+      status: 0,
+      code: "UNKNOWN_ERROR",
+      message: "Unexpected",
     });
   });
-
-  it('handles 204 No Content', async () => {
-    (global.fetch as any).mockResolvedValue({
-      ok: true,
-      status: 204,
-      json: async () => undefined,
-    });
-
-    const result = await request('/api/delete');
-    expect(result).toBeUndefined();
-  });
-
-  it('throws timeout error when request exceeds timeout', async () => {
-    // Mock fetch to respect the abort signal so it rejects when aborted
-    (global.fetch as any).mockImplementation((_url: string, opts: RequestInit) => {
-      return new Promise((_, reject) => {
-        if (opts.signal) {
-          opts.signal.addEventListener('abort', () => {
-            const err = new DOMException('The operation was aborted.', 'AbortError');
-            reject(err);
-          });
-        }
-      });
-    });
-
-    await expect(request('/api/slow', { timeout: 50 })).rejects.toMatchObject({
-      message: expect.stringContaining('timed out'),
-      status: 408,
-      code: 'TIMEOUT',
-    });
-  }, 5000);
 });
