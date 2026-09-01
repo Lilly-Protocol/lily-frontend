@@ -1,44 +1,45 @@
 import { defineConfig, globalIgnores } from "eslint/config";
+import pluginTailwindcss from "eslint-plugin-tailwindcss";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
+import tailwind from "eslint-plugin-tailwindcss";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
     plugins: {
-      "simple-import-sort": simpleImportSort,
+      tailwindcss: pluginTailwindcss,
+    },
+    settings: {
+      tailwindcss: {
+        cssConfigPath: "src/app/globals.css",
+      },
     },
     rules: {
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
+      ...pluginTailwindcss.configs.recommended.rules,
+      "tailwindcss/no-custom-classname": "off",
+    },
+  },
+  {
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
         {
-          prefer: "type-imports",
-          fixStyle: "inline-type-imports",
+          prefer: 'type-imports',
+          fixStyle: 'inline-type-imports',
         },
       ],
-      "simple-import-sort/imports": [
-        "error",
-        {
-          groups: [
-            ["^\\u0000"],
-            ["^node:"],
-            ["^@?\\w"],
-            ["^@/"],
-            ["^\\."],
-          ],
-        },
-      ],
-      "simple-import-sort/exports": "error",
+      "react/jsx-no-target-blank": ["error", { enforceDynamicLinks: "always" }],
     },
   },
   globalIgnores([
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-    "coverage/**",
+    // Default ignores of eslint-config-next:
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'coverage/**',
   ]),
 ]);
 
