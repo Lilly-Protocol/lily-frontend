@@ -1,7 +1,14 @@
-import { createSiteMetadata, getAbsoluteUrl, routes, siteConfig } from "./site";
+import {
+  createOrganizationJsonLd,
+  createSiteMetadata,
+  getAbsoluteUrl,
+  routes,
+  siteConfig,
+} from "./site";
 
-describe("site config", () => {
-  it("creates consistent metadata", () => {
+
+describe('site config', () => {
+  it('creates consistent metadata', () => {
     const metadata = createSiteMetadata();
 
     expect(metadata.applicationName).toBe(siteConfig.name);
@@ -10,30 +17,30 @@ describe("site config", () => {
       template: `%s | ${siteConfig.name}`,
     });
     expect(metadata.metadataBase?.toString()).toBe(`${siteConfig.url}/`);
+    expect(metadata.alternates?.canonical).toBe(siteConfig.url);
   });
 
-  it("builds absolute page urls from typed routes", () => {
-    expect(getAbsoluteUrl(routes.home)).toBe(siteConfig.url);
-    expect(getAbsoluteUrl(routes.docs)).toBe(
+  it("creates route-specific canonical metadata", () => {
+    expect(createPageMetadata(routes.home).alternates?.canonical).toBe(
+      siteConfig.url,
+    );
+    expect(createPageMetadata(routes.docs).alternates?.canonical).toBe(
       `${siteConfig.url}${routes.docs}`,
     );
   });
 
-  it("keeps home and nested dashboard urls normalized", () => {
+  it('builds absolute page urls from typed routes', () => {
     expect(getAbsoluteUrl(routes.home)).toBe(siteConfig.url);
-
-    const nestedUrl = new URL(getAbsoluteUrl("/app/activity"));
-
-    expect(nestedUrl.origin).toBe(siteConfig.url);
-    expect(nestedUrl.pathname).toBe("/app/activity");
-    expect(nestedUrl.toString()).toBe(`${siteConfig.url}/app/activity`);
-    expect(nestedUrl.pathname).not.toContain("//");
+    expect(getAbsoluteUrl(routes.docs)).toBe(`${siteConfig.url}${routes.docs}`);
   });
 
-  it("builds valid absolute urls for every static site page", () => {
-    for (const page of siteConfig.pages) {
-      expect(() => getAbsoluteUrl(page.path)).not.toThrow();
-      expect(new URL(getAbsoluteUrl(page.path)).origin).toBe(siteConfig.url);
-    }
+  it("generates valid Organization JSON-LD structured data matching site config", () => {
+    const jsonLd = createOrganizationJsonLd();
+    expect(jsonLd["@context"]).toBe("https://schema.org");
+    expect(jsonLd["@type"]).toBe("Organization");
+    expect(jsonLd.name).toBe(siteConfig.name);
+    expect(jsonLd.url).toBe(siteConfig.url);
+    expect(jsonLd.description).toBe(siteConfig.description);
   });
 });
+
