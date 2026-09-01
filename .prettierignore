@@ -1,8 +1,5 @@
- node_modules
- .next
- out
- build
- dist
- coverage
- package-lock.json
- *.md
+node_modules
+.next
+coverage
+dist
+*.min.js
