@@ -44,30 +44,18 @@ describe('SectionLayout', () => {
     expect(screen.getByText('/app/agents/[id]')).toBeInTheDocument();
   });
 
-  it("renders the shell and children when no section routes are configured", () => {
-    render(
+  it("passes automated accessibility audit with zero axe violations", async () => {
+    const { container } = render(
       <SectionLayout
-        title="Empty section"
-        description="Navigation will be configured later."
-        routes={[]}
+        title="Public marketing"
+        description="Public-facing route group."
+        routes={getSectionRoutes("marketing")}
       >
-        <div>Empty route content</div>
+        <div>Section content</div>
       </SectionLayout>,
     );
 
-    expect(
-      screen.getByRole("link", { name: /lily protocol/i }),
-    ).toHaveAttribute("href", "/");
-    expect(screen.getByText("Empty section")).toBeInTheDocument();
-    expect(
-      screen.getByText("Navigation will be configured later."),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Empty route content")).toBeInTheDocument();
-
-    const sectionNav = screen.getByRole("navigation", {
-      name: /section routes/i,
-    });
-
-    expect(within(sectionNav).queryAllByRole("listitem")).toHaveLength(0);
+    await checkA11y(container);
   });
 });
+
