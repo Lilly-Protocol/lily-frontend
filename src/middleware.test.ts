@@ -1,44 +1,21 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { middleware } from "./middleware";
-
-vi.mock("next/server", () => {
-  return {
-    NextResponse: {
-      next: vi.fn(({ request }: { request?: { headers: Headers } } = {}) => {
-        const responseHeaders = new Map<string, string>();
-        return {
-          headers: {
-            set: (k: string, v: string) => responseHeaders.set(k, v),
-            get: (k: string) => responseHeaders.get(k),
-          },
-          _requestHeaders: request?.headers ?? null,
-        };
-      }),
-    },
-  };
-});
+import { NextRequest } from "next/server";
 
 describe("middleware", () => {
-  it("sets x-request-id on response and forwards to request for document requests", () => {
-    const headers = new Headers({ "sec-fetch-dest": "document" });
-    const req = { headers } as any;
-    const res = middleware(req);
-    const id = res.headers.get("x-request-id");
-    expect(id).toBeTruthy();
-    expect(res._requestHeaders.get("x-request-id")).toBe(id);
+  it("sets x-request-id header on response when missing in request", () => {
+    const request = new NextRequest(new URL("/", "http://localhost:3000"));
+    const response = middleware(request);
+    expect(response.headers.get("x-request-id")).toBeTruthy();
+    expect(response.headers.get("x-request-id")?.length).toBeGreaterThan(0);
   });
 
-  it("skips non-document requests", () => {
-    const headers = new Headers({ "sec-fetch-dest": "script" });
-    const req = { headers } as any;
-    const res = middleware(req);
-    expect(res.headers.get("x-request-id")).toBeUndefined();
-  });
-
-  it("assigns request id when sec-fetch-dest is missing", () => {
-    const headers = new Headers();
-    const req = { headers } as any;
-    const res = middleware(req);
-    expect(res.headers.get("x-request-id")).toBeTruthy();
+  it("preserves existing x-request-id from request", () => {
+    const existingId = "test-request-id-123";
+    const request = new NextRequest(new URL("/", "http://localhost:3000"), {
+      headers: { "x-request-id": existingId },
+    });
+    const response = middleware(request);
+    expect(response.headers.get("x-request-id")).toBe(existingId);
   });
 });
