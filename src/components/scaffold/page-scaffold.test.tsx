@@ -56,3 +56,4 @@ describe('PageScaffold', () => {
     expect(screen.queryByText(route.path)).not.toBeInTheDocument();
   });
 });
+

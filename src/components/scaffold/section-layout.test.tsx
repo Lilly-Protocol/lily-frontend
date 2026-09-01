@@ -16,9 +16,11 @@ describe('SectionLayout', () => {
       </SectionLayout>,
     );
 
-    expect(
-      screen.getByRole("link", { name: /lily protocol/i }),
-    ).toHaveAttribute("href", "/");
+    // Both SiteHeader and SiteFooter render a "Lily Protocol" brand link;
+    // assert at least the first one (header) points home.
+    const brandLinks = screen.getAllByRole("link", { name: /lily protocol/i });
+    expect(brandLinks.length).toBeGreaterThanOrEqual(1);
+    expect(brandLinks[0]).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: /docs/i })).toHaveAttribute(
       "href",
       "/docs",
@@ -43,4 +45,19 @@ describe('SectionLayout', () => {
 
     expect(screen.getByText('/app/agents/[id]')).toBeInTheDocument();
   });
+
+  it("passes automated accessibility audit with zero axe violations", async () => {
+    const { container } = render(
+      <SectionLayout
+        title="Public marketing"
+        description="Public-facing route group."
+        routes={getSectionRoutes("marketing")}
+      >
+        <div>Section content</div>
+      </SectionLayout>,
+    );
+
+    await checkA11y(container);
+  });
 });
+

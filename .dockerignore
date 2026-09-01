@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+.github
+coverage
+.turbo
+*.md
+.env*
+.prettierignore
+.prettierrc
+eslint.config.mjs
+vitest.config.ts
+tsconfig.json

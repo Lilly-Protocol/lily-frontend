@@ -29,7 +29,7 @@ Contributor-ready frontend foundation for Lily Protocol. This repository is inte
 
 ## Current scope
 
-- Stabilized Next.js foundation
+- Stabilized Next.js foundation with strict security headers (`Referrer-Policy`, `Permissions-Policy`, `X-Content-Type-Options`, `X-Frame-Options`)
 - Strict TypeScript, linting, tests, and CI
 - Contributor workflow and GitHub templates
 - Shared layout scaffolds for marketing, auth, support, and dashboard surfaces
@@ -91,9 +91,12 @@ npm run typecheck
 npm run test:run
 npm run build
 npm run check
+npm run format
+npm run clean
 ```
 
 `npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
+`npm run format` applies Prettier to supported repository files. `npm run clean` removes the generated `.next`, `coverage`, and `tsconfig.tsbuildinfo` artifacts.
 
 ## Motion tokens
 
@@ -111,10 +114,14 @@ See [ADR-0001: Route Scaffold Architecture](docs/adr/0001-route-scaffold-archite
 src/
   app/                  App Router routes, route groups, and layouts
   components/scaffold/  Shared route-shell and layout primitives
+  components/ui/        Reusable UI primitives (timeline, etc.)
   config/               Site metadata and route registry
   features/scaffold/    Generic scaffold page helpers
+  instrumentation.ts    Server-side error observability and telemetry hook
   test/                 Shared test setup
   types/                Shared TypeScript types
+docs/
+  adr/                  Architecture Decision Records (see ADR 0001: Route-Scaffold Architecture)
 .github/
   workflows/            CI automation
   ISSUE_TEMPLATE/       GitHub issue templates
@@ -141,6 +148,10 @@ Each route is scaffolded with:
 - intended screen purpose
 - a note that implementation should follow approved Figma work
 - natural issue slices contributors can pick up
+
+## Empty state pattern
+
+Use `EmptyState` from `src/components/ui/empty-state.tsx` for planned list surfaces such as `/app/wallets`, `/app/agents`, `/app/activity`, `/blog`, and `/careers`. Pass a decorative icon slot, a route-specific title, a concise description, and an optional CTA link when there is a clear next action.
 
 ## Contributor workflow
 
