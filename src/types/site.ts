@@ -27,7 +27,7 @@ export type StaticSiteRoute =
   | "/app/developers"
   | "/app/settings";
 
-export type DynamicSiteRoute = "/app/agents/[id]";
+export type DynamicSiteRoute = '/app/agents/[id]';
 
 export type SiteRoute = StaticSiteRoute | DynamicSiteRoute;
 
@@ -40,11 +40,13 @@ export type RouteScaffold = {
   readonly figmaScope: string;
   readonly implementationAreas: readonly string[];
   readonly includeInSitemap?: boolean;
+  readonly updatedAt?: string;
 };
 
 export type SitePage = {
   readonly path: StaticSiteRoute;
   readonly priority: number;
+  readonly updatedAt?: string;
 };
 
 export type SectionDefinition = {

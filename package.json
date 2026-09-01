@@ -7,10 +7,13 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "test:e2e": "playwright test",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run --coverage",
@@ -33,11 +36,14 @@
     "@types/react-dom": "^19",
     "@vercel/og": "^1.0.2",
     "@vitest/coverage-v8": "^4.0.8",
+    "clsx": "^2.1.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
     "jsdom": "^26.1.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.0.8"
+    "vitest": "^4.1.11"
   }
 }

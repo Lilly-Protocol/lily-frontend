@@ -1,15 +1,14 @@
-name: CI
+ name: CI
 
-on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
-      - master
+ on:
+   push:
+     branches: [main]
+   pull_request:
+     branches: [main]
 
-permissions:
-  contents: read
+ concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+   cancel-in-progress: true
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -52,18 +51,24 @@ jobs:
     timeout-minutes: 15
     env:
       CI: true
+      NEXT_PUBLIC_SITE_URL: https://lilyprotocol.dev
+      NEXT_PUBLIC_API_BASE_URL: https://api.lilyprotocol.dev
     strategy:
       fail-fast: false
       matrix:
         check:
           - name: Lint
             command: npm run lint
+          - name: Format
+            command: npm run format
           - name: Typecheck
             command: npm run typecheck
           - name: Test
             command: npm run test:run
           - name: Build
             command: npm run build
+          - name: E2E
+            command: npx playwright test
 
     steps:
       - name: Checkout
@@ -107,3 +112,25 @@ jobs:
         with:
           name: coverage-report
           path: coverage
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
