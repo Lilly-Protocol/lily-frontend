@@ -101,7 +101,8 @@ Each route is scaffolded with:
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage, and PR guidance.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage, and PR guidance. Please review our [Code of Conduct](./CODE_OF_CONDUCT.md) before participating.
+
 
 ## Contributor-ready focus
 

@@ -73,3 +73,8 @@ npm run check
 ## Reporting issues
 
 Use the GitHub issue templates for bugs, features, and contributor-scoped tasks. Reproduction steps, expected behavior, acceptance criteria, and screenshots help us move faster.
+
+## Code of Conduct
+
+Please review and adhere to our [Code of Conduct](./CODE_OF_CONDUCT.md) in all project spaces and discussions.
+
