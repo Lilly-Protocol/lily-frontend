@@ -1,6 +1,10 @@
-# Contributing to Lily Frontend
+# Contributing to Lily Protocol Frontend
 
-Thanks for helping build Lily Protocol.
+## Adding a New Route
+
+## Code of Conduct
+
+Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
 
 ## Local setup
 
@@ -8,6 +12,9 @@ Thanks for helping build Lily Protocol.
 - Install dependencies with `npm install`.
 - Run `npm run dev` for local work.
 - Run `npm run check` before opening a pull request.
+- Use an editor with native EditorConfig support or install its EditorConfig
+  extension so indentation, UTF-8 encoding, LF endings, and final newlines match
+  the repository defaults.
 
 ## Project shape
 
@@ -37,30 +44,48 @@ The repository includes a root `.editorconfig` so editors use the same formattin
 Run these commands before opening a pull request:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run test:run
-npm run build
-npm run check
+node scripts/add-route.mjs
 ```
 
-`npm run check` is the fastest way to mirror CI end-to-end.
+The script will:
+1. Prompt for route ID, title, path, section, and purpose
+2. Generate the page file content using `createScaffoldPage` and `createScaffoldMetadata`
+3. Print the registry entry to add to `src/config/routes.ts`
+4. Print the type union update needed for `src/types/site.ts`
+5. Optionally write the page file to the correct directory
+
+CI also runs `npm audit --omit=dev --audit-level=high` after installing from `package-lock.json`. The audit job fails only on high-severity advisories in production dependencies; dev-only advisories are excluded via `--omit=dev`.
+
+### Dependency audit triage
+
+When the dependency audit job fails locally or in CI:
+
+1. Reproduce with `npm ci` then `npm audit --omit=dev --audit-level=high` so results match CI (do not use `npm install`, which can drift from the lockfile).
+2. Identify whether each advisory affects a direct dependency or a transitive one (`npm audit` lists the dependency chain).
+3. Prefer upgrading to a patched release within the project's supported range. Use Dependabot PRs when they exist, or bump `package.json` and regenerate the lockfile with `npm install <package>@<version>`.
+4. If no fix is available yet, assess exploitability in this app (server vs client, dev-only tooling vs production runtime). Document the risk and link the advisory in the PR; do not merge with a failing audit unless maintainers explicitly accept the exception.
+5. Do not use `npm audit fix --force` without review—it can jump to major versions outside the stated dependency range.
 
 ## Pull requests
 
-- Explain the problem being solved, not only the code that changed.
-- Link the related issue and list the main changes clearly.
-- Include screenshots or recordings for UI changes.
-- Call out risks, tradeoffs, and follow-up work intentionally left out.
-- Make sure the PR template is filled out completely so reviewers have enough context.
+1. Add the printed registry entry to `routeScaffolds` in `src/config/routes.ts`
+2. Update `StaticSiteRoute` in `src/types/site.ts` if adding a static route
+3. Update the route count assertion in `src/config/routes.test.ts` if applicable
+4. Implement the real UI from Figma in the generated page file
 
-## Engineering expectations
+## Development Setup
 
-- Prefer server components unless client interactivity is required.
-- Keep business logic and presentation modular so future contributors can extend issue-sized features without rewriting route files.
-- Add or update tests when you change reusable behavior, rendering logic, or project configuration.
-- Use typed imports, consistent naming, and small focused components over large catch-all files.
-- If a route is still scaffolded, preserve the scaffold clarity while implementing only the issue scope you were assigned.
+```bash
+npm install
+npm run dev
+```
+
+### Async status announcements
+
+- Pass loading, empty, and completion messages through the `PageScaffold`
+  `statusMessage` prop so assistive technology receives polite announcements.
+- Do not render an empty live region before a page has a meaningful status to
+  announce.
 
 ## Issues and contributor tasks
 
@@ -77,3 +102,8 @@ npm run check
 ## Reporting issues
 
 Use the GitHub issue templates for bugs, features, and contributor-scoped tasks. Reproduction steps, expected behavior, acceptance criteria, and screenshots help us move faster.
+
+## Code of Conduct
+
+Please review and adhere to our [Code of Conduct](./CODE_OF_CONDUCT.md) in all project spaces and discussions.
+
