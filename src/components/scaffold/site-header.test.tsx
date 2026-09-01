@@ -1,72 +1,47 @@
- import { render, screen, fireEvent, within } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen } from "@testing-library/react";
+
+import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteHeader } from "./site-header";
 
-vi.mock("next/navigation", () => ({
-  usePathname: vi.fn(() => "/"),
-}));
+describe("SiteHeader", () => {
+  it("renders site branding and links to home", () => {
+    render(<SiteHeader />);
 
-describe("SiteHeader Mobile Navigation (Issue #118)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
   });
 
-  it("renders desktop nav links by default", () => {
+  it("renders global navigation links matching the route registry", () => {
     render(<SiteHeader />);
-    expect(screen.getByRole("link", { name: /docs/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /sign in/i })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /dashboard/i })).toBeInTheDocument();
+
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
+    expect(docsLink).toHaveAttribute("href", routes.docs);
+
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
   });
 
-  it("renders a hamburger button for mobile", () => {
+  it("contains no dead or unregistered links", () => {
     render(<SiteHeader />);
-    const button = screen.getByRole("button", { name: /open menu/i });
-    expect(button).toBeInTheDocument();
-    expect(button).toHaveAttribute("aria-expanded", "false");
-    expect(button).toHaveAttribute("aria-controls", "mobile-nav-menu");
-  });
 
-  it("toggles mobile menu visibility on button click", () => {
-    render(<SiteHeader />);
-    const button = screen.getByRole("button", { name: /open menu/i });
-    
-    // Initially closed - mobile menu should not be visible
-    expect(screen.queryByLabelText("Mobile")).not.toBeInTheDocument();
-    
-    // Open menu
-    fireEvent.click(button);
-    expect(button).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByLabelText("Mobile")).toBeInTheDocument();
-    
-    // Close menu
-    fireEvent.click(button);
-    expect(button).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByLabelText("Mobile")).not.toBeInTheDocument();
-  });
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
 
-  it("closes mobile menu on Escape key press and returns focus to button", () => {
-    render(<SiteHeader />);
-    const button = screen.getByRole("button", { name: /open menu/i });
-    
-    fireEvent.click(button);
-    expect(screen.getByLabelText("Mobile")).toBeInTheDocument();
-    
-    fireEvent.keyDown(document, { key: "Escape" });
-    
-    expect(screen.queryByLabelText("Mobile")).not.toBeInTheDocument();
-    expect(button).toHaveFocus();
-  });
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
 
-  it("closes mobile menu when a link is clicked", () => {
-    render(<SiteHeader />);
-    const button = screen.getByRole("button", { name: /open menu/i });
-    
-    fireEvent.click(button);
-   const mobileMenu = screen.getByLabelText("Mobile");
-   const docsLink = within(mobileMenu).getByRole("link", { name: /docs/i });
-    
-    fireEvent.click(docsLink);
-    expect(screen.queryByLabelText("Mobile")).not.toBeInTheDocument();
+    for (const link of links) {
+      const href = link.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
+    }
   });
 });

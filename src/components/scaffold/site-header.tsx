@@ -2,40 +2,21 @@
 
 import type { Route } from "next";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
-import { routes, siteConfig } from "@/config/site";
+import { routes, siteConfig } from '@/config/site';
 
 export function SiteHeader() {
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsOpen(false);
-        buttonRef.current?.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+  const pathname = usePathname();
 
   return (
-    <header className="border-b border-[var(--color-line)] bg-white/90">
+    <header className="border-b border-[var(--color-line)] bg-[var(--color-header-bg)]">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div>
-          <Link
-            className="text-lg font-semibold tracking-tight"
-            href={routes.home as Route}
-          >
+          <Link className="text-lg font-semibold tracking-tight" href={routes.home as Route}>
             {siteConfig.name}
           </Link>
-          <p className="mt-1 text-sm text-[var(--color-muted)]">
+          <p className="mt-1 text-sm text-(--color-muted)">
             Contributor-ready scaffold
           </p>
         </div>
@@ -60,20 +41,23 @@ export function SiteHeader() {
         {/* Desktop nav */}
         <nav aria-label="Global" className="hidden flex-wrap gap-2 text-sm md:flex">
           <Link
-            className="rounded-full border border-[var(--color-line)] px-4 py-2 hover:border-[var(--color-accent)]"
+            className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.docs as Route}
+            aria-current={pathname === routes.docs ? "page" : undefined}
           >
             Docs
           </Link>
           <Link
-            className="rounded-full border border-[var(--color-line)] px-4 py-2 hover:border-[var(--color-accent)]"
+            className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.signin as Route}
+            aria-current={pathname === routes.signin ? "page" : undefined}
           >
             Sign in
           </Link>
           <Link
-            className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-white hover:opacity-90"
+            className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-[var(--color-panel-contrast)] hover:opacity-90"
             href={routes.dashboard as Route}
+            aria-current={pathname === routes.dashboard ? "page" : undefined}
           >
             Dashboard
           </Link>
