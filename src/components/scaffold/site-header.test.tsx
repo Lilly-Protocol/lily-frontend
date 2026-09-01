@@ -1,35 +1,47 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 
-import { routes } from "@/config/site";
+import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
+
 import { SiteHeader } from "./site-header";
 
 describe("SiteHeader", () => {
-  it("renders navigation links that mirror the site routes registry", () => {
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
 
-    // Assert that each route surfaced in the header matches the registry
-    const docsLink = screen.getByRole("link", { name: /docs/i });
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
+  });
+
+  it("renders global navigation links matching the route registry", () => {
+    render(<SiteHeader />);
+
+    const docsLink = screen.getByRole("link", { name: /^docs$/i });
+    expect(docsLink).toBeInTheDocument();
     expect(docsLink).toHaveAttribute("href", routes.docs);
 
-    const signInLink = screen.getByRole("link", { name: /sign in/i });
-    expect(signInLink).toHaveAttribute("href", routes.signin);
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
 
-    const dashboardLink = screen.getByRole("link", { name: /dashboard/i });
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
     expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
   });
 
-  it("does not render dead or unregistered navigation links", () => {
+  it("contains no dead or unregistered links", () => {
     render(<SiteHeader />);
 
-    const navLinks = screen.getAllByRole("link");
-    const registeredRoutes = new Set(Object.values(routes));
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
 
-    for (const link of navLinks) {
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
+
+    for (const link of links) {
       const href = link.getAttribute("href");
-      // Skip the home/logo link which is allowed to point to root
-      if (href === routes.home) continue;
-      expect(registeredRoutes).toContain(href);
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
     }
   });
 });
