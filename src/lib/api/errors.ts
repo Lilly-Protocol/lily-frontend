@@ -1,44 +1,48 @@
-export interface LilyApiErrorOptions {
-  status: number;
-  code: string;
-  message: string;
-  details?: unknown;
+export interface LilyApiErrorDetails {
+  field?: string;
+  reason?: string;
 }
 
-/** A normalized error returned by Lily API requests. */
 export class LilyApiError extends Error {
-  readonly status: number;
-  readonly code: string;
-  readonly details?: unknown;
+  public readonly status: number;
+  public readonly code: string;
+  public readonly details?: LilyApiErrorDetails[];
 
-  constructor({ status, code, message, details }: LilyApiErrorOptions) {
+  constructor(
+    message: string,
+    status: number,
+    code: string,
+    details?: LilyApiErrorDetails[],
+  ) {
     super(message);
     this.name = "LilyApiError";
     this.status = status;
     this.code = code;
-
-    if (details !== undefined) {
-      this.details = details;
-    }
+    this.details = details;
   }
 }
 
-/** Returns true when a value has the normalized Lily API error shape. */
-export function isLilyApiError(value: unknown): value is LilyApiError {
-  if (value instanceof LilyApiError) {
-    return true;
+export function isLilyApiError(error: unknown): error is LilyApiError {
+  return error instanceof LilyApiError;
+}
+
+export async function handleApiResponse(response: Response): Promise<void> {
+  if (response.ok) return;
+
+  let code = "UNKNOWN_ERROR";
+  let message = response.statusText || "An unexpected error occurred";
+  let details: LilyApiErrorDetails[] | undefined;
+
+  try {
+    const body = await response.json();
+    if (typeof body === "object" && body !== null) {
+      if (typeof body.code === "string") code = body.code;
+      if (typeof body.message === "string") message = body.message;
+      if (Array.isArray(body.details)) details = body.details;
+    }
+  } catch {
+    // Non-JSON error response; use defaults from status text
   }
 
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-
-  const candidate = value as Record<string, unknown>;
-
-  return (
-    candidate.name === "LilyApiError" &&
-    typeof candidate.status === "number" &&
-    typeof candidate.code === "string" &&
-    typeof candidate.message === "string"
-  );
+  throw new LilyApiError(message, response.status, code, details);
 }
