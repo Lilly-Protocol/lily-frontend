@@ -16,6 +16,9 @@ describe('site config', () => {
       default: siteConfig.name,
       template: `%s | ${siteConfig.name}`,
     });
+    expect(metadata.title).toEqual(
+      expect.objectContaining({ template: expect.stringContaining("%s") }),
+    );
     expect(metadata.metadataBase?.toString()).toBe(`${siteConfig.url}/`);
     expect(metadata.alternates?.canonical).toBe(siteConfig.url);
   });
