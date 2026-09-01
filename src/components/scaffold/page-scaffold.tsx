@@ -2,7 +2,7 @@ import type { RouteScaffold } from "@/types/site";
 import { ImplementationAreasWrapper } from "./implementation-areas-wrapper";
 
 type PageScaffoldProps = {
-  readonly route: RouteScaffold;
+      <div className="flex flex-wrap items-start justify-between gap-4 min-w-0">
   readonly dynamicLabel?: string;
   readonly statusMessage?: string;
 };
@@ -73,3 +73,4 @@ export function PageScaffold({
     </main>
   );
 }
+

@@ -91,9 +91,12 @@ npm run typecheck
 npm run test:run
 npm run build
 npm run check
+npm run format
+npm run clean
 ```
 
 `npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
+`npm run format` applies Prettier to supported repository files. `npm run clean` removes the generated `.next`, `coverage`, and `tsconfig.tsbuildinfo` artifacts.
 
 ## Motion tokens
 
@@ -113,8 +116,11 @@ src/
   components/scaffold/  Shared route-shell and layout primitives
   config/               Site metadata and route registry
   features/scaffold/    Generic scaffold page helpers
+  instrumentation.ts    Server-side error observability and telemetry hook
   test/                 Shared test setup
   types/                Shared TypeScript types
+docs/
+  adr/                  Architecture Decision Records (see ADR 0001: Route-Scaffold Architecture)
 .github/
   workflows/            CI automation
   ISSUE_TEMPLATE/       GitHub issue templates
