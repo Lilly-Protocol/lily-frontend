@@ -1,7 +1,9 @@
-import { SectionLayout } from "@/components/scaffold/section-layout";
-import { getSectionRoutes, sectionDefinitions } from "@/config/routes";
+import { SectionLayout } from '@/components/scaffold/section-layout';
+import { getSectionRoutes, sectionDefinitions } from '@/config/routes';
 
-const authSection = sectionDefinitions.find((section) => section.key === "auth");
+const authSection = sectionDefinitions.find(
+  (section) => section.key === "auth",
+);
 
 export default function AuthLayout({
   children,
@@ -9,14 +11,14 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   if (!authSection) {
-    throw new Error("Missing auth section definition.");
+    throw new Error('Missing auth section definition.');
   }
 
   return (
     <SectionLayout
       title={authSection.label}
       description={authSection.description}
-      routes={getSectionRoutes("auth")}
+      routes={getSectionRoutes('auth')}
     >
       {children}
     </SectionLayout>
