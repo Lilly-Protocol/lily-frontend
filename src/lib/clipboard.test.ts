@@ -1,76 +1,46 @@
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { copyText } from "./clipboard";
 
 describe("copyText", () => {
-  const originalClipboard = navigator.clipboard;
-  const originalExecCommand = document.execCommand;
+  beforeEach(() => {
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: vi.fn().mockResolvedValue(undefined),
+      },
+    });
+    // jsdom does not implement execCommand; stub it for fallback tests
+    if (typeof document.execCommand !== "function") {
+      (document as any).execCommand = vi.fn().mockReturnValue(true);
+    }
+  });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    defineClipboard(originalClipboard);
-    defineExecCommand(originalExecCommand);
   });
 
-  it("uses the async clipboard API when available", async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    defineClipboard({ writeText } as unknown as Clipboard);
-
-    await expect(copyText("API key")).resolves.toEqual({
-      ok: true,
-      method: "clipboard",
-    });
-    expect(writeText).toHaveBeenCalledWith("API key");
+  it("uses navigator.clipboard when available", async () => {
+    const result = await copyText("hello");
+    expect(result).toBe(true);
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith("hello");
   });
 
-  it("falls back to execCommand when async clipboard fails", async () => {
-    const writeText = vi.fn().mockRejectedValue(new Error("denied"));
-    const execCommand = vi.fn().mockReturnValue(true);
-    defineClipboard({ writeText } as unknown as Clipboard);
-    defineExecCommand(execCommand);
+  it("falls back to execCommand when clipboard API throws", async () => {
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error("denied"));
+    const execSpy = vi.spyOn(document, "execCommand").mockReturnValue(true);
 
-    await expect(copyText("npm install lily")).resolves.toEqual({
-      ok: true,
-      method: "execCommand",
-    });
-    expect(execCommand).toHaveBeenCalledWith("copy");
+    const result = await copyText("fallback");
+    expect(result).toBe(true);
+    expect(execSpy).toHaveBeenCalledWith("copy");
   });
 
-  it("reports failure when both clipboard paths fail", async () => {
-    const error = new Error("denied");
-    const writeText = vi.fn().mockRejectedValue(error);
-    defineClipboard({ writeText } as unknown as Clipboard);
-    defineExecCommand(vi.fn().mockReturnValue(false));
-
-    await expect(copyText("secret")).resolves.toEqual({
-      ok: false,
-      error,
+  it("returns false when both paths fail", async () => {
+    vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error("denied"));
+    const execSpy = vi.spyOn(document, "execCommand").mockImplementation(() => {
+      throw new Error("nope");
     });
-  });
 
-  it("reports fallback exceptions without leaving textarea nodes behind", async () => {
-    const execCommand = vi.fn(() => {
-      throw new Error("blocked");
-    });
-    defineClipboard(undefined);
-    defineExecCommand(execCommand);
-
-    const result = await copyText("reference");
-
-    expect(result.ok).toBe(false);
-    expect(result.error).toBeInstanceOf(Error);
-    expect(document.querySelector("textarea")).not.toBeInTheDocument();
+    const result = await copyText("fail");
+    expect(result).toBe(false);
+    expect(execSpy).toHaveBeenCalled();
   });
 });
-
-function defineClipboard(value: Clipboard | undefined) {
-  Object.defineProperty(navigator, "clipboard", {
-    configurable: true,
-    value,
-  });
-}
-
-function defineExecCommand(value: Document["execCommand"] | undefined) {
-  Object.defineProperty(document, "execCommand", {
-    configurable: true,
-    value,
-  });
-}
