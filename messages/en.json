@@ -1,0 +1,10 @@
+{
+  "SiteHeader": {
+    "home": "Home",
+    "docs": "Docs",
+    "contribute": "Contribute"
+  },
+  "Eyebrow": {
+    "platform": "Platform"
+  }
+}
