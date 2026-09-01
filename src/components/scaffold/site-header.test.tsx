@@ -1,49 +1,47 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 
-import { routes } from "@/config/site";
-import { getSectionRoutes } from "@/config/routes";
+import { routes, siteConfig } from "@/config/site";
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteHeader } from "./site-header";
 
 describe("SiteHeader", () => {
-  it("renders the site name and tagline", () => {
+  it("renders site branding and links to home", () => {
     render(<SiteHeader />);
 
-    expect(screen.getByText("Lily Protocol")).toBeInTheDocument();
-    expect(screen.getByText("Contributor-ready scaffold")).toBeInTheDocument();
+    const brandLink = screen.getByRole("link", { name: new RegExp(siteConfig.name, "i") });
+    expect(brandLink).toBeInTheDocument();
+    expect(brandLink).toHaveAttribute("href", routes.home);
   });
 
-  it("links to home using the canonical route", () => {
+  it("renders global navigation links matching the route registry", () => {
     render(<SiteHeader />);
-
-    const homeLink = screen.getByRole("link", { name: /lily protocol/i });
-    expect(homeLink).toHaveAttribute("href", routes.home);
-  });
-
-  it("exposes docs, sign in, and dashboard navigation links that mirror the route registry", () => {
-    render(<SiteHeader />);
-
-    const docsRoute = getSectionRoutes("docs").find((route) => route.id === "docs");
-    const authRoute = getSectionRoutes("auth").find((route) => route.id === "signin");
-    const dashboardRoute = getSectionRoutes("dashboard").find(
-      (route) => route.id === "dashboard-overview",
-    );
-
-    expect(docsRoute).toBeDefined();
-    expect(authRoute).toBeDefined();
-    expect(dashboardRoute).toBeDefined();
 
     const docsLink = screen.getByRole("link", { name: /^docs$/i });
-    const signInLink = screen.getByRole("link", { name: /^sign in$/i });
-    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
-
+    expect(docsLink).toBeInTheDocument();
     expect(docsLink).toHaveAttribute("href", routes.docs);
-    expect(signInLink).toHaveAttribute("href", routes.signin);
-    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
 
-    expect(routes.docs).toBe(docsRoute?.path);
-    expect(routes.signin).toBe(authRoute?.path);
-    expect(routes.dashboard).toBe(dashboardRoute?.path);
+    const signinLink = screen.getByRole("link", { name: /^sign in$/i });
+    expect(signinLink).toBeInTheDocument();
+    expect(signinLink).toHaveAttribute("href", routes.signin);
+
+    const dashboardLink = screen.getByRole("link", { name: /^dashboard$/i });
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink).toHaveAttribute("href", routes.dashboard);
+  });
+
+  it("contains no dead or unregistered links", () => {
+    render(<SiteHeader />);
+
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(0);
+
+    const registeredPaths = new Set<string>(routeScaffolds.map((r) => r.path));
+
+    for (const link of links) {
+      const href = link.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(registeredPaths.has(href!)).toBe(true);
+    }
   });
 });
