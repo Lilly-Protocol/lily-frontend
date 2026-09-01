@@ -1,3 +1,3 @@
-import { createScaffoldPage } from "@/features/scaffold/page-factory";
+import { createScaffoldPage } from '@/features/scaffold/page-factory';
 
-export default createScaffoldPage("dashboard-overview");
+export default createScaffoldPage('dashboard-overview');
