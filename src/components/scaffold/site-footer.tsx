@@ -1,79 +1,69 @@
 import type { Route } from "next";
 import Link from "next/link";
 
-import { routeScaffolds } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { routes, siteConfig } from "@/config/site";
+import type { RouteScaffold } from "@/types/site";
 
-const FOOTER_SECTION_KEYS = ["legal", "docs"] as const;
-
-type FooterSectionKey = (typeof FOOTER_SECTION_KEYS)[number];
-
-const SECTION_LABELS: Record<FooterSectionKey, string> = {
-  legal: "Legal",
-  docs: "Support",
+type SiteFooterProps = {
+  readonly legalRoutes: readonly RouteScaffold[];
+  readonly supportRoutes: readonly RouteScaffold[];
 };
 
-export function SiteFooter() {
-  const footerGroups = FOOTER_SECTION_KEYS.map((key) => ({
-    key,
-    label: SECTION_LABELS[key],
-    routes: routeScaffolds.filter(
-      (r) => r.section === key && !r.path.includes("["),
-    ),
-  }));
+export function SiteFooter({ legalRoutes, supportRoutes }: SiteFooterProps) {
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer
-      aria-label="Site footer"
-      className="border-t border-[var(--color-line)] bg-white/90"
-    >
-      <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
-          {/* Brand mark */}
-          <div className="flex-none">
+    <footer className="border-t border-[var(--color-line)] bg-white/90">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
             <Link
-              href={"/" as Route}
-              className="text-base font-semibold tracking-tight text-[var(--color-ink)]"
+              className="text-lg font-semibold tracking-tight"
+              href={routes.home as Route}
             >
               {siteConfig.name}
             </Link>
-            <p className="mt-2 max-w-xs text-sm leading-6 text-[var(--color-muted)]">
-              {siteConfig.tagline}
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              {siteConfig.description}
             </p>
           </div>
 
-          {/* Link groups */}
-          <nav
-            aria-label="Footer navigation"
-            className="flex flex-wrap gap-10"
-          >
-            {footerGroups.map((group) => (
-              <div key={group.key}>
-                <p className="eyebrow text-[var(--color-accent)]">
-                  {group.label}
-                </p>
-                <ul className="mt-4 space-y-3">
-                  {group.routes.map((route) => (
-                    <li key={route.id}>
-                      <Link
-                        href={route.path as Route}
-                        className="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
-                      >
-                        {route.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <nav aria-label="Legal">
+            <p className="eyebrow text-[var(--color-accent)]">Legal</p>
+            <ul className="mt-4 grid gap-2">
+              {legalRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
+                  >
+                    {route.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Support">
+            <p className="eyebrow text-[var(--color-accent)]">Support</p>
+            <ul className="mt-4 grid gap-2">
+              {supportRoutes.map((route) => (
+                <li key={route.id}>
+                  <Link
+                    className="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)]"
+                    href={route.path as Route}
+                  >
+                    {route.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </nav>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-10 border-t border-[var(--color-line)] pt-6">
+        <div className="border-t border-[var(--color-line)] pt-6">
           <p className="text-sm text-[var(--color-muted)]">
-            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights
-            reserved.
+            &copy; {currentYear} {siteConfig.name}. All rights reserved.
           </p>
         </div>
       </div>
