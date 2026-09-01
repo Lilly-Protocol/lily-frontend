@@ -1,5 +1,3 @@
-import { createScaffoldPage, createScaffoldMetadata } from "@/features/scaffold/page-factory";
+import { createScaffoldPage } from '@/features/scaffold/page-factory';
 
-export default createScaffoldPage("blog");
-
-export const metadata = createScaffoldMetadata("blog");
+export default createScaffoldPage('blog');

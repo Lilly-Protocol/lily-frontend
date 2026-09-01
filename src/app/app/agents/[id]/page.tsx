@@ -1,20 +1,15 @@
-import { PageScaffold } from "@/components/scaffold/page-scaffold";
-import { getRouteScaffold } from "@/config/routes";
-import { siteConfig } from "@/config/site";
-import type { Metadata } from "next";
+import { PageScaffold } from '@/components/scaffold/page-scaffold';
+import { getRouteScaffold } from '@/config/routes';
 
-export default async function AgentDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function AgentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
+  if (!id || !AGENT_ID_PATTERN.test(id)) {
+    notFound();
+  }
+
   return (
-    <PageScaffold
-      route={getRouteScaffold("agent-detail")}
-      dynamicLabel={`/app/agents/${id}`}
-    />
+    <PageScaffold route={getRouteScaffold('agent-detail')} dynamicLabel={`/app/agents/${id}`} />
   );
 }
 
