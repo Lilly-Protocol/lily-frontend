@@ -23,9 +23,10 @@ describe("SectionLayout", () => {
       "href",
       "/docs",
     );
-    expect(
-      screen.getByRole("link", { name: /landing page/i }),
-    ).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: /landing page/i })).toHaveAttribute(
+      "href",
+      "/",
+    );
     expect(screen.getByText("Section content")).toBeInTheDocument();
   });
 

@@ -1,44 +1,43 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
 
- vi.mock("next/link", () => ({
-   default: ({
-     href,
-     children,
-     ...props
-   }: {
-     href: string;
-     children: React.ReactNode;
-     [key: string]: unknown;
-   }) => (
-     <a href={href} {...props}>
-       {children}
-     </a>
-   ),
- }));
+import { routeScaffolds } from "@/config/routes";
 
 import { SiteFooter } from "./site-footer";
 
 describe("SiteFooter", () => {
-  it("renders legal and docs links from route registry", () => {
-    render(<SiteFooter />);
+  const legalRoutes = routeScaffolds.filter((route) => route.section === "legal");
+  const supportRoutes = routeScaffolds.filter(
+    (route) => route.section === "docs",
+  );
 
-    const terms = screen.getByRole("link", { name: /terms of service/i });
-    const privacy = screen.getByRole("link", { name: /privacy policy/i });
-    const cookies = screen.getByRole("link", { name: /cookie policy/i });
-    const docs = screen.getByRole("link", { name: /^documentation$/i });
-    const status = screen.getByRole("link", { name: /status page/i });
+  it("renders the brand mark linking home", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
 
-    expect(terms).toHaveAttribute("href", "/terms");
-    expect(privacy).toHaveAttribute("href", "/privacy");
-    expect(cookies).toHaveAttribute("href", "/cookies");
-    expect(docs).toHaveAttribute("href", "/docs");
-    expect(status).toHaveAttribute("href", "/status");
+    const brand = screen.getByRole("link", { name: /lily protocol/i });
+    expect(brand).toHaveAttribute("href", "/");
   });
 
-  it("renders copyright text with site name", () => {
-    render(<SiteFooter />);
-    expect(screen.getByText(/lily protocol/i)).toBeInTheDocument();
+  it("renders every legal route as a footer link", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
+
+    for (const route of legalRoutes) {
+      const link = screen.getByRole("link", { name: route.title });
+      expect(link).toHaveAttribute("href", route.path);
+    }
+  });
+
+  it("renders every support route as a footer link", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
+
+    for (const route of supportRoutes) {
+      const link = screen.getByRole("link", { name: route.title });
+      expect(link).toHaveAttribute("href", route.path);
+    }
+  });
+
+  it("displays a copyright line", () => {
+    render(<SiteFooter legalRoutes={legalRoutes} supportRoutes={supportRoutes} />);
+
     expect(screen.getByText(/all rights reserved/i)).toBeInTheDocument();
   });
 });
