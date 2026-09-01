@@ -36,6 +36,9 @@ export const siteConfig = {
 export function createSiteMetadata(): Metadata {
   return {
     metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical: siteConfig.url,
+    },
     title: {
       default: siteConfig.name,
       template: `%s | ${siteConfig.name}`,
@@ -65,3 +68,15 @@ export function getAbsoluteUrl(path: StaticSiteRoute): string {
 
   return new URL(path, siteConfig.url).toString();
 }
+
+export function createOrganizationJsonLd(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    keywords: siteConfig.keywords.join(", "),
+  };
+}
+

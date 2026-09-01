@@ -1,8 +1,12 @@
 import { SectionLayout } from "@/components/scaffold/section-layout";
 import { getSectionRoutes, sectionDefinitions } from "@/config/routes";
 
-const docsSection = sectionDefinitions.find((section) => section.key === "docs");
-const legalSection = sectionDefinitions.find((section) => section.key === "legal");
+const docsSection = sectionDefinitions.find(
+  (section) => section.key === "docs",
+);
+const legalSection = sectionDefinitions.find(
+  (section) => section.key === "legal",
+);
 
 const supportRoutes = [
   ...getSectionRoutes("docs"),

@@ -13,7 +13,9 @@ describe("PageScaffold", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("/")).toBeInTheDocument();
     expect(
-      screen.getByText(/contributors should implement the real experience from the approved figma design/i),
+      screen.getByText(
+        /contributors should implement the real experience from the approved figma design/i,
+      ),
     ).toBeInTheDocument();
   });
 });
