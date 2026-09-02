@@ -1,0 +1,23 @@
+name: PR Description Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate PR Description
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Run PR description check
+        uses: ./.github/actions/pr-description-check
+        with:
+          body: ${{ github.event.pull_request.body }}
+          mode: error
