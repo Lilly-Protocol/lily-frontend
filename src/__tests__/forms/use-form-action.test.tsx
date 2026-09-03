@@ -1,6 +1,7 @@
  import "@testing-library/jest-dom/vitest";
- import { render, screen, waitFor } from "@testing-library/react";
+ import { act, render, renderHook, screen, waitFor } from "@testing-library/react";
  import userEvent from "@testing-library/user-event";
+ import { startTransition } from "react";
  import { describe, expect, it, vi } from "vitest";
 
  import { useFormAction, type FormActionState } from "../../lib/forms/use-form-action";
@@ -13,16 +14,13 @@
  }
 
  function DemoForm({ action }: DemoProps) {
-   const { state, pending, submit, reset } = useFormAction<{ greeting: string }>(action);
+   const { state, pending, submit } = useFormAction<{ greeting: string }>(action);
 
    return (
      <form action={submit}>
        <input name="name" defaultValue="" />
        <button type="submit" disabled={pending}>
          {pending ? "Submitting..." : "Submit"}
-       </button>
-       <button type="button" onClick={reset}>
-         Reset
        </button>
        {state.formError && <p data-testid="form-error">{state.formError}</p>}
        {state.fieldErrors?.name && (
@@ -95,20 +93,34 @@
        data: null,
      }));
 
-     render(<DemoForm action={action} />);
-     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
+     const { result } = renderHook(() =>
+       useFormAction<{ greeting: string }>(action),
+     );
+
+     // Submit once to populate errors
+     await act(async () => {
+       startTransition(() => {
+         result.current.submit(new FormData());
+       });
+     });
 
      await waitFor(() => {
-       expect(screen.getByTestId("field-error")).toBeInTheDocument();
-       expect(screen.getByTestId("form-error")).toBeInTheDocument();
+       expect(result.current.state.fieldErrors).toEqual({
+         name: ["Name is required"],
+       });
+       expect(result.current.state.formError).toBe("Form failed");
      });
      expect(action).toHaveBeenCalledTimes(1);
 
-     await userEvent.click(screen.getByRole("button", { name: "Reset" }));
+     // Reset must clear state
+     act(() => {
+       result.current.reset();
+     });
 
-     await waitFor(() => {
-       expect(screen.queryByTestId("field-error")).not.toBeInTheDocument();
-       expect(screen.queryByTestId("form-error")).not.toBeInTheDocument();
+     expect(result.current.state).toEqual({
+       fieldErrors: null,
+       formError: null,
+       data: null,
      });
 
      // Calling reset must not invoke action again
