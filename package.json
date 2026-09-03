@@ -18,6 +18,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run --coverage",
+    "icons": "node scripts/generate-icons.mjs",
     "check": "npm run lint && npm run typecheck && npm run test:run && npm run build"
   },
   "dependencies": {
