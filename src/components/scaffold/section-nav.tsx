@@ -11,7 +11,7 @@ type SectionNavProps = {
   readonly ariaLabel?: string;
 };
 
-export function SectionNav({ routes }: SectionNavProps) {
+export function SectionNav({ routes, ariaLabel = "Section routes" }: SectionNavProps) {
   const pathname = usePathname();
 
   return (
@@ -37,9 +37,9 @@ export function SectionNav({ routes }: SectionNavProps) {
                   {route.path}
                 </span>
               </Link>
-            </li>
-          );
-        })}
+            )}
+          </li>
+        ))}
       </ul>
     </nav>
   );
