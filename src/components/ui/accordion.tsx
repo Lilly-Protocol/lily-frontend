@@ -51,7 +51,7 @@ export function AccordionItem({ title, children, defaultOpen = false }: Accordio
   );
 
   return (
-    <div className="border-b border-[var(--color-border)]">
+    <div className="border-b border-[var(--color-line)]">
       <h3>
         <button
           id={headerId}
@@ -99,7 +99,7 @@ export interface AccordionProps {
 
 export function Accordion({ children, className = "" }: AccordionProps) {
   return (
-    <div className={`divide-y divide-[var(--color-border)] ${className}`}>
+    <div className={`divide-y divide-[var(--color-line)] ${className}`}>
       {children}
     </div>
   );
