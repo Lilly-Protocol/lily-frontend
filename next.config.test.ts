@@ -1,16 +1,16 @@
-import nextConfig, { legacyRedirects } from "./next.config";
+import nextConfig, { legacyRedirects } from './next.config';
 
-describe("Next.js redirects", () => {
-  it("permanently redirects known legacy routes", async () => {
+describe('Next.js redirects', () => {
+  it('permanently redirects known legacy routes', async () => {
     await expect(nextConfig.redirects?.()).resolves.toEqual([
       {
-        source: "/dash",
-        destination: "/app",
+        source: '/dash',
+        destination: '/app',
         permanent: true,
       },
       {
-        source: "/sign-up",
-        destination: "/signup",
+        source: '/sign-up',
+        destination: '/signup',
         permanent: true,
       },
     ]);
