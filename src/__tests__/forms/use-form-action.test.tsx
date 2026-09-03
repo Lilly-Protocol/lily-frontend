@@ -13,13 +13,16 @@
  }
 
  function DemoForm({ action }: DemoProps) {
-   const { state, pending, submit } = useFormAction<{ greeting: string }>(action);
+   const { state, pending, submit, reset } = useFormAction<{ greeting: string }>(action);
 
    return (
      <form action={submit}>
        <input name="name" defaultValue="" />
        <button type="submit" disabled={pending}>
          {pending ? "Submitting..." : "Submit"}
+       </button>
+       <button type="button" onClick={reset}>
+         Reset
        </button>
        {state.formError && <p data-testid="form-error">{state.formError}</p>}
        {state.fieldErrors?.name && (
@@ -83,5 +86,32 @@
      await waitFor(() => {
        expect(screen.getByTestId("form-error")).toHaveTextContent("Network down");
      });
+   });
+
+   it("resets state without re-invoking the action", async () => {
+     const action = vi.fn(async () => ({
+       fieldErrors: { name: ["Name is required"] },
+       formError: "Form failed",
+       data: null,
+     }));
+
+     render(<DemoForm action={action} />);
+     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
+
+     await waitFor(() => {
+       expect(screen.getByTestId("field-error")).toBeInTheDocument();
+       expect(screen.getByTestId("form-error")).toBeInTheDocument();
+     });
+     expect(action).toHaveBeenCalledTimes(1);
+
+     await userEvent.click(screen.getByRole("button", { name: "Reset" }));
+
+     await waitFor(() => {
+       expect(screen.queryByTestId("field-error")).not.toBeInTheDocument();
+       expect(screen.queryByTestId("form-error")).not.toBeInTheDocument();
+     });
+
+     // Calling reset must not invoke action again
+     expect(action).toHaveBeenCalledTimes(1);
    });
  });

@@ -1,6 +1,6 @@
- "use client";
+"use client";
 
- import { useActionState, useCallback } from "react";
+ import { useActionState, useCallback, useState } from "react";
 
  export type FieldErrors = Record<string, string[]>;
 
@@ -37,7 +37,7 @@
      payload: FormData,
    ) => Promise<FormActionState<TData>> | FormActionState<TData>,
  ): UseFormActionResult<TData> {
-   const [state, dispatch, pending] = useActionState<
+   const [actionState, dispatch, pending] = useActionState<
      FormActionState<TData>,
      FormData
    >(async (prev, payload) => {
@@ -50,14 +50,28 @@
      }
    }, INITIAL_STATE as FormActionState<TData>);
 
+   const [isReset, setIsReset] = useState(false);
+
+   const submit = useCallback(
+     (payload?: FormData) => {
+       setIsReset(false);
+       dispatch(payload ?? new FormData());
+     },
+     [dispatch],
+   );
+
    const reset = useCallback(() => {
-     dispatch(new FormData());
-   }, [dispatch]);
+     setIsReset(true);
+   }, []);
+
+   const state = isReset
+     ? (INITIAL_STATE as FormActionState<TData>)
+     : actionState;
 
    return {
      state,
-     pending,
+     pending: isReset ? false : pending,
      reset,
-     submit: dispatch,
+     submit,
    };
  }
