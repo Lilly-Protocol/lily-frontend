@@ -20,6 +20,13 @@ vi.mock("@/config/routes", () => ({
     { key: "legal", label: "Legal", description: "Legal pages" },
     { key: "dashboard", label: "Dashboard", description: "App dashboard" },
   ],
+  routeScaffolds: [
+    { id: "l1", title: "Privacy", path: "/privacy", section: "legal" },
+    { id: "l2", title: "Terms", path: "/terms", section: "legal" },
+    { id: "d1", title: "Docs", path: "/docs", section: "docs" },
+    { id: "d2", title: "Install", path: "/docs/installation", section: "docs" },
+    { id: "c1", title: "Contact", path: "/contact", section: "marketing" },
+  ],
   getSectionRoutes: (section: string) => {
     const map: Record<string, Array<{ id: string; title: string; path: string }>> = {
       marketing: [{ id: "m1", title: "Home", path: "/" }],
