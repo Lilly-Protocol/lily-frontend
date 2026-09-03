@@ -1,19 +1,19 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { SectionNav } from "./section-nav";
+import { SectionNav } from './section-nav';
 
-vi.mock("next/link", () => ({
+vi.mock('next/link', () => ({
   default: ({
     children,
     href,
     className,
-    "aria-current": ariaCurrent,
+    'aria-current': ariaCurrent,
   }: {
     children: React.ReactNode;
     href: string;
     className?: string;
-    "aria-current"?: string;
+    'aria-current'?: string;
   }) => (
     <a href={href} className={className} aria-current={ariaCurrent}>
       {children}
@@ -22,36 +22,47 @@ vi.mock("next/link", () => ({
 }));
 
 const mockUsePathname = vi.fn();
-vi.mock("next/navigation", () => ({
+vi.mock('next/navigation', () => ({
   usePathname: () => mockUsePathname(),
 }));
 
 const mockRoutes = [
-  { id: "home", title: "Home", path: "/" },
-  { id: "about", title: "About", path: "/about" },
-  { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]" },
+  { id: 'home', title: 'Home', path: '/' },
+  { id: 'about', title: 'About', path: '/about' },
+  { id: 'agents', title: 'Agents Registry', path: '/app/agents' },
+  { id: 'agent-detail', title: 'Agent Detail', path: '/app/agents/[id]' },
 ] as const;
 
-describe("SectionNav", () => {
-  it("marks link as active when pathname matches exactly", () => {
-    mockUsePathname.mockReturnValue("/about");
+describe('SectionNav', () => {
+  it('marks link as active when pathname matches exactly', () => {
+    mockUsePathname.mockReturnValue('/about');
     render(<SectionNav routes={mockRoutes} />);
-    const aboutLink = screen.getByRole("link", { name: /about/i });
-    expect(aboutLink).toHaveAttribute("aria-current", "page");
-    expect(aboutLink.className).toContain("border-[var(--color-accent)]");
+    const aboutLink = screen.getByRole('link', { name: /about/i });
+    expect(aboutLink).toHaveAttribute('aria-current', 'page');
+    expect(aboutLink).toHaveClass('border-(--color-accent)', 'text-(--color-accent)');
   });
 
-  it("does not mark links as active on unrelated path", () => {
-    mockUsePathname.mockReturnValue("/contact");
+  it('marks the agents registry active on a nested agent detail path', () => {
+    mockUsePathname.mockReturnValue('/app/agents/agentlily_demo_001');
     render(<SectionNav routes={mockRoutes} />);
-    const homeLink = screen.getByRole("link", { name: /home/i });
-    expect(homeLink).not.toHaveAttribute("aria-current");
+
+    expect(screen.getByRole('link', { name: /agents registry/i })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
   });
 
-  it("renders placeholder div for dynamic route pattern", () => {
-    mockUsePathname.mockReturnValue("/app/agents/123");
+  it('does not mark links as active on unrelated path', () => {
+    mockUsePathname.mockReturnValue('/contact');
     render(<SectionNav routes={mockRoutes} />);
-    expect(screen.queryByRole("link", { name: /agent detail/i })).toBeNull();
-    expect(screen.getByText("Agent Detail")).toBeInTheDocument();
+    const homeLink = screen.getByRole('link', { name: /home/i });
+    expect(homeLink).not.toHaveAttribute('aria-current');
+  });
+
+  it('renders placeholder div for dynamic route pattern', () => {
+    mockUsePathname.mockReturnValue('/app/agents/123');
+    render(<SectionNav routes={mockRoutes} />);
+    expect(screen.queryByRole('link', { name: /agent detail/i })).toBeNull();
+    expect(screen.getByText('Agent Detail')).toBeInTheDocument();
   });
 });
