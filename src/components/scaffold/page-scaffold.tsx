@@ -53,7 +53,6 @@ export function PageScaffold({
           <p className="mt-4 text-base leading-7 text-(--color-muted)">
             {route.figmaScope}
           </p>
-          <p className="mt-4 text-base leading-7 text-[var(--color-muted)]">{route.figmaScope}</p>
         </article>
 
         <article className="rounded-3xl border border-(--color-line) bg-(--color-panel-muted) p-6">
