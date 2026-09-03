@@ -39,6 +39,7 @@ export function SiteHeader() {
           <Link
             className="text-lg font-semibold tracking-tight"
             href={routes.home as Route}
+            aria-current={pathname === routes.home ? "page" : undefined}
           >
             {siteConfig.name}
           </Link>
@@ -55,7 +56,12 @@ export function SiteHeader() {
           <Link
             className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.docs as Route}
-            aria-current={pathname === routes.docs ? "page" : undefined}
+            aria-current={
+              pathname === routes.docs ||
+              pathname?.startsWith(`${routes.docs}/`)
+                ? "page"
+                : undefined
+            }
           >
             {scaffoldMessages.siteHeader.docs}
           </Link>

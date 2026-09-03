@@ -44,6 +44,7 @@ describe("Active route indication (Issue #119)", () => {
     const routes = [
       { id: "home", title: "Home", path: "/" },
       { id: "docs", title: "Docs", path: "/docs" },
+      { id: "agents", title: "Agents Registry", path: "/app/agents" },
       { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]" },
     ] as const;
 
@@ -59,6 +60,14 @@ describe("Active route indication (Issue #119)", () => {
       render(<SectionNav routes={routes} />);
       const docsLink = screen.getByRole("link", { name: /docs/i });
       expect(docsLink).toHaveAttribute("aria-current", "page");
+    });
+
+    it("marks the agents registry nav link active when viewing an agent detail page", () => {
+      mockUsePathname.mockReturnValue("/app/agents/abc123");
+      render(<SectionNav routes={routes} />);
+      const agentsLink = screen.getByRole("link", { name: /agents registry/i });
+      expect(agentsLink).toHaveAttribute("aria-current", "page");
+      expect(agentsLink.className).toContain("border-[var(--color-accent)]");
     });
 
     it("does not apply aria-current to non-matching routes", () => {
