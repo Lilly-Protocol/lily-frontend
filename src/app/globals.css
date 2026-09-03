@@ -17,7 +17,15 @@
   --focus-ring-color: rgba(15, 118, 110, 0.45);
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
-  --shadow-soft: 0 16px 40px rgba(17, 24, 39, 0.06);
+
+  /* Elevation scale: 4 tiers from subtle to modal-level lift. */
+  --shadow-1: 0 16px 40px rgba(17, 24, 39, 0.06);
+  --shadow-2: 0 4px 12px rgba(17, 24, 39, 0.08);
+  --shadow-3: 0 10px 24px rgba(17, 24, 39, 0.10);
+  --shadow-4: 0 20px 48px rgba(17, 24, 39, 0.14);
+  /* Backward-compatible alias used by .surface and legacy consumers. */
+  --shadow-soft: var(--shadow-1);
+
   --duration-fast: 150ms;
   --duration-base: 250ms;
   --duration-slow: 400ms;
@@ -170,6 +178,50 @@ a {
   letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
   line-height: var(--leading-tight);
+}
+
+/* .type-* aliases over the same scale tokens, for semantic naming. */
+.type-display {
+  font-size: var(--text-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  font-weight: 700;
+}
+
+.type-h1 {
+  font-size: var(--text-h1);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  font-weight: 600;
+}
+
+.type-h2 {
+  font-size: var(--text-h2);
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  font-weight: 600;
+}
+
+.type-h3 {
+  font-size: var(--text-h3);
+  line-height: var(--leading-heading);
+  font-weight: 600;
+}
+
+.type-h4 {
+  font-size: var(--text-h4);
+  line-height: var(--leading-heading);
+  font-weight: 600;
+}
+
+.type-body {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+.type-caption {
+  font-size: var(--text-caption);
+  line-height: var(--leading-body);
 }
 
 /* Focus is the one state a keyboard user has. The scaffold styled :hover only,

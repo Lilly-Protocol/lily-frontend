@@ -406,7 +406,10 @@ export const staticSitePages = routeScaffolds
   .map((route) => ({
     path: route.path as StaticSiteRoute,
     priority: route.path === '/' ? 1 : 0.8,
-  })) as readonly SitePage[];
+    updatedAt: route.updatedAt,
+  }))
+  .sort((a, b) => b.priority - a.priority) as readonly SitePage[];
+
 
 export function getRouteScaffold(routeId: RouteScaffold['id']): RouteScaffold {
   const match = routeScaffolds.find((route) => route.id === routeId);

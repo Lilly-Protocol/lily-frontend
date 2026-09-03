@@ -1,8 +1,12 @@
 import { http, HttpResponse } from "msw";
-import { describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { server } from "../server";
 
 describe("MSW fetch mocking", () => {
+  beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
   it("intercepts fetch and returns mocked response", async () => {
     server.use(
       http.get("https://api.example.com/health", () => {

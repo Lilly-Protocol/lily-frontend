@@ -1,11 +1,13 @@
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 import { ESLint } from "eslint";
 
 describe("project ESLint rules", () => {
-  it("rejects target=_blank links without rel=noopener noreferrer", async () => {
+  // ESLint cold-loads the whole flat config; allow well over the 5s default.
+  it("rejects target=_blank links without rel=noopener noreferrer", { timeout: 30_000 }, async () => {
     const fixture = await readFile(
-      new URL("./eslint/unsafe-target-blank.tsx.txt", import.meta.url),
+      path.resolve(process.cwd(), "src/test/eslint/unsafe-target-blank.tsx.txt"),
       "utf8",
     );
     const eslint = new ESLint();

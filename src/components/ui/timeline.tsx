@@ -1,10 +1,18 @@
-import type { ReactNode } from "react";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 
-type TimelineItemProps = {
+export type TimelineItemProps = {
   readonly date: string;
   readonly title: string;
   readonly children: ReactNode;
   readonly status?: string;
+  /** Injected by <Timeline> for the last child; hides the connecting line. */
+  readonly isLast?: boolean | undefined;
 };
 
 export function TimelineItem({
@@ -12,10 +20,17 @@ export function TimelineItem({
   title,
   children,
   status,
+  isLast = false,
 }: TimelineItemProps) {
   return (
     <li className="relative flex gap-4 pb-8 last:pb-0">
-      <div className="absolute left-[7px] top-2 h-full w-px bg-[var(--color-line)] last:hidden" aria-hidden="true" />
+      {isLast ? null : (
+        <div
+          data-testid="timeline-line"
+          className="absolute left-[7px] top-2 h-full w-px bg-[var(--color-line)]"
+          aria-hidden="true"
+        />
+      )}
       <div className="relative mt-1.5 h-3.5 w-3.5 flex-none rounded-full border-2 border-[var(--color-accent)] bg-[var(--color-panel-muted)]" aria-hidden="true" />
       <div className="flex flex-col gap-1">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -39,9 +54,16 @@ type TimelineProps = {
 };
 
 export function Timeline({ children, className }: TimelineProps) {
+  const items = Children.toArray(children);
   return (
-    <ul className={className} role="list">
-      {children}
-    </ul>
+    <ol className={className}>
+      {items.map((child, index) =>
+        isValidElement(child) && child.type === TimelineItem
+          ? cloneElement(child as ReactElement<TimelineItemProps>, {
+              isLast: index === items.length - 1,
+            })
+          : child,
+      )}
+    </ol>
   );
 }

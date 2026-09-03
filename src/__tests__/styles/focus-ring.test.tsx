@@ -1,21 +1,22 @@
  import "@testing-library/jest-dom/vitest";
+ import { readFileSync } from "node:fs";
+ import path from "node:path";
  import { render, screen } from "@testing-library/react";
  import { describe, expect, it } from "vitest";
 
+ const css = readFileSync(
+   path.resolve(__dirname, "../../app/globals.css"),
+   "utf-8",
+ );
+
  describe("Focus ring design tokens", () => {
-   it("defines focus ring CSS custom properties on :root", async () => {
-     const css = await import("../../app/globals.css?raw").then(
-       (m) => m.default,
-     );
+   it("defines focus ring CSS custom properties on :root", () => {
      expect(css).toContain("--focus-ring-color");
      expect(css).toContain("--focus-ring-width");
      expect(css).toContain("--focus-ring-offset");
    });
 
-   it("applies focus-visible outline using the token variables", async () => {
-     const css = await import("../../app/globals.css?raw").then(
-       (m) => m.default,
-     );
+   it("applies focus-visible outline using the token variables", () => {
      expect(css).toMatch(/:focus-visible\s*\{[^}]*outline:\s*var\(--focus-ring-width\)\s+solid\s+var\(--focus-ring-color\)/);
      expect(css).toMatch(/outline-offset:\s*var\(--focus-ring-offset\)/);
    });

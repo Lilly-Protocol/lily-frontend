@@ -29,6 +29,7 @@ vi.mock("next/navigation", () => ({
 const mockRoutes = [
   { id: "home", title: "Home", path: "/" },
   { id: "about", title: "About", path: "/about" },
+  { id: "agents-registry", title: "Agents Registry", path: "/app/agents" },
   { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]" },
 ] as const;
 
@@ -53,5 +54,13 @@ describe("SectionNav", () => {
     render(<SectionNav routes={mockRoutes} />);
     expect(screen.queryByRole("link", { name: /agent detail/i })).toBeNull();
     expect(screen.getByText("Agent Detail")).toBeInTheDocument();
+  });
+
+  it("marks the Agents Registry link current on a nested agent detail path", () => {
+    mockUsePathname.mockReturnValue("/app/agents/abc");
+    render(<SectionNav routes={mockRoutes} />);
+    const registryLink = screen.getByRole("link", { name: /agents registry/i });
+    expect(registryLink).toHaveAttribute("aria-current", "page");
+    expect(registryLink.className).toContain("border-[var(--color-accent)]");
   });
 });
