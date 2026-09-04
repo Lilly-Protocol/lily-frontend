@@ -77,7 +77,7 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    return legacyRedirects as { source: string; destination: string; permanent: boolean }[];
+    return legacyRedirects.map((redirect) => ({ ...redirect }));
   },
 };
 
