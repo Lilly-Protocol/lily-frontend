@@ -77,3 +77,18 @@ ownership and public indexing stay aligned.
 - Keep route `page.tsx` files focused on page composition. Shared header,
   sidebar, and section navigation behavior belongs in the scaffold components.
 
+
+## Internationalization Decision
+
+The repository previously carried unused `next-intl` scaffolding
+(`src/i18n/`, `src/app/[locale]/layout.tsx`, `messages/en.json`, and the
+`next-intl` dependency) that was never mounted: no middleware performed locale
+negotiation, the root layout served a single hard-coded `lang="en"` document,
+and no component consumed translation messages. The disconnected provider could
+never render for any route.
+
+Decision (recorded in #452): until a real localization scope is agreed, the
+dead scaffolding and the `next-intl` dependency are removed. The app serves
+English-only content from the single root layout. Reintroducing i18n should
+start from a scope decision (target locales, negotiation strategy, message
+namespace layout) rather than restoring this unused scaffold.
