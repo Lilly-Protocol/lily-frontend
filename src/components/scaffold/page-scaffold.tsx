@@ -12,7 +12,7 @@ export function PageScaffold({
   statusMessage,
 }: PageScaffoldProps) {
   return (
-    <main className="surface rounded-[1.75rem] p-8 sm:p-10">
+    <section className="surface rounded-[1.75rem] p-8 sm:p-10">
       <p className="eyebrow text-(--color-accent)">{route.section}</p>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -68,6 +68,6 @@ export function PageScaffold({
           </ul>
         </article>
       </section>
-    </main>
+    </section>
   );
 }
