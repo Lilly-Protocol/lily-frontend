@@ -55,5 +55,13 @@ describe('PageScaffold', () => {
     expect(screen.getByText(dynamicLabel)).toBeInTheDocument();
     expect(screen.queryByText(route.path)).not.toBeInTheDocument();
   });
+
+  it("contains exactly one main element and one h1 heading", () => {
+    const { container } = render(
+      <PageScaffold route={getRouteScaffold("landing")} />,
+    );
+    expect(container.querySelectorAll("main")).toHaveLength(1);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
 });
 
