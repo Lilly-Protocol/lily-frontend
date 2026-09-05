@@ -30,7 +30,12 @@ export function SectionNav({ routes, ariaLabel }: SectionNavProps) {
               <Link
                 className="flex items-center justify-between rounded-2xl border border-(--color-line) bg-(--color-panel-muted) px-4 py-3 text-sm hover:border-(--color-accent)"
                 href={route.path as Route}
-                aria-current={pathname === route.path ? "page" : undefined}
+                aria-current={
+                  pathname === route.path ||
+                  (route.path !== "/" && pathname?.startsWith(`${route.path}/`))
+                    ? "page"
+                    : undefined
+                }
               >
                 <span>{route.title}</span>
                 <span className="font-mono text-xs text-(--color-muted)">
