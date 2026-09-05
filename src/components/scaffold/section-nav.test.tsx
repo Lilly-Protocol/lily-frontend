@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
+import type { RouteScaffold } from "@/types/site";
 import { SectionNav } from "./section-nav";
 
 vi.mock("next/link", () => ({
@@ -13,7 +14,7 @@ vi.mock("next/link", () => ({
     children: React.ReactNode;
     href: string;
     className?: string;
-    "aria-current"?: string;
+    "aria-current"?: React.AriaAttributes["aria-current"];
   }) => (
     <a href={href} className={className} aria-current={ariaCurrent}>
       {children}
@@ -26,11 +27,35 @@ vi.mock("next/navigation", () => ({
   usePathname: () => mockUsePathname(),
 }));
 
-const mockRoutes = [
-  { id: "home", title: "Home", path: "/" },
-  { id: "about", title: "About", path: "/about" },
-  { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]" },
-] as const;
+const mockRoutes: readonly RouteScaffold[] = [
+  {
+    id: "home",
+    title: "Home",
+    path: "/",
+    section: "marketing",
+    purpose: "Home",
+    figmaScope: "Home",
+    implementationAreas: [],
+  },
+  {
+    id: "about",
+    title: "About",
+    path: "/about",
+    section: "marketing",
+    purpose: "About",
+    figmaScope: "About",
+    implementationAreas: [],
+  },
+  {
+    id: "agent-detail",
+    title: "Agent Detail",
+    path: "/app/agents/[id]",
+    section: "dashboard",
+    purpose: "Agent Detail",
+    figmaScope: "Agent Detail",
+    implementationAreas: [],
+  },
+];
 
 describe("SectionNav", () => {
   it("marks link as active when pathname matches exactly", () => {
