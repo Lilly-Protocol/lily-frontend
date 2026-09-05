@@ -39,6 +39,7 @@ export function SiteHeader() {
           <Link
             className="text-lg font-semibold tracking-tight"
             href={routes.home as Route}
+            aria-current={pathname === routes.home ? "page" : undefined}
           >
             {siteConfig.name}
           </Link>
@@ -55,21 +56,34 @@ export function SiteHeader() {
           <Link
             className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.docs as Route}
-            aria-current={pathname === routes.docs ? "page" : undefined}
+            aria-current={
+              pathname === routes.docs || pathname?.startsWith(`${routes.docs}/`)
+                ? "page"
+                : undefined
+            }
           >
             {scaffoldMessages.siteHeader.docs}
           </Link>
           <Link
             className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.signin as Route}
-            aria-current={pathname === routes.signin ? "page" : undefined}
+            aria-current={
+              pathname === routes.signin || pathname?.startsWith(`${routes.signin}/`)
+                ? "page"
+                : undefined
+            }
           >
             {scaffoldMessages.siteHeader.signIn}
           </Link>
           <Link
             className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-[var(--color-panel-contrast)] hover:opacity-90"
             href={routes.dashboard as Route}
-            aria-current={pathname === routes.dashboard ? "page" : undefined}
+            aria-current={
+              pathname === routes.dashboard ||
+              pathname?.startsWith(`${routes.dashboard}/`)
+                ? "page"
+                : undefined
+            }
           >
             {scaffoldMessages.siteHeader.dashboard}
           </Link>
