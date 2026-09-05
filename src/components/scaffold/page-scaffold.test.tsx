@@ -55,5 +55,13 @@ describe('PageScaffold', () => {
     expect(screen.getByText(dynamicLabel)).toBeInTheDocument();
     expect(screen.queryByText(route.path)).not.toBeInTheDocument();
   });
+
+  it("renders as a section rather than a nested main landmark (Issue #464)", () => {
+    const route = getRouteScaffold("landing");
+    const { container } = render(<PageScaffold route={route} />);
+
+    expect(screen.queryByRole("main")).toBeNull();
+    expect(container.querySelector("section.surface")).toBeInTheDocument();
+  });
 });
 
