@@ -16,9 +16,10 @@ vi.mock("next/font/google", () => ({
   Space_Grotesk: fontMocks.spaceGrotesk,
 }));
 
-import "./layout";
+import { viewport } from "./layout";
+import { rootViewport } from "@/config/viewport";
 
-describe("RootLayout font configuration", () => {
+describe("RootLayout configuration", () => {
   it("uses swap display for both fonts and preloads Space Grotesk", () => {
     expect(fontMocks.spaceGrotesk).toHaveBeenCalledWith(
       expect.objectContaining({ display: "swap", preload: true }),
@@ -26,5 +27,9 @@ describe("RootLayout font configuration", () => {
     expect(fontMocks.ibmPlexMono).toHaveBeenCalledWith(
       expect.objectContaining({ display: "swap" }),
     );
+  });
+
+  it("exports rootViewport from config/viewport as layout viewport", () => {
+    expect(viewport).toEqual(rootViewport);
   });
 });
