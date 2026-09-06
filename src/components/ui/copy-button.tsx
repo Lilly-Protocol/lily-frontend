@@ -27,6 +27,7 @@ export function CopyButton({
     const ok = await copyText(text);
 
     setCopyState(ok ? "copied" : "failed");
+    window.setTimeout(() => setCopyState("idle"), 2000);
   }
 
   const buttonLabel =

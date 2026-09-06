@@ -27,6 +27,13 @@ export function SiteHeader() {
   useEffect(() => {
     if (!isOpen) return;
 
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        buttonRef.current?.focus();
+      }
+    }
+
     function handleClickOutside(event: MouseEvent) {
       if (
         menuRef.current &&
@@ -38,8 +45,12 @@ export function SiteHeader() {
       }
     }
 
+    document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, [isOpen]);
 
   return (

@@ -22,7 +22,10 @@ if (!fs.existsSync(iconsDir)) fs.mkdirSync(iconsDir, { recursive: true });
 // Write canonical SVGs
 fs.writeFileSync(path.join(publicDir, 'icon.svg'), svgIcon);
 fs.writeFileSync(path.join(publicDir, 'favicon.svg'), svgIcon);
-console.log('Created public/icon.svg and public/favicon.svg');
+fs.writeFileSync(path.join(publicDir, 'apple-touch-icon.svg'), svgIcon);
+fs.writeFileSync(path.join(iconsDir, 'lily-icon.svg'), svgIcon);
+fs.writeFileSync(path.join(iconsDir, 'lily-maskable-icon.svg'), svgIcon);
+console.log('Created public/ SVGs and public/icons/ SVGs');
 
 const pngTargets = [
   { dest: path.join(publicDir, 'apple-icon.png'), size: 180 },
