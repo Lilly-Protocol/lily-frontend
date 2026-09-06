@@ -13,14 +13,12 @@ export default function MarketingLayout({
   }
 
   return (
-    <>
-      <SectionLayout
-        title={marketingSection.label}
-        description={marketingSection.description}
-        routes={getSectionRoutes("marketing")}
-      >
-        {children}
-      </SectionLayout>
-    </>
+    <SectionLayout
+      title={marketingSection.label}
+      description={marketingSection.description}
+      routes={getSectionRoutes("marketing")}
+    >
+      {children}
+    </SectionLayout>
   );
 }

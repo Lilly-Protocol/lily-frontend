@@ -12,32 +12,31 @@ vi.mock("@/config/site", () => ({
   siteConfig: { name: "Lilly" },
 }));
 
-vi.mock("@/config/routes", () => ({
-  sectionDefinitions: [
-    { key: "marketing", label: "Marketing", description: "Public site" },
-    { key: "auth", label: "Auth", description: "Authentication" },
-    { key: "docs", label: "Docs", description: "Documentation" },
-    { key: "legal", label: "Legal", description: "Legal pages" },
-    { key: "dashboard", label: "Dashboard", description: "App dashboard" },
-  ],
-  routeScaffolds: [
-    { id: "l1", title: "Privacy", path: "/privacy", section: "legal" },
-    { id: "l2", title: "Terms", path: "/terms", section: "legal" },
-    { id: "d1", title: "Docs", path: "/docs", section: "docs" },
-    { id: "d2", title: "Install", path: "/docs/installation", section: "docs" },
-    { id: "c1", title: "Contact", path: "/contact", section: "marketing" },
-  ],
-  getSectionRoutes: (section: string) => {
-    const map: Record<string, Array<{ id: string; title: string; path: string }>> = {
-      marketing: [{ id: "m1", title: "Home", path: "/" }],
-      auth: [{ id: "a1", title: "Sign In", path: "/signin" }],
-      docs: [{ id: "d1", title: "Docs", path: "/docs" }],
-      legal: [{ id: "l1", title: "Privacy", path: "/privacy" }],
-      dashboard: [{ id: "db1", title: "Dashboard", path: "/app" }],
-    };
-    return map[section] ?? [];
-  },
-}));
+import type * as RoutesModule from "@/config/routes";
+
+vi.mock("@/config/routes", async (importOriginal) => {
+  const actual = await importOriginal<typeof RoutesModule>();
+  return {
+    ...actual,
+    sectionDefinitions: [
+      { key: "marketing", label: "Marketing", description: "Public site" },
+      { key: "auth", label: "Auth", description: "Authentication" },
+      { key: "docs", label: "Docs", description: "Documentation" },
+      { key: "legal", label: "Legal", description: "Legal pages" },
+      { key: "dashboard", label: "Dashboard", description: "App dashboard" },
+    ],
+    getSectionRoutes: (section: string) => {
+      const map: Record<string, Array<{ id: string; title: string; path: string }>> = {
+        marketing: [{ id: "m1", title: "Home", path: "/" }],
+        auth: [{ id: "a1", title: "Sign In", path: "/signin" }],
+        docs: [{ id: "d1", title: "Docs", path: "/docs" }],
+        legal: [{ id: "l1", title: "Privacy", path: "/privacy" }],
+        dashboard: [{ id: "db1", title: "Dashboard", path: "/app" }],
+      };
+      return map[section] ?? [];
+    },
+  };
+});
 
 import MarketingLayout from "@/app/(marketing)/layout";
 import AuthLayout from "@/app/(auth)/layout";
@@ -62,7 +61,7 @@ describe("Route group layouts render expected landmarks", () => {
   it("renders SiteHeader and SectionNav in support layout", () => {
     render(<SupportLayout><div>Support Page</div></SupportLayout>);
     expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByLabelText("Section routes")).toBeInTheDocument();
+    expect(screen.getByLabelText(/Support and legal pages|Section routes/i)).toBeInTheDocument();
     expect(screen.getByText("Support Page")).toBeInTheDocument();
   });
 
