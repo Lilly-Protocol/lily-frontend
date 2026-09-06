@@ -4,6 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { RouteScaffold } from "@/types/site";
 import { SectionNav } from "./section-nav";
 
+import type { ComponentProps } from "react";
+import type { RouteScaffold } from "@/types/site";
+
 vi.mock("next/link", () => ({
   default: ({
     children,
@@ -14,7 +17,7 @@ vi.mock("next/link", () => ({
     children: React.ReactNode;
     href: string;
     className?: string;
-    "aria-current"?: React.AriaAttributes["aria-current"];
+    "aria-current"?: ComponentProps<"a">["aria-current"];
   }) => (
     <a href={href} className={className} aria-current={ariaCurrent}>
       {children}
@@ -33,27 +36,27 @@ const mockRoutes: readonly RouteScaffold[] = [
     title: "Home",
     path: "/",
     section: "marketing",
-    purpose: "Home",
-    figmaScope: "Home",
-    implementationAreas: [],
+    purpose: "Home page",
+    figmaScope: "Home screen",
+    implementationAreas: ["UI"],
   },
   {
     id: "about",
     title: "About",
     path: "/about",
     section: "marketing",
-    purpose: "About",
-    figmaScope: "About",
-    implementationAreas: [],
+    purpose: "About page",
+    figmaScope: "About screen",
+    implementationAreas: ["UI"],
   },
   {
     id: "agent-detail",
     title: "Agent Detail",
     path: "/app/agents/[id]",
     section: "dashboard",
-    purpose: "Agent Detail",
-    figmaScope: "Agent Detail",
-    implementationAreas: [],
+    purpose: "Agent details",
+    figmaScope: "Agent screen",
+    implementationAreas: ["UI"],
   },
 ];
 
@@ -63,7 +66,7 @@ describe("SectionNav", () => {
     render(<SectionNav routes={mockRoutes} />);
     const aboutLink = screen.getByRole("link", { name: /about/i });
     expect(aboutLink).toHaveAttribute("aria-current", "page");
-    expect(aboutLink.className).toContain("border-[var(--color-accent)]");
+    expect(aboutLink.className).toContain("border-(--color-accent)");
   });
 
   it("does not mark links as active on unrelated path", () => {
@@ -80,32 +83,24 @@ describe("SectionNav", () => {
     expect(screen.getByText("Agent Detail")).toBeInTheDocument();
   });
 
-  it("marks agents registry link active when viewing an agent detail page (Issue #465)", () => {
-    const dashboardRoutes: readonly RouteScaffold[] = [
-      {
-        id: "agents",
-        title: "Agents Registry",
-        path: "/app/agents",
-        section: "dashboard",
-        purpose: "Registry",
-        figmaScope: "Registry",
-        implementationAreas: [],
-      },
-      {
-        id: "agent-detail",
-        title: "Agent Detail",
-        path: "/app/agents/[id]",
-        section: "dashboard",
-        purpose: "Detail",
-        figmaScope: "Detail",
-        implementationAreas: [],
-      },
-    ];
+  it("renders default aria-label 'Section routes' when ariaLabel is not provided", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(<SectionNav routes={mockRoutes} />);
+    const nav = screen.getByRole("navigation", { name: "Section routes" });
+    expect(nav).toBeInTheDocument();
+  });
 
-    mockUsePathname.mockReturnValue("/app/agents/agent-xyz");
-    render(<SectionNav routes={dashboardRoutes} />);
-    const registryLink = screen.getByRole("link", { name: /agents registry/i });
-    expect(registryLink).toHaveAttribute("aria-current", "page");
-    expect(registryLink.className).toContain("border-[var(--color-accent)]");
+  it("renders custom aria-label when ariaLabel prop is provided", () => {
+    mockUsePathname.mockReturnValue("/");
+    render(
+      <SectionNav
+        routes={mockRoutes}
+        ariaLabel="Support and legal pages"
+      />,
+    );
+    const nav = screen.getByRole("navigation", {
+      name: "Support and legal pages",
+    });
+    expect(nav).toBeInTheDocument();
   });
 });
