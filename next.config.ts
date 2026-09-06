@@ -1,8 +1,9 @@
+import type { NextConfig } from "next";
 import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
 
 const withSerwist = withSerwistInit({
-  swSrc: "app/sw.ts",
+  swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
   disable: process.env.NODE_ENV !== "production",
 });
@@ -47,12 +48,25 @@ export const legacyRedirects = [
 const nextConfig: NextConfig = {
   output: "standalone",
   typedRoutes: true,
+  turbopack: {},
   poweredByHeader: false,
   images: {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "opengraph.example.com",
+      },
+      {
+        protocol: "https",
         hostname: "**.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.lilyprotocol.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.lilyprotocol.dev",
       },
       {
         protocol: "https",
@@ -60,7 +74,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cdn.lillyprotocol.dev",
+        hostname: "cdn.lilyprotocol.dev",
       },
       {
         protocol: "https",
@@ -77,7 +91,7 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    return legacyRedirects as { source: string; destination: string; permanent: boolean }[];
+    return legacyRedirects as unknown as { source: string; destination: string; permanent: boolean }[];
   },
 };
 
