@@ -1,25 +1,26 @@
 import type { Viewport } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
-import { SiteFooter } from "@/components/site-footer";
 import { createOrganizationJsonLd, serializeJsonLd } from "@/config/json-ld";
 import { createSiteMetadata } from "@/config/site";
+import { rootViewport } from "@/config/viewport";
+
 import { rootViewport } from "@/config/viewport";
 
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
-  variable: '--font-space-grotesk',
-  subsets: ['latin'],
-  display: 'swap',
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap",
   preload: true,
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
-  variable: '--font-ibm-plex-mono',
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  display: 'swap',
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const viewport: Viewport = rootViewport;
@@ -45,7 +46,6 @@ export default function RootLayout({
           type="application/ld+json"
         />
         {children}
-        <SiteFooter />
       </body>
     </html>
   );
