@@ -17,10 +17,9 @@ vi.mock("next/font/google", () => ({
 }));
 
 import { render } from "@testing-library/react";
-
 import RootLayout from "./layout";
 
-describe("RootLayout font configuration", () => {
+describe("RootLayout configuration", () => {
   it("uses swap display for both fonts and preloads Space Grotesk", () => {
     expect(fontMocks.spaceGrotesk).toHaveBeenCalled();
     expect(fontMocks.ibmPlexMono).toHaveBeenCalled();
@@ -32,6 +31,20 @@ describe("RootLayout font configuration", () => {
         <div>Content</div>
       </RootLayout>,
     );
+    const scripts = container.querySelectorAll(
+      'script[type="application/ld+json"]#organization-json-ld',
+    );
+    expect(scripts).toHaveLength(1);
+    expect(container.querySelectorAll("footer")).toHaveLength(1);
+  });
+
+  it("renders exactly one application/ld+json organization script and single footer", () => {
+    const { container } = render(
+      <RootLayout>
+        <div>Content</div>
+      </RootLayout>,
+    );
+
     const scripts = container.querySelectorAll(
       'script[type="application/ld+json"]#organization-json-ld',
     );
