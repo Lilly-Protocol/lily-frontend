@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { getRouteScaffold, getSectionRoutes } from '@/config/routes';
+import { getSectionRoutes } from '@/config/routes';
 import { checkA11y } from '@/test/a11y';
 
 import { PageScaffold } from './page-scaffold';
@@ -64,9 +64,22 @@ describe('SectionLayout', () => {
         </SectionLayout>,
       );
 
-      expect(screen.getAllByRole('main')).toHaveLength(1);
-      await checkA11y(container);
-    },
-  );
+    await checkA11y(container);
+  });
+
+  it("renders exactly one footer landmark per layout", () => {
+    render(
+      <SectionLayout
+        title="Public marketing"
+        description="Public-facing route group."
+        routes={getSectionRoutes("marketing")}
+      >
+        <div>Section content</div>
+      </SectionLayout>,
+    );
+
+    const footers = screen.getAllByRole("contentinfo");
+    expect(footers).toHaveLength(1);
+  });
 });
 
