@@ -11,16 +11,17 @@ type SectionNavProps = {
   readonly ariaLabel?: string;
 };
 
-export function SectionNav({ routes, ariaLabel }: SectionNavProps) {
+export function SectionNav({
+  routes,
+  ariaLabel = "Section routes",
+}: SectionNavProps) {
   const pathname = usePathname();
 
   return (
     <nav aria-label={ariaLabel}>
       <ul className="grid gap-2">
         {routes.map((route) => {
-          const isCurrent =
-            pathname === route.path ||
-            (route.path !== "/" && pathname?.startsWith(`${route.path}/`));
+          const isActive = pathname === route.path;
 
           return (
             <li key={route.id} className="sm:w-64 sm:flex-none">
@@ -34,12 +35,12 @@ export function SectionNav({ routes, ariaLabel }: SectionNavProps) {
               ) : (
                 <Link
                   className={`flex items-center justify-between rounded-2xl border ${
-                    isCurrent
-                      ? "border-[var(--color-accent)]"
+                    isActive
+                      ? "border-(--color-accent)"
                       : "border-(--color-line)"
                   } bg-(--color-panel-muted) px-4 py-3 text-sm hover:border-(--color-accent)`}
                   href={route.path as Route}
-                  aria-current={isCurrent ? "page" : undefined}
+                  aria-current={isActive ? "page" : undefined}
                 >
                   <span>{route.title}</span>
                   <span className="font-mono text-xs text-(--color-muted)">

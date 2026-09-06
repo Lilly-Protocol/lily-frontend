@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import { SiteHeader } from "../site-header";
 import { SectionNav } from "../section-nav";
+import type { RouteScaffold } from "@/types/site";
 
 vi.mock("next/navigation", () => ({
   usePathname: vi.fn(),
@@ -41,12 +42,11 @@ describe("Active route indication (Issue #119)", () => {
   });
 
   describe("SectionNav", () => {
-    const routes = [
-      { id: "home", title: "Home", path: "/" },
-      { id: "docs", title: "Docs", path: "/docs" },
-      { id: "agents", title: "Agents Registry", path: "/app/agents" },
-      { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]" },
-    ] as const;
+    const routes: readonly RouteScaffold[] = [
+      { id: "home", title: "Home", path: "/", section: "marketing", purpose: "Home", figmaScope: "", implementationAreas: [] },
+      { id: "docs", title: "Docs", path: "/docs", section: "docs", purpose: "Docs", figmaScope: "", implementationAreas: [] },
+      { id: "agent-detail", title: "Agent Detail", path: "/app/agents/[id]", section: "dashboard", purpose: "Detail", figmaScope: "", implementationAreas: [] },
+    ];
 
     it("applies aria-current to exact match", () => {
       mockUsePathname.mockReturnValue("/docs");
