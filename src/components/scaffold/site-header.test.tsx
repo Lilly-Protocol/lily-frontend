@@ -50,18 +50,24 @@ describe("SiteHeader", () => {
 
     const menuButton = screen.getByRole("button", { name: /open menu/i });
     expect(menuButton).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("navigation", { name: "Mobile" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("navigation", { name: "Mobile" }),
+    ).not.toBeInTheDocument();
 
     fireEvent.click(menuButton);
 
     expect(menuButton).toHaveAttribute("aria-expanded", "true");
     expect(document.querySelectorAll("#mobile-nav-menu")).toHaveLength(1);
-    expect(screen.getByRole("navigation", { name: "Mobile" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "Mobile" }),
+    ).toBeInTheDocument();
 
     fireEvent.keyDown(document, { key: "Escape" });
 
     expect(menuButton).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("navigation", { name: "Mobile" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("navigation", { name: "Mobile" }),
+    ).not.toBeInTheDocument();
     expect(menuButton).toHaveFocus();
   });
 });
