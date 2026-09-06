@@ -1,28 +1,32 @@
 import type { Metadata } from "next";
 
-import { siteConfig } from "@/config/site";
 import { AboutContent } from "@/features/about/about-content";
-import { createScaffoldMetadata } from "@/features/scaffold/page-factory";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  ...createScaffoldMetadata("about"),
+  title: "About | Lily Protocol",
+  description: "Learn about the mission, core values, and ecosystem backing Lily Protocol.",
   alternates: {
-    canonical: new URL("/about", siteConfig.url).toString(),
+    canonical: `${siteConfig.url}/about`,
   },
 };
 
 export default function AboutPage() {
   return (
-    <>
-      <h1 className="text-3xl font-semibold tracking-tight text-[var(--color-ink)]">
-        About
-      </h1>
-      <p className="mt-3 max-w-2xl text-sm text-[var(--color-muted)]">
-        What Lily Protocol is, what we stand for, and who we build with.
-      </p>
-      <div className="mt-10">
-        <AboutContent />
-      </div>
-    </>
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <header className="mb-12">
+        <p className="eyebrow text-(--color-accent)">
+          About Us
+        </p>
+        <h1 className="mt-2 text-4xl font-semibold tracking-tight text-(--color-ink) sm:text-5xl">
+          About Lily Protocol
+        </h1>
+        <p className="mt-4 max-w-3xl text-lg text-(--color-muted)">
+          Pioneering deterministic compute, open economic rails, and coordination protocols for the next generation of decentralized networks.
+        </p>
+      </header>
+
+      <AboutContent />
+    </div>
   );
 }
