@@ -1,56 +1,55 @@
 export interface PublicEnv {
   siteUrl: string;
-  apiBaseUrl: string;
+  apiBaseUrl?: string;
 }
 
-function normalizeUrl(value: string): string {
-  return value.endsWith("/") ? value.slice(0, -1) : value;
-}
-
-function validateUrl(key: string, value: string): string {
-  let parsed: URL;
-  try {
-    parsed = new URL(value);
-  } catch {
-    throw new Error(`${key} must be an absolute http(s) URL`);
-  }
-
-  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-    throw new Error(`${key} must use http or https`);
-  }
-
-  return normalizeUrl(value);
-}
-
-export function parsePublicEnv(
-  source: Record<string, string | undefined> = process.env,
-): PublicEnv {
-  const siteUrlRaw = source.NEXT_PUBLIC_SITE_URL;
+export function parsePublicEnv(raw: Record<string, string | undefined>): PublicEnv {
+  const siteUrlRaw = raw.NEXT_PUBLIC_SITE_URL;
   if (!siteUrlRaw) {
     throw new Error(
       "Missing required environment variable NEXT_PUBLIC_SITE_URL. Copy .env.example to .env.local and set it.",
     );
   }
 
-  const apiBaseUrlRaw = source.NEXT_PUBLIC_API_BASE_URL;
-  if (!apiBaseUrlRaw) {
-    throw new Error(
-      "Missing required environment variable NEXT_PUBLIC_API_BASE_URL. Copy .env.example to .env.local and set it.",
-    );
+  let siteUrlObj: URL;
+  try {
+    siteUrlObj = new URL(siteUrlRaw);
+  } catch {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an absolute http(s) URL");
+  }
+
+  if (siteUrlObj.protocol !== "http:" && siteUrlObj.protocol !== "https:") {
+    throw new Error("NEXT_PUBLIC_SITE_URL must use http or https");
+  }
+
+  const apiBaseUrlRaw = raw.NEXT_PUBLIC_API_BASE_URL;
+  let apiBaseUrl: string | undefined;
+
+  if (apiBaseUrlRaw !== undefined && apiBaseUrlRaw !== "") {
+    let apiUrlObj: URL;
+    try {
+      apiUrlObj = new URL(apiBaseUrlRaw);
+    } catch {
+      throw new Error("NEXT_PUBLIC_API_BASE_URL must be an absolute http(s) URL");
+    }
+
+    if (apiUrlObj.protocol !== "http:" && apiUrlObj.protocol !== "https:") {
+      throw new Error("NEXT_PUBLIC_API_BASE_URL must use http or https");
+    }
+    apiBaseUrl = apiBaseUrlRaw.replace(/\/+$/, "");
   }
 
   return {
-    siteUrl: validateUrl("NEXT_PUBLIC_SITE_URL", siteUrlRaw),
-    apiBaseUrl: validateUrl("NEXT_PUBLIC_API_BASE_URL", apiBaseUrlRaw),
+    siteUrl: siteUrlRaw.replace(/\/+$/, ""),
+    ...(apiBaseUrl ? { apiBaseUrl } : {}),
   };
 }
 
-export const env: PublicEnv = {
-  get siteUrl(): string {
-    return parsePublicEnv().siteUrl;
+export const env = {
+  get siteUrl() {
+    return parsePublicEnv(process.env).siteUrl;
   },
-  get apiBaseUrl(): string {
-    return parsePublicEnv().apiBaseUrl;
+  get apiBaseUrl() {
+    return parsePublicEnv(process.env).apiBaseUrl;
   },
 };
-
