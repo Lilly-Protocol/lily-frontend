@@ -1,51 +1,46 @@
-import type { Agent } from "./types";
+import type { Agent } from './types';
 
-/**
- * Mock dataset backing the Agents Registry list view until the real
- * registry API is wired up. IDs follow the `/app/agents/[id]` detail
- * route so every row can link into its detail view.
- */
-export const MOCK_AGENTS: readonly Agent[] = [
+export const mockAgents: readonly Agent[] = [
   {
-    id: "agent-001",
-    name: "Atlas Indexer",
-    description: "Crawls and indexes on-chain registry events every epoch.",
-    status: "active",
-    tasksCompleted: 1284,
+    id: 'agentlily_demo_001',
+    name: 'Lily Core Sentinel',
+    description: 'Autonomous validator ensuring consensus and smart contract invariants.',
+    status: 'active',
+    tasksCompleted: 1420,
   },
   {
-    id: "agent-002",
-    name: "Beacon Sentinel",
-    description: "Watches validator health and escalates anomalies.",
-    status: "active",
-    tasksCompleted: 942,
+    id: 'agentlily_audit_002',
+    name: 'Shield Auditor',
+    description: 'Automated vulnerability scanner for zero-day dependency detection.',
+    status: 'registered',
+    tasksCompleted: 350,
   },
   {
-    id: "agent-003",
-    name: "Cartographer",
-    description: "Maps new protocol deployments into the registry graph.",
-    status: "paused",
-    tasksCompleted: 311,
+    id: 'agentlily_settle_003',
+    name: 'Payment Settlement Relay',
+    description: 'Cross-chain liquidity routing and multi-token disbursement.',
+    status: 'active',
+    tasksCompleted: 8912,
   },
   {
-    id: "agent-004",
-    name: "Delta Swapper",
-    description: "Executes routed swaps across configured liquidity venues.",
-    status: "registered",
-    tasksCompleted: 0,
+    id: 'agentlily_bridge_004',
+    name: 'Ecosystem Bridge Oracle',
+    description: 'Cryptographic proof verification for cross-network state sync.',
+    status: 'paused',
+    tasksCompleted: 420,
   },
   {
-    id: "agent-005",
-    name: "Echo Relayer",
-    description: "Relays signed messages between supported chains.",
-    status: "active",
-    tasksCompleted: 2077,
+    id: 'agentlily_telemetry_005',
+    name: 'Network Telemetry Watcher',
+    description: 'Low-latency distributed telemetry and node health reporting.',
+    status: 'registered',
+    tasksCompleted: 104,
   },
   {
-    id: "agent-006",
-    name: "Fathom Auditor",
-    description: "Runs scheduled risk audits over registered agents.",
-    status: "paused",
-    tasksCompleted: 456,
+    id: 'agentlily_indexer_006',
+    name: 'Ledger Indexer Service',
+    description: 'High-throughput block indexing and GraphQL event subscriptions.',
+    status: 'active',
+    tasksCompleted: 4519,
   },
 ];

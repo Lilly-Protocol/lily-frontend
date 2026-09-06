@@ -1,26 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import { getRouteScaffold } from "@/config/routes";
-import { AgentsExplorer } from "@/features/agents/agents-explorer";
-import { MOCK_AGENTS } from "@/features/agents/mock-agents";
-import { createScaffoldMetadata } from "@/features/scaffold/page-factory";
+import { getRouteScaffold } from '@/config/routes';
+import { createScaffoldMetadata } from '@/features/scaffold/page-factory';
+import { AgentsExplorer } from '@/features/agents/agents-explorer';
+import { mockAgents } from '@/features/agents/mock-agents';
 
-export const metadata: Metadata = createScaffoldMetadata("agents");
+const scaffold = getRouteScaffold('agents');
+
+export const metadata: Metadata = createScaffoldMetadata('agents');
 
 export default function AgentsPage() {
-  const route = getRouteScaffold("agents");
-
   return (
-    <main className="surface rounded-[1.75rem] p-8 sm:p-10">
-      <p className="eyebrow text-(--color-accent)">{route.section}</p>
-      <h1 className="mt-4 text-4xl font-semibold tracking-tight">
-        {route.title}
-      </h1>
-      <p className="mt-4 max-w-3xl text-lg leading-8 text-(--color-muted)">
-        {route.purpose}
-      </p>
+    <main className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight text-[var(--color-ink)] sm:text-4xl">
+          {scaffold.title}
+        </h1>
+        <p className="mt-2 text-base text-[var(--color-muted)] sm:text-lg">{scaffold.purpose}</p>
+      </div>
 
-      <AgentsExplorer agents={MOCK_AGENTS} />
+      <AgentsExplorer initialAgents={mockAgents} />
     </main>
   );
 }

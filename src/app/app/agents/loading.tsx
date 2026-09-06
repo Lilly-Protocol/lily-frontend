@@ -1,20 +1,15 @@
-import { Skeleton, SkeletonCard } from "@/components/ui/skeleton";
+import { SkeletonCard } from '@/components/ui/skeleton';
 
 export default function AgentsLoading() {
   return (
-    <main
-      aria-busy="true"
-      className="surface rounded-[1.75rem] p-8 sm:p-10"
-    >
-      <p className="sr-only" role="status">
-        Loading agents
-      </p>
-      <Skeleton className="h-8 w-64" />
-      <div className="mt-8 grid gap-3">
-        <SkeletonCard />
-        <SkeletonCard />
-        <SkeletonCard />
+    <div role="status" aria-live="polite" aria-busy="true" className="space-y-4">
+      <span className="sr-only">Loading agents registry...</span>
+      <div className="grid gap-4 md:grid-cols-2">
+        <SkeletonCard className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)]" />
+        <SkeletonCard className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)]" />
+        <SkeletonCard className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)]" />
+        <SkeletonCard className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)]" />
       </div>
-    </main>
+    </div>
   );
 }

@@ -1,165 +1,144 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from 'react';
+import Link from 'next/link';
 
-import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyState } from '@/components/ui/empty-state';
+import type { Agent, AgentStatus } from './types';
 
-import type { Agent, AgentStatus } from "./types";
+interface AgentsExplorerProps {
+  readonly initialAgents: readonly Agent[];
+}
 
-type StatusFilter = "all" | AgentStatus;
-
-const STATUS_FILTERS: readonly { value: StatusFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "registered", label: "Registered" },
-  { value: "active", label: "Active" },
-  { value: "paused", label: "Paused" },
+const statusFilters: readonly { readonly label: string; readonly value: AgentStatus | 'all' }[] = [
+  { label: 'All', value: 'all' },
+  { label: 'Active', value: 'active' },
+  { label: 'Registered', value: 'registered' },
+  { label: 'Paused', value: 'paused' },
 ];
 
-const STATUS_BADGE_CLASS: Record<AgentStatus, string> = {
-  registered:
-    "border-[var(--color-line)] bg-[var(--color-panel-muted)] text-[var(--color-muted)]",
-  active:
-    "border-[var(--color-accent)] bg-[var(--color-panel-muted)] text-[var(--color-accent)]",
-  paused:
-    "border-[var(--color-line)] bg-transparent text-[var(--color-muted)]",
-};
+function getStatusBadgeStyle(status: AgentStatus) {
+  switch (status) {
+    case 'active':
+      return 'border-[var(--color-accent)] bg-[var(--color-accent)]/10 text-[var(--color-accent)]';
+    case 'registered':
+      return 'border-[var(--color-line)] bg-[var(--color-panel-muted)] text-[var(--color-ink)]';
+    case 'paused':
+      return 'border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400';
+  }
+}
 
-type AgentsExplorerProps = {
-  readonly agents: readonly Agent[];
-};
+export function AgentsExplorer({ initialAgents }: AgentsExplorerProps) {
+  const searchInputId = useId();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<AgentStatus | 'all'>('all');
 
-export function AgentsExplorer({ agents }: AgentsExplorerProps) {
-  const [query, setQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-
-  const visibleAgents = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-
-    return agents.filter((agent) => {
-      const matchesStatus =
-        statusFilter === "all" || agent.status === statusFilter;
-
-      if (!matchesStatus) {
-        return false;
-      }
-
-      if (needle.length === 0) {
-        return true;
-      }
-
-      return (
-        agent.name.toLowerCase().includes(needle) ||
-        agent.description.toLowerCase().includes(needle)
-      );
+  const filteredAgents = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    return initialAgents.filter((agent) => {
+      const matchesStatus = selectedStatus === 'all' || agent.status === selectedStatus;
+      const matchesQuery =
+        q.length === 0 ||
+        agent.name.toLowerCase().includes(q) ||
+        agent.description.toLowerCase().includes(q) ||
+        agent.id.toLowerCase().includes(q);
+      return matchesStatus && matchesQuery;
     });
-  }, [agents, query, statusFilter]);
+  }, [initialAgents, searchQuery, selectedStatus]);
+
+  function handleResetFilters() {
+    setSearchQuery('');
+    setSelectedStatus('all');
+  }
 
   return (
-    <section aria-label="Agent registry explorer" className="mt-8">
-      <div className="flex flex-wrap items-end gap-4">
-        <div className="flex min-w-56 flex-col gap-1">
-          <label
-            className="text-sm font-medium text-[var(--color-ink)]"
-            htmlFor="agents-search"
-          >
+    <div className="mt-8 space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full sm:max-w-xs">
+          <label htmlFor={searchInputId} className="sr-only">
             Search agents
           </label>
           <input
-            className="rounded-full border border-[var(--color-line)] bg-[var(--color-panel-solid)] px-4 py-2 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
-            id="agents-search"
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by name or description"
-            type="search"
-            value={query}
+            id={searchInputId}
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search agents by name or ID..."
+            className="w-full rounded-xl border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-2 text-sm text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:outline-none"
           />
         </div>
 
         <div
-          aria-label="Filter by status"
-          className="flex flex-wrap gap-2"
+          className="flex flex-wrap items-center gap-2"
           role="group"
+          aria-label="Filter by agent status"
         >
-          {STATUS_FILTERS.map((filter) => {
-            const selected = statusFilter === filter.value;
-
+          {statusFilters.map(({ label, value }) => {
+            const isSelected = selectedStatus === value;
             return (
               <button
-                aria-pressed={selected}
-                className={
-                  "rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] motion-reduce:transition-none " +
-                  (selected
-                    ? "border-[var(--color-accent)] bg-[var(--color-panel-muted)] text-[var(--color-accent)]"
-                    : "border-[var(--color-line)] text-[var(--color-muted)] hover:border-[var(--color-accent)]")
-                }
-                key={filter.value}
-                onClick={() => setStatusFilter(filter.value)}
+                key={value}
                 type="button"
+                aria-pressed={isSelected}
+                onClick={() => setSelectedStatus(value)}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:outline-none ${
+                  isSelected
+                    ? 'bg-[var(--color-ink)] text-white'
+                    : 'border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-muted)] hover:text-[var(--color-ink)]'
+                }`}
               >
-                {filter.label}
+                {label}
               </button>
             );
           })}
         </div>
       </div>
 
-      <p
-        aria-live="polite"
-        aria-atomic="true"
-        className="mt-4 text-sm text-[var(--color-muted)]"
-      >
-        Showing {visibleAgents.length} of {agents.length} agents
-      </p>
+      <div role="status" aria-live="polite" className="text-xs text-[var(--color-muted)]">
+        Showing {filteredAgents.length} of {initialAgents.length} agents
+      </div>
 
-      {visibleAgents.length === 0 ? (
-        <div className="mt-6">
-          <EmptyState
-            action={
-              <button
-                className="rounded-full border border-[var(--color-accent)] px-4 py-2 text-sm font-medium text-[var(--color-accent)] transition-colors hover:bg-[var(--color-panel-muted)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] motion-reduce:transition-none"
-                onClick={() => {
-                  setQuery("");
-                  setStatusFilter("all");
-                }}
-                type="button"
-              >
-                Clear filters
-              </button>
-            }
-            description="No agents match the current search and status filters. Adjust or clear the filters to see the full registry."
-            icon={
-              <svg
-                aria-hidden="true"
-                className="size-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m21 21-4.35-4.35" strokeLinecap="round" />
-              </svg>
-            }
-            title="No agents match your filters"
-          />
-        </div>
+      {filteredAgents.length === 0 ? (
+        <EmptyState
+          icon={<span className="text-xl">🔍</span>}
+          title="No agents found"
+          description={
+            <p>
+              No registered agents match your active filters. Try adjusting your search query or
+              status selection.
+            </p>
+          }
+          action={
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="rounded-full bg-[var(--color-ink)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:outline-none"
+            >
+              Clear filters
+            </button>
+          }
+        />
       ) : (
-        <ul className="mt-6 grid gap-3">
-          {visibleAgents.map((agent) => (
-            <li key={agent.id}>
-              <Link
-                className="block rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel-muted)] px-5 py-4 transition-colors hover:border-[var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] motion-reduce:transition-none"
-                href={`/app/agents/${agent.id}`}
-              >
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <span className="text-base font-semibold text-[var(--color-ink)]">
-                    {agent.name}
-                  </span>
+        <div className="grid gap-4 md:grid-cols-2">
+          {filteredAgents.map((agent) => (
+            <article
+              key={agent.id}
+              className="group flex flex-col justify-between rounded-2xl border border-[var(--color-line)] bg-[var(--color-surface)] p-6 transition-all hover:border-[var(--color-accent)]"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="text-lg font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">
+                    <Link
+                      href={`/app/agents/${agent.id}`}
+                      className="focus-visible:underline focus-visible:outline-none"
+                    >
+                      {agent.name}
+                    </Link>
+                  </h2>
                   <span
-                    className={
-                      "rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wide " +
-                      STATUS_BADGE_CLASS[agent.status]
-                    }
+                    className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold capitalize ${getStatusBadgeStyle(
+                      agent.status,
+                    )}`}
                   >
                     {agent.status}
                   </span>
@@ -167,14 +146,16 @@ export function AgentsExplorer({ agents }: AgentsExplorerProps) {
                 <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
                   {agent.description}
                 </p>
-                <p className="mt-2 font-mono text-xs text-[var(--color-muted)]">
-                  {agent.id} · {agent.tasksCompleted} tasks completed
-                </p>
-              </Link>
-            </li>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between border-t border-[var(--color-line)] pt-4 text-xs text-[var(--color-muted)]">
+                <span className="font-mono">{agent.id}</span>
+                <span>{agent.tasksCompleted.toLocaleString()} tasks</span>
+              </div>
+            </article>
           ))}
-        </ul>
+        </div>
       )}
-    </section>
+    </div>
   );
 }

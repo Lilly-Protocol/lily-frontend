@@ -1,9 +1,9 @@
-export type AgentStatus = "registered" | "active" | "paused";
+export type AgentStatus = 'active' | 'registered' | 'paused';
 
-export type Agent = {
+export interface Agent {
   readonly id: string;
   readonly name: string;
   readonly description: string;
   readonly status: AgentStatus;
   readonly tasksCompleted: number;
-};
+}
