@@ -1,11 +1,11 @@
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import path from "node:path";
 
 import { ESLint } from "eslint";
 
 describe("project ESLint rules", () => {
   it("rejects target=_blank links without rel=noopener noreferrer", async () => {
-    const fixturePath = resolve(
+    const fixturePath = path.resolve(
       process.cwd(),
       "src/test/eslint/unsafe-target-blank.tsx.txt",
     );
