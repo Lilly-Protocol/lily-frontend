@@ -78,17 +78,18 @@ ownership and public indexing stay aligned.
   sidebar, and section navigation behavior belongs in the scaffold components.
 
 
-## Internationalization Decision
+## Internationalization (i18n)
 
-The repository previously carried unused `next-intl` scaffolding
-(`src/i18n/`, `src/app/[locale]/layout.tsx`, `messages/en.json`, and the
-`next-intl` dependency) that was never mounted: no middleware performed locale
-negotiation, the root layout served a single hard-coded `lang="en"` document,
-and no component consumed translation messages. The disconnected provider could
-never render for any route.
-
-Decision (recorded in #452): until a real localization scope is agreed, the
-dead scaffolding and the `next-intl` dependency are removed. The app serves
-English-only content from the single root layout. Reintroducing i18n should
-start from a scope decision (target locales, negotiation strategy, message
-namespace layout) rather than restoring this unused scaffold.
+> **Status: Deferred.** The `next-intl` dependency and associated scaffolding
+> (`src/i18n/`, `src/app/[locale]/`, `messages/`) were removed because only a
+> single locale (`en`) was defined and the wiring was incomplete (root layout
+> never mounted `[locale]`, causing dead code paths and TS2307 errors).
+>
+> When i18n becomes a real requirement:
+> 1. Re-add `next-intl` to `package.json`
+> 2. Restore `src/i18n/routing.ts` and `src/i18n/request.ts`
+> 3. Create `src/app/[locale]/layout.tsx` with `NextIntlClientProvider`
+> 4. Update `src/app/layout.tsx` to derive `<html lang>` from the locale
+> 5. Add `src/middleware.ts` integration with `createMiddleware` from
+>    `next-intl/routing`
+> 6. Populate `messages/` with translation files for each supported locale
