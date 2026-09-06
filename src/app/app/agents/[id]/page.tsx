@@ -1,23 +1,19 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
-import { PageScaffold } from "@/components/scaffold/page-scaffold";
-import { getRouteScaffold } from "@/config/routes";
-import { siteConfig } from "@/config/site";
-
-const AGENT_ID_PATTERN = /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|agentlily_demo_001)$/;
+import { PageScaffold } from '@/components/scaffold/page-scaffold';
+import { getRouteScaffold } from '@/config/routes';
+import { siteConfig } from '@/config/site';
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return [{ id: "agentlily_demo_001" }];
+  return [{ id: 'agentlily_demo_001' }];
 }
 
-export default async function AgentDetailPage({
-  params,
-}: {
-  params: Promise<{ id?: string }>;
-}) {
+const AGENT_ID_PATTERN = /^(agentlily_[a-zA-Z0-9_]+|agent-[a-zA-Z0-9_-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
+
+export default async function AgentDetailPage({ params }: { params: Promise<{ id?: string }> }) {
   const { id } = await params;
 
   if (!id || !AGENT_ID_PATTERN.test(id)) {
@@ -39,8 +35,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const route = getRouteScaffold("agent-detail");
-  const title = `Agent Detail View: ${id}`;
-  const description = `${route.purpose} for ${id}`;
+  const title = `${route.title}: ${id}`;
+  const description = `${route.purpose} (${id})`;
 
   return {
     title,

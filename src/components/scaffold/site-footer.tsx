@@ -1,22 +1,20 @@
 import type { Route } from "next";
 import Link from "next/link";
 
-import { routeScaffolds } from "@/config/routes";
+import { getSectionRoutes, routeScaffolds } from "@/config/routes";
 import { routes, siteConfig } from "@/config/site";
 import type { RouteScaffold } from "@/types/site";
+
+const defaultLegalRoutes: readonly RouteScaffold[] = getSectionRoutes("legal");
+const defaultSupportRoutes: readonly RouteScaffold[] = [
+  ...getSectionRoutes("docs"),
+  ...routeScaffolds.filter((r) => r.id === "contact"),
+];
 
 type SiteFooterProps = {
   readonly legalRoutes?: readonly RouteScaffold[];
   readonly supportRoutes?: readonly RouteScaffold[];
 };
-
-const defaultLegalRoutes = routeScaffolds.filter((r) =>
-  ["terms", "privacy", "cookies"].includes(r.id),
-);
-
-const defaultSupportRoutes = routeScaffolds.filter((r) =>
-  ["docs", "status", "contact"].includes(r.id),
-);
 
 export function SiteFooter({
   legalRoutes = defaultLegalRoutes,
