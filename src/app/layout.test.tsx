@@ -16,8 +16,8 @@ vi.mock("next/font/google", () => ({
   Space_Grotesk: fontMocks.spaceGrotesk,
 }));
 
-import { viewport } from "./layout";
-import { rootViewport } from "@/config/viewport";
+import { render } from "@testing-library/react";
+import RootLayout from "./layout";
 
 describe("RootLayout configuration", () => {
   it("uses swap display for both fonts and preloads Space Grotesk", () => {
@@ -29,7 +29,17 @@ describe("RootLayout configuration", () => {
     );
   });
 
-  it("exports rootViewport from config/viewport as layout viewport", () => {
-    expect(viewport).toEqual(rootViewport);
+  it("renders exactly one application/ld+json organization script and single footer", () => {
+    const { container } = render(
+      <RootLayout>
+        <div>Content</div>
+      </RootLayout>,
+    );
+
+    const scripts = container.querySelectorAll(
+      'script[type="application/ld+json"]#organization-json-ld',
+    );
+    expect(scripts).toHaveLength(1);
+    expect(container.querySelectorAll("footer")).toHaveLength(1);
   });
 });
