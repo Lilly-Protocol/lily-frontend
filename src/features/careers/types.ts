@@ -1,16 +1,14 @@
-export type LocationType = "Remote" | "Hybrid" | "On-site";
+export interface OpenRole {
+  id: string;
+  title: string;
+  team: string;
+  location: string;
+  type: string;
+  applyHref: string;
+}
 
-export type OpenRole = {
-  readonly id: string;
-  readonly title: string;
-  readonly team: string;
-  readonly location: string;
-  readonly locationType: LocationType;
-  readonly applyHref: string;
-};
-
-export type CultureSection = {
-  readonly id: string;
-  readonly title: string;
-  readonly body: string;
-};
+export interface CultureValue {
+  id: string;
+  title: string;
+  description: string;
+}

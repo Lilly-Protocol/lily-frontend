@@ -1,55 +1,59 @@
-import type { CultureSection, OpenRole } from "./types";
+import type { CultureValue, OpenRole } from "./types";
 
-export const openRoles: readonly OpenRole[] = [
+export const mockCultureValues: readonly CultureValue[] = [
+  {
+    id: "autonomy",
+    title: "High Autonomy, Clear Ownership",
+    description: "We trust engineers and designers to own problems end-to-end with direct accountability to our users.",
+  },
+  {
+    id: "open-source",
+    title: "Open Source by Default",
+    description: "Our protocols, SDKs, and developer tools are built in the open with community collaboration.",
+  },
+  {
+    id: "rigor",
+    title: "Engineering Rigor",
+    description: "We prioritize correctness, deterministic testing, and high reliability across all distributed protocols.",
+  },
+  {
+    id: "remote",
+    title: "Global & Remote-First",
+    description: "Our team spans multiple continents and timezones, operating asynchronously with clear documentation.",
+  },
+] as const;
+
+export const mockOpenRoles: readonly OpenRole[] = [
+  {
+    id: "sr-frontend-engineer",
+    title: "Senior Frontend Engineer",
+    team: "Product Engineering",
+    location: "Remote (Global)",
+    type: "Full-time",
+    applyHref: "mailto:careers@lillyprotocol.com?subject=Application:%20Senior%20Frontend%20Engineer",
+  },
   {
     id: "protocol-engineer",
-    title: "Senior Protocol Engineer",
-    team: "Protocol",
-    location: "Remote (GMT-3 to GMT+3)",
-    locationType: "Remote",
-    applyHref: "mailto:careers@lilyprotocol.dev?subject=Senior%20Protocol%20Engineer",
+    title: "Core Protocol Engineer",
+    team: "Infrastructure",
+    location: "Remote (Global)",
+    type: "Full-time",
+    applyHref: "mailto:careers@lillyprotocol.com?subject=Application:%20Core%20Protocol%20Engineer",
   },
   {
-    id: "frontend-engineer",
-    title: "Frontend Engineer, Dashboard",
-    team: "Product",
-    location: "Remote (GMT-5 to GMT+2)",
-    locationType: "Remote",
-    applyHref: "mailto:careers@lilyprotocol.dev?subject=Frontend%20Engineer%2C%20Dashboard",
+    id: "developer-advocate",
+    title: "Developer Advocate",
+    team: "Ecosystem & Growth",
+    location: "Remote (US / EU)",
+    type: "Full-time",
+    applyHref: "mailto:careers@lillyprotocol.com?subject=Application:%20Developer%20Advocate",
   },
   {
-    id: "developer-relations",
-    title: "Developer Relations Engineer",
-    team: "Ecosystem",
-    location: "Lisbon, Portugal",
-    locationType: "Hybrid",
-    applyHref: "mailto:careers@lilyprotocol.dev?subject=Developer%20Relations%20Engineer",
-  },
-  {
-    id: "security-reviewer",
-    title: "Smart Contract Security Reviewer",
+    id: "security-researcher",
+    title: "Security Researcher",
     team: "Security",
-    location: "Remote (worldwide)",
-    locationType: "Remote",
-    applyHref:
-      "mailto:careers@lilyprotocol.dev?subject=Smart%20Contract%20Security%20Reviewer",
+    location: "Remote (Global)",
+    type: "Full-time",
+    applyHref: "mailto:careers@lillyprotocol.com?subject=Application:%20Security%20Researcher",
   },
-];
-
-export const cultureSections: readonly CultureSection[] = [
-  {
-    id: "how-we-work",
-    title: "How we work",
-    body: "We are a small, fully distributed team that ships in public. Work happens in the open: design docs, protocol changes, and incident reviews are written down and reviewed asynchronously so nobody has to sit in a meeting to stay informed.",
-  },
-  {
-    id: "what-we-value",
-    title: "What we value",
-    body: "Clarity over cleverness. We favour the boring, auditable solution, we write the test before the optimisation, and we treat a clear explanation as part of the deliverable rather than an afterthought.",
-  },
-  {
-    id: "how-we-hire",
-    title: "How we hire",
-    body: "Every loop is the same shape: a scoping conversation, a paired work session on a real problem from our backlog, and a conversation about how you make decisions under uncertainty. We give a decision within five business days.",
-  },
-];
+] as const;

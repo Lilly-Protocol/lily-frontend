@@ -1,99 +1,52 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
-import { CareersContent } from "./careers-content";
-import { cultureSections, openRoles } from "./mock-roles";
-import type { OpenRole } from "./types";
+import CareersPage from "@/app/(marketing)/careers/page";
+import { CareersContent } from "@/features/careers/careers-content";
+import { mockCultureValues, mockOpenRoles } from "@/features/careers/mock-roles";
 
-const role: OpenRole = {
-  id: "test-role",
-  title: "Senior Protocol Engineer",
-  team: "Protocol",
-  location: "Remote (GMT-3 to GMT+3)",
-  locationType: "Hybrid",
-  applyHref: "mailto:careers@lilyprotocol.dev?subject=Senior%20Protocol%20Engineer",
-};
-
-describe("CareersContent", () => {
-  it("renders exactly one <h1> for the page", () => {
-    render(<CareersContent culture={cultureSections} roles={openRoles} />);
-
-    expect(screen.getByRole("heading", { level: 1, name: "Careers" })).toBeInTheDocument();
-    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+describe("Careers Page & Content", () => {
+  it("renders exactly one h1 heading on the careers page", () => {
+    render(<CareersPage />);
+    const headings = screen.getAllByRole("heading", { level: 1 });
+    expect(headings).toHaveLength(1);
+    expect(headings[0]).toHaveTextContent(/careers at lily protocol/i);
   });
 
-  it("renders the culture and values sections", () => {
-    render(<CareersContent culture={cultureSections} roles={openRoles} />);
+  it("renders all culture and values sections", () => {
+    render(<CareersContent />);
 
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Culture and values" }),
-    ).toBeInTheDocument();
-
-    for (const section of cultureSections) {
-      expect(
-        screen.getByRole("heading", { level: 3, name: section.title }),
-      ).toBeInTheDocument();
-      expect(screen.getByText(section.body)).toBeInTheDocument();
+    for (const val of mockCultureValues) {
+      expect(screen.getByText(val.title)).toBeInTheDocument();
+      expect(screen.getByText(val.description)).toBeInTheDocument();
     }
   });
 
-  it("renders a role's title, team, location type, and application link", () => {
-    render(<CareersContent culture={cultureSections} roles={[role]} />);
+  it("renders the list of open roles from mock data", () => {
+    render(<CareersContent />);
 
-    expect(
-      screen.getByRole("heading", { level: 3, name: role.title }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(`${role.team} · ${role.location}`),
-    ).toBeInTheDocument();
-    expect(screen.getByText(role.locationType)).toBeInTheDocument();
-
-    const applyLink = screen.getByRole("link", {
-      name: `Apply for this role: ${role.title}`,
-    });
-    expect(applyLink).toHaveAttribute("href", role.applyHref);
-  });
-
-  it("renders every mock role in the open roles list", () => {
-    render(<CareersContent culture={cultureSections} roles={openRoles} />);
-
-    const list = screen.getByRole("list");
-    expect(within(list).getAllByRole("listitem")).toHaveLength(openRoles.length);
-
-    for (const openRole of openRoles) {
-      expect(
-        within(list).getByRole("heading", { level: 3, name: openRole.title }),
-      ).toBeInTheDocument();
+    for (const role of mockOpenRoles) {
+      expect(screen.getByText(role.title)).toBeInTheDocument();
+      expect(screen.getByText(role.team)).toBeInTheDocument();
     }
+
+    const applyLinks = screen.getAllByRole("link", { name: /apply now/i });
+    expect(applyLinks).toHaveLength(mockOpenRoles.length);
+    expect(applyLinks[0]).toHaveAttribute("href", mockOpenRoles[0].applyHref);
   });
 
-  it("renders the EmptyState instead of a list when no roles are open", () => {
-    render(<CareersContent culture={cultureSections} roles={[]} />);
+  it("renders the EmptyState component when roles array is empty", () => {
+    render(<CareersContent roles={[]} />);
 
+    expect(screen.getByText(/no open roles currently/i)).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 2, name: "Nothing open at the moment" }),
+      screen.getByText(/we do not have active listings at the moment/i)
     ).toBeInTheDocument();
-    expect(screen.getByText("No open roles")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "careers@lilyprotocol.dev" })).toHaveAttribute(
-      "href",
-      "mailto:careers@lilyprotocol.dev",
-    );
 
-    expect(screen.queryByRole("list")).not.toBeInTheDocument();
-    expect(screen.queryByText(role.title)).not.toBeInTheDocument();
-  });
+    const generalApplyLink = screen.getByRole("link", { name: /send general application/i });
+    expect(generalApplyLink).toHaveAttribute("href", expect.stringContaining("mailto:careers@lillyprotocol.com"));
 
-  it("still renders one <h1> in the empty-state variant", () => {
-    render(<CareersContent culture={cultureSections} roles={[]} />);
-
-    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-  });
-
-  it("omits the culture section when no culture content is provided", () => {
-    render(<CareersContent roles={openRoles} />);
-
-    expect(
-      screen.queryByRole("heading", { name: "Culture and values" }),
-    ).not.toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: "Careers" })).toBeInTheDocument();
+    // Open roles should not be rendered
+    expect(screen.queryByRole("link", { name: /apply now/i })).not.toBeInTheDocument();
   });
 });
