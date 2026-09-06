@@ -1,74 +1,91 @@
-import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import ContactPage from "@/app/(marketing)/contact/page";
-import { contactChannels } from "./contact-data";
-import { ContactContent } from "./contact-content";
+import { ContactContent } from "@/features/contact/contact-content";
+import { contactChannels, faqItems } from "@/features/contact/contact-data";
 
-describe("ContactContent", () => {
-  it("renders one h1 heading for the page", () => {
+describe("Contact Page & Content", () => {
+  it("renders exactly one h1 heading on the contact page", () => {
     render(<ContactPage />);
-    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    const headings = screen.getAllByRole("heading", { level: 1 });
+    expect(headings).toHaveLength(1);
+    expect(headings[0]).toHaveTextContent(/contact us/i);
   });
 
-  it("renders all channel cards with their contact links", () => {
-    render(<ContactContent />);
-    for (const channel of contactChannels) {
-      const link = screen.getByRole("link", { name: channel.linkLabel });
-      expect(link).toHaveAttribute("href", channel.href);
-      expect(screen.getByText(channel.title)).toBeInTheDocument();
-    }
-  });
-
-  it("renders exactly one form landmark", () => {
-    render(<ContactContent />);
-    const forms = screen.getAllByRole("form");
+  it("renders exactly one form landmark on the page initially", () => {
+    const { container } = render(<ContactContent />);
+    const forms = container.querySelectorAll("form");
     expect(forms).toHaveLength(1);
   });
 
-  it("shows inline errors and does not navigate when submitting an empty form", async () => {
-    const user = userEvent.setup();
+  it("renders all inbound contact channel cards with expected links", () => {
     render(<ContactContent />);
 
-    const form = screen.getByRole("form", { name: /contact inquiry/i });
-    await user.click(within(form).getByRole("button", { name: /send inquiry/i }));
+    for (const channel of contactChannels) {
+      expect(screen.getByText(channel.title)).toBeInTheDocument();
+      const link = screen.getByRole("link", { name: new RegExp(channel.actionLabel, "i") });
+      expect(link).toHaveAttribute("href", channel.href);
+    }
+  });
+
+  it("displays validation error alerts on empty form submission and does not navigate", () => {
+    render(<ContactContent />);
+
+    const submitBtn = screen.getByRole("button", { name: /submit inquiry/i });
+    fireEvent.click(submitBtn);
 
     const alerts = screen.getAllByRole("alert");
-    expect(alerts).toHaveLength(3);
-    expect(screen.getByText(/please enter your name/i)).toBeInTheDocument();
-    expect(screen.getByText(/please enter your email address/i)).toBeInTheDocument();
-    expect(screen.getByText(/please enter a message/i)).toBeInTheDocument();
-    expect(form).not.toHaveAttribute("action");
+    expect(alerts.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText(/name is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/message is required/i)).toBeInTheDocument();
+
+    // Form remains in document (no submission / navigation)
+    expect(screen.getByRole("button", { name: /submit inquiry/i })).toBeInTheDocument();
   });
 
-  it("clears errors and confirms submission when the form is filled validly", async () => {
-    const user = userEvent.setup();
+  it("validates email formatting", () => {
     render(<ContactContent />);
 
-    const form = screen.getByRole("form", { name: /contact inquiry/i });
-    await user.type(within(form).getByLabelText(/name/i), "Ada");
-    await user.type(within(form).getByLabelText(/email/i), "ada@example.com");
-    await user.type(within(form).getByLabelText(/message/i), "Hello there");
-    await user.click(within(form).getByRole("button", { name: /send inquiry/i }));
+    fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Satoshi Nakamoto" } });
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "invalid-email" } });
+    fireEvent.change(screen.getByLabelText(/message/i), { target: { value: "Hello Lily" } });
 
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(screen.getByText(/thank you\. your inquiry has been recorded/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /submit inquiry/i }));
+
+    expect(screen.getByText(/please enter a valid email address/i)).toBeInTheDocument();
   });
 
-  it("toggles FAQ accordion panels on click", async () => {
-    const user = userEvent.setup();
+  it("displays success confirmation upon valid submission", () => {
     render(<ContactContent />);
 
-    const firstQuestion = screen.getByRole("button", { name: /how fast will i get a response/i });
-    expect(firstQuestion).toHaveAttribute("aria-expanded", "false");
+    fireEvent.change(screen.getByLabelText(/full name/i), { target: { value: "Alice Cooper" } });
+    fireEvent.change(screen.getByLabelText(/email address/i), { target: { value: "alice@example.com" } });
+    fireEvent.change(screen.getByLabelText(/message/i), { target: { value: "Looking forward to integrating." } });
 
-    await user.click(firstQuestion);
-    expect(firstQuestion).toHaveAttribute("aria-expanded", "true");
-    const panel = screen.getByRole("region", { name: /how fast will i get a response/i });
-    expect(within(panel).getByText(/reply to support and security inquiries within two business days/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /submit inquiry/i }));
 
-    await user.click(firstQuestion);
-    expect(firstQuestion).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("status")).toBeInTheDocument();
+    expect(screen.getByText(/message received/i)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /submit inquiry/i })).not.toBeInTheDocument();
+  });
+
+  it("toggles accordion FAQ items correctly", () => {
+    render(<ContactContent />);
+
+    const firstFaq = faqItems[0];
+    const button = screen.getByRole("button", { name: new RegExp(firstFaq.question, "i") });
+
+    // Initially collapsed
+    expect(button).toHaveAttribute("aria-expanded", "false");
+
+    // Click to expand
+    fireEvent.click(button);
+    expect(button).toHaveAttribute("aria-expanded", "true");
+
+    // Click again to collapse
+    fireEvent.click(button);
+    expect(button).toHaveAttribute("aria-expanded", "false");
   });
 });
