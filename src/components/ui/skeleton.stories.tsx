@@ -1,32 +1,27 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Skeleton, SkeletonText, SkeletonCard } from "./skeleton";
 
-import { Skeleton, SkeletonCard, SkeletonText } from "./skeleton";
-
-const meta: Meta<typeof Skeleton> = {
+const meta: Meta = {
   title: "UI/Skeleton",
   component: Skeleton,
   parameters: { layout: "padded" },
 };
-
 export default meta;
-type Story = StoryObj<typeof Skeleton>;
 
-export const Text: Story = {
-  args: { variant: "text" },
+type SkeletonStory = StoryObj<typeof Skeleton>;
+type SkeletonTextStory = StoryObj<typeof SkeletonText>;
+type SkeletonCardStory = StoryObj<typeof SkeletonCard>;
+
+export const Default: SkeletonStory = {};
+
+export const TextVariant: SkeletonStory = { args: { variant: "text" } };
+
+export const AvatarVariant: SkeletonStory = { args: { variant: "avatar" } };
+
+export const CardVariant: SkeletonStory = { args: { variant: "card" } };
+
+export const TextLines: SkeletonTextStory = {
+  args: { lines: 3 },
 };
 
-export const Avatar: Story = {
-  args: { variant: "avatar" },
-};
-
-export const Card: Story = {
-  args: { variant: "card" },
-};
-
-export const LoadingText: Story = {
-  render: () => <SkeletonText lines={4} className="max-w-xl" />,
-};
-
-export const LoadingCard: Story = {
-  render: () => <SkeletonCard className="max-w-xl" />,
-};
+export const Card: SkeletonCardStory = {};

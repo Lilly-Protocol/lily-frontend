@@ -1,38 +1,50 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
 import { Accordion, AccordionItem } from "./accordion";
 
 const meta: Meta<typeof Accordion> = {
   title: "UI/Accordion",
   component: Accordion,
-  args: { children: null },
   parameters: { layout: "padded" },
 };
-
 export default meta;
+
 type Story = StoryObj<typeof Accordion>;
 
-function AccordionExample({ defaultOpen = false }: { defaultOpen?: boolean }) {
-  return (
-    <Accordion className="max-w-2xl">
-      <AccordionItem title="What is Lilly?" defaultOpen={defaultOpen}>
-        Lilly provides infrastructure for building and operating autonomous agents.
+export const Default: Story = {
+  render: () => (
+    <Accordion>
+      <AccordionItem title="What is Lily Protocol?">
+        Lily Protocol is a payments and identity layer for AI agents.
       </AccordionItem>
-      <AccordionItem title="Can I use it with my existing workflow?">
-        Yes. The shared primitives are designed to compose with the rest of the application.
+      <AccordionItem title="How do I get started?">
+        Install the SDK, configure your API key, and start making requests.
+      </AccordionItem>
+      <AccordionItem title="Is it compatible with EVM?">
+        Yes, Lily Protocol supports EVM-compatible chains including Base.
       </AccordionItem>
     </Accordion>
-  );
-}
-
-export const Closed: Story = {
-  render: () => <AccordionExample />,
+  ),
 };
 
-export const Open: Story = {
-  render: () => <AccordionExample defaultOpen />,
+export const FirstItemOpen: Story = {
+  render: () => (
+    <Accordion>
+      <AccordionItem title="Open by default" defaultOpen>
+        This item is expanded by default, showing the accordion in its open state.
+      </AccordionItem>
+      <AccordionItem title="Second item">
+        This item starts closed but can be expanded on click.
+      </AccordionItem>
+    </Accordion>
+  ),
 };
 
-export const Empty: Story = {
-  render: () => <Accordion>{null}</Accordion>,
+export const SingleItem: Story = {
+  render: () => (
+    <Accordion>
+      <AccordionItem title="Do you support BUSD?">
+        Yes, BUSD BEP20 is supported as a payment currency alongside USDC on Base.
+      </AccordionItem>
+    </Accordion>
+  ),
 };
