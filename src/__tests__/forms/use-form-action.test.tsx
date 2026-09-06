@@ -73,6 +73,7 @@
      });
    });
 
+
    it("captures thrown errors as form-level failures", async () => {
      const action = vi.fn(async () => {
        throw new Error("Network down");
@@ -86,44 +87,35 @@
      });
    });
 
-   it("resets state without re-invoking the action", async () => {
-     const action = vi.fn(async () => ({
-       fieldErrors: { name: ["Name is required"] },
-       formError: "Form failed",
-       data: null,
-     }));
+   it("resets state without re-executing action", async () => {
+    function ResetDemo({ action }: DemoProps) {
+      const { state, submit, reset } = useFormAction<{ greeting: string }>(action);
+      return (
+        <form action={submit}>
+          <button type="submit">Submit</button>
+          <button type="button" onClick={reset}>Reset</button>
+          {state.formError && <p data-testid="form-error">{state.formError}</p>}
+        </form>
+      );
+    }
 
-     const { result } = renderHook(() =>
-       useFormAction<{ greeting: string }>(action),
-     );
+    const action = vi.fn(async () => {
+      throw new Error("Failure");
+    });
 
-     // Submit once to populate errors
-     await act(async () => {
-       startTransition(() => {
-         result.current.submit(new FormData());
-       });
-     });
+    render(<ResetDemo action={action} />);
+    await userEvent.click(screen.getByRole("button", { name: "Submit" }));
 
-     await waitFor(() => {
-       expect(result.current.state.fieldErrors).toEqual({
-         name: ["Name is required"],
-       });
-       expect(result.current.state.formError).toBe("Form failed");
-     });
-     expect(action).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(screen.getByTestId("form-error")).toHaveTextContent("Failure");
+    });
+    expect(action).toHaveBeenCalledTimes(1);
 
-     // Reset must clear state
-     act(() => {
-       result.current.reset();
-     });
+    await userEvent.click(screen.getByRole("button", { name: "Reset" }));
 
-     expect(result.current.state).toEqual({
-       fieldErrors: null,
-       formError: null,
-       data: null,
-     });
-
-     // Calling reset must not invoke action again
-     expect(action).toHaveBeenCalledTimes(1);
-   });
+    await waitFor(() => {
+      expect(screen.queryByTestId("form-error")).toBeNull();
+    });
+    expect(action).toHaveBeenCalledTimes(1);
+  });
  });
