@@ -8,10 +8,14 @@ import { useRef, useState, useEffect } from "react";
 import { scaffoldMessages } from "@/config/messages";
 import { routes, siteConfig } from "@/config/site";
 
-function isCurrentPath(pathname: string | null, routePath: string): boolean {
-  if (!pathname) return false;
-  if (routePath === "/") return pathname === "/";
-  return pathname === routePath || pathname.startsWith(`${routePath}/`);
+function isRouteActive(currentPath: string | null | undefined, targetRoute: string): boolean {
+  if (!currentPath) {
+    return false;
+  }
+  if (targetRoute === routes.home || targetRoute === "/") {
+    return currentPath === "/" || currentPath === routes.home;
+  }
+  return currentPath === targetRoute || currentPath.startsWith(targetRoute + "/");
 }
 
 export function SiteHeader() {
@@ -22,6 +26,13 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (!isOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        buttonRef.current?.focus();
+      }
+    }
 
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -34,8 +45,26 @@ export function SiteHeader() {
       }
     }
 
+    document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        buttonRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   return (
@@ -45,7 +74,7 @@ export function SiteHeader() {
           <Link
             className="text-lg font-semibold tracking-tight"
             href={routes.home as Route}
-            aria-current={isCurrentPath(pathname, routes.home) ? "page" : undefined}
+            aria-current={isRouteActive(pathname, routes.home) ? "page" : undefined}
           >
             {siteConfig.name}
           </Link>
@@ -62,21 +91,21 @@ export function SiteHeader() {
           <Link
             className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.docs as Route}
-            aria-current={isCurrentPath(pathname, routes.docs) ? "page" : undefined}
+            aria-current={isRouteActive(pathname, routes.docs) ? "page" : undefined}
           >
             {scaffoldMessages.siteHeader.docs}
           </Link>
           <Link
             className="rounded-full border border-(--color-line) px-4 py-2 hover:border-(--color-accent)"
             href={routes.signin as Route}
-            aria-current={isCurrentPath(pathname, routes.signin) ? "page" : undefined}
+            aria-current={isRouteActive(pathname, routes.signin) ? "page" : undefined}
           >
             {scaffoldMessages.siteHeader.signIn}
           </Link>
           <Link
             className="rounded-full bg-[var(--color-ink)] px-4 py-2 text-[var(--color-panel-contrast)] hover:opacity-90"
             href={routes.dashboard as Route}
-            aria-current={isCurrentPath(pathname, routes.dashboard) ? "page" : undefined}
+            aria-current={isRouteActive(pathname, routes.dashboard) ? "page" : undefined}
           >
             {scaffoldMessages.siteHeader.dashboard}
           </Link>

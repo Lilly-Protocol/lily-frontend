@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
 import { routeScaffolds } from '@/config/routes';
-
 import { createScaffoldPage } from './page-factory';
 
 function expectSingleHeading(title: string) {

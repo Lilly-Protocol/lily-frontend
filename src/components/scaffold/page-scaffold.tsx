@@ -12,11 +12,11 @@ export function PageScaffold({
   statusMessage,
 }: PageScaffoldProps) {
   return (
-    <main className="surface rounded-[1.75rem] p-8 sm:p-10">
+    <section className="surface rounded-[1.75rem] p-8 sm:p-10">
       <p className="eyebrow text-(--color-accent)">{route.section}</p>
       <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-[clamp(2rem,5vw,2.5rem)] font-semibold tracking-tight">
+          <h1 className="text-[clamp(1.75rem,4vw,2.25rem)] text-4xl font-semibold tracking-tight break-words">
             {route.title}
           </h1>
           <p className="mt-4 max-w-3xl text-lg leading-8 text-(--color-muted) break-words">
@@ -68,6 +68,6 @@ export function PageScaffold({
           </ul>
         </article>
       </section>
-    </main>
+    </section>
   );
 }

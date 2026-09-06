@@ -6,10 +6,9 @@ import { getAbsoluteUrl, siteConfig } from '@/config/site';
 export default function sitemap(): MetadataRoute.Sitemap {
   return siteConfig.pages.map((page) => ({
     url: getAbsoluteUrl(page.path),
-    lastModified: page.updatedAt
-      ? new Date(page.updatedAt)
-      : new Date(defaultSitemapUpdatedAt),
+    lastModified: new Date(page.updatedAt ?? defaultSitemapUpdatedAt),
     changeFrequency: 'weekly',
     priority: page.priority,
   }));
 }
+
