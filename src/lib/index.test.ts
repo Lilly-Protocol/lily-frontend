@@ -12,7 +12,11 @@ describe("src/lib barrel exports", () => {
   });
 
   it("allows instantiating LilyApiError from barrel export", () => {
-    const error = new lib.LilyApiError("Test error", 400, "BAD_REQUEST");
+    const error = new lib.LilyApiError({
+      message: "Test error",
+      status: 400,
+      code: "BAD_REQUEST",
+    });
     expect(error).toBeInstanceOf(Error);
     expect(error).toBeInstanceOf(lib.LilyApiError);
     expect(lib.isLilyApiError(error)).toBe(true);

@@ -5,7 +5,6 @@ import type { RouteScaffold } from "@/types/site";
 import { SectionNav } from "./section-nav";
 
 import type { ComponentProps } from "react";
-import type { RouteScaffold } from "@/types/site";
 
 vi.mock("next/link", () => ({
   default: ({

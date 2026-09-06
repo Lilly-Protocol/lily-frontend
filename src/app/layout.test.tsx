@@ -17,7 +17,9 @@ vi.mock("next/font/google", () => ({
 }));
 
 import { render } from "@testing-library/react";
-import RootLayout from "./layout";
+
+import { SURFACE_THEME_COLOR, rootViewport } from "@/config/viewport";
+import RootLayout, { viewport } from "./layout";
 
 describe("RootLayout configuration", () => {
   it("uses swap display for both fonts and preloads Space Grotesk", () => {

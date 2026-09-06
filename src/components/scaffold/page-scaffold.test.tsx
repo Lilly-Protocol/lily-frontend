@@ -70,7 +70,7 @@ describe('PageScaffold', () => {
 
     const scopeParagraphs = screen.getAllByText(route.figmaScope);
     expect(scopeParagraphs).toHaveLength(1);
-    expect(article).toContainElement(scopeParagraphs[0]);
+    expect(article).toContainElement(scopeParagraphs[0]!);
   });
 });
 

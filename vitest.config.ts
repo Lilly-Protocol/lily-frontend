@@ -11,12 +11,18 @@ export default defineConfig({
     }
   },
   test: {
-    exclude: [...configDefaults.exclude, '**/e2e/**'],
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
     css: true,
-    setupFiles: ['./src/test/setup.ts'],
-    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**', 'tests/e2e/**', '**/*.spec.ts', 'eslint-rules/**'],
+    setupFiles: ["./src/test/setup.ts"],
+    exclude: [
+      ...configDefaults.exclude,
+      "**/e2e/**",
+      "e2e/**",
+      "tests/e2e/**",
+      "**/*.spec.ts",
+      "eslint-rules/**",
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

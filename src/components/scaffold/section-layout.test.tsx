@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { getSectionRoutes } from '@/config/routes';
+import { getRouteScaffold, getSectionRoutes } from '@/config/routes';
 import { checkA11y } from '@/test/a11y';
 
 import { PageScaffold } from './page-scaffold';

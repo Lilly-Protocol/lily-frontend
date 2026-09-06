@@ -74,7 +74,7 @@ describe("Contact Page & Content", () => {
   it("toggles accordion FAQ items correctly", () => {
     render(<ContactContent />);
 
-    const firstFaq = faqItems[0];
+    const firstFaq = faqItems[0]!;
     const button = screen.getByRole("button", { name: new RegExp(firstFaq.question, "i") });
 
     // Initially collapsed

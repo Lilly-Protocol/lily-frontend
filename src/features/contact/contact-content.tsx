@@ -151,7 +151,7 @@ export function ContactContent() {
               id="contact-name"
               value={formData.name}
               onChange={handleChange}
-              error={errors.name}
+              {...(errors.name !== undefined ? { error: errors.name } : {})}
               placeholder="Ada Lovelace"
             />
 
@@ -162,7 +162,7 @@ export function ContactContent() {
               id="contact-email"
               value={formData.email}
               onChange={handleChange}
-              error={errors.email}
+              {...(errors.email !== undefined ? { error: errors.email } : {})}
               placeholder="ada@example.com"
             />
 

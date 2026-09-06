@@ -32,7 +32,7 @@ describe("Careers Page & Content", () => {
 
     const applyLinks = screen.getAllByRole("link", { name: /apply now/i });
     expect(applyLinks).toHaveLength(mockOpenRoles.length);
-    expect(applyLinks[0]).toHaveAttribute("href", mockOpenRoles[0].applyHref);
+    expect(applyLinks[0]!).toHaveAttribute("href", mockOpenRoles[0]!.applyHref);
   });
 
   it("renders the EmptyState component when roles array is empty", () => {

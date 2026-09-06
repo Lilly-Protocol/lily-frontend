@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -71,7 +72,7 @@ export function BlogListing({ posts = mockBlogPosts }: BlogListingProps) {
               </div>
 
               <h3 className="mt-4 text-2xl font-semibold tracking-tight text-(--color-ink) sm:text-3xl">
-                <Link href={`/blog/${featuredPost.slug}`} className="hover:underline focus:outline-none">
+                <Link href={`/blog/${featuredPost.slug}` as Route} className="hover:underline focus:outline-none">
                   {featuredPost.title}
                 </Link>
               </h3>
@@ -84,7 +85,7 @@ export function BlogListing({ posts = mockBlogPosts }: BlogListingProps) {
             <div className="mt-8 flex items-center justify-between border-t border-(--color-line) pt-6 text-sm text-(--color-muted)">
               <time dateTime={featuredPost.date}>{featuredPost.date}</time>
               <Link
-                href={`/blog/${featuredPost.slug}`}
+                href={`/blog/${featuredPost.slug}` as Route}
                 className="font-medium text-(--color-accent) hover:underline"
               >
                 Read article &rarr;
@@ -148,7 +149,7 @@ export function BlogListing({ posts = mockBlogPosts }: BlogListingProps) {
                   </div>
 
                   <h3 className="mt-3 text-lg font-semibold tracking-tight text-(--color-ink)">
-                    <Link href={`/blog/${post.slug}`} className="hover:underline focus:outline-none">
+                    <Link href={`/blog/${post.slug}` as Route} className="hover:underline focus:outline-none">
                       {post.title}
                     </Link>
                   </h3>
@@ -158,7 +159,7 @@ export function BlogListing({ posts = mockBlogPosts }: BlogListingProps) {
 
                 <div className="mt-6 flex items-center justify-between border-t border-(--color-line) pt-4 text-xs text-(--color-muted)">
                   <time dateTime={post.date}>{post.date}</time>
-                  <Link href={`/blog/${post.slug}`} className="font-medium text-(--color-accent) hover:underline">
+                  <Link href={`/blog/${post.slug}` as Route} className="font-medium text-(--color-accent) hover:underline">
                     Read &rarr;
                   </Link>
                 </div>
