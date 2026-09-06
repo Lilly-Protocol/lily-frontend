@@ -76,6 +76,17 @@ export type TimelineProps = {
 };
 
 export function Timeline({ items, children, className }: TimelineProps) {
+  const childArray = Children.toArray(children);
+
+  // In children mode the caller constructs <TimelineItem> elements directly,
+  // so derive isLast here (like the `items` path below) to omit the connector
+  // line on the final item.
+  const lastTimelineItemIndex = childArray.reduce(
+    (lastIndex, child, index) =>
+      isValidElement(child) && child.type === TimelineItem ? index : lastIndex,
+    -1,
+  );
+
   return (
     <ol className={className}>
       {items
@@ -86,7 +97,17 @@ export function Timeline({ items, children, className }: TimelineProps) {
               isLast={index === items.length - 1}
             />
           ))
-        : children}
+        : childArray.map((child, index) => {
+            if (isValidElement(child) && child.type === TimelineItem) {
+              return cloneElement(
+                child as ReactElement<
+                  TimelineItemProps & { readonly isLast?: boolean }
+                >,
+                { isLast: index === lastTimelineItemIndex },
+              );
+            }
+            return child;
+          })}
     </ol>
   );
 }

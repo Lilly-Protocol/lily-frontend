@@ -90,12 +90,11 @@ describe("app route modules", () => {
     ({ routeId, Page }) => {
       render(<Page />);
 
-      expect(
-        screen.getByRole("heading", {
-          level: 1,
-          name: getRouteScaffold(routeId).title,
-        }),
-      ).toBeInTheDocument();
+      // Each route module must render exactly one h1 whose text carries the
+      // registry title (custom pages may brand it, e.g. "Contact Us").
+      const headings = screen.getAllByRole("heading", { level: 1 });
+      expect(headings).toHaveLength(1);
+      expect(headings[0]).toHaveTextContent(getRouteScaffold(routeId).title);
     },
   );
 

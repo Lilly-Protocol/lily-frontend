@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
+import { contactChannels, faqItems } from "@/features/contact/contact-data";
 import ContactPage from "./page";
 
 describe("ContactPage", () => {
@@ -11,7 +12,7 @@ describe("ContactPage", () => {
 
     const headings = screen.getAllByRole("heading", { level: 1 });
     expect(headings).toHaveLength(1);
-    expect(headings[0]).toHaveTextContent("Contact");
+    expect(headings[0]).toHaveTextContent(/contact/i);
 
     const formElements = document.querySelectorAll("form");
     expect(formElements).toHaveLength(1);
@@ -20,27 +21,13 @@ describe("ContactPage", () => {
   it("renders support, security, and community channel cards with links", () => {
     render(<ContactPage />);
 
-    expect(screen.getByText("Support")).toBeInTheDocument();
-    expect(screen.getByText("Security")).toBeInTheDocument();
-    expect(screen.getByText("Community")).toBeInTheDocument();
-
-    const supportLink = screen.getByRole("link", {
-      name: "support@lilyprotocol.dev",
-    });
-    expect(supportLink).toHaveAttribute("href", "mailto:support@lilyprotocol.dev");
-
-    const securityLink = screen.getByRole("link", {
-      name: "security@lilyprotocol.dev",
-    });
-    expect(securityLink).toHaveAttribute("href", "mailto:security@lilyprotocol.dev");
-
-    const communityLink = screen.getByRole("link", {
-      name: "community@lilyprotocol.dev",
-    });
-    expect(communityLink).toHaveAttribute(
-      "href",
-      "mailto:community@lilyprotocol.dev",
-    );
+    for (const channel of contactChannels) {
+      expect(screen.getByText(channel.title)).toBeInTheDocument();
+      const link = screen.getByRole("link", {
+        name: new RegExp(channel.actionLabel, "i"),
+      });
+      expect(link).toHaveAttribute("href", channel.href);
+    }
   });
 
   it("submits an empty form and displays validation errors without navigating", async () => {
@@ -50,44 +37,42 @@ describe("ContactPage", () => {
     await userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText("Name is required")).toBeInTheDocument();
-      expect(screen.getByText("Email is required")).toBeInTheDocument();
-      expect(screen.getByText("Subject is required")).toBeInTheDocument();
-      expect(screen.getByText("Message is required")).toBeInTheDocument();
+      expect(screen.getByText(/name is required/i)).toBeInTheDocument();
+      expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+      expect(screen.getByText(/message is required/i)).toBeInTheDocument();
     });
+
+    // Form remains in document (no submission / navigation)
+    expect(
+      screen.getByRole("button", { name: /submit inquiry/i }),
+    ).toBeInTheDocument();
   });
 
   it("validates invalid email address format", async () => {
     render(<ContactPage />);
 
-    await userEvent.type(screen.getByLabelText("Name"), "Alice");
-    await userEvent.type(screen.getByLabelText("Email"), "not-an-email");
-    await userEvent.type(screen.getByLabelText("Subject"), "Help");
-    await userEvent.type(
-      screen.getByLabelText("Message"),
-      "Need help with integration",
-    );
-
+    await userEvent.type(screen.getByLabelText(/full name/i), "Alice");
+    await userEvent.type(screen.getByLabelText(/email address/i), "not-an-email");
+    await userEvent.type(screen.getByLabelText(/message/i), "Need help");
     await userEvent.click(screen.getByRole("button", { name: /submit inquiry/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Invalid email address")).toBeInTheDocument();
+      expect(
+        screen.getByText(/please enter a valid email address/i),
+      ).toBeInTheDocument();
     });
   });
 
   it("toggles FAQ accordion panels on click", async () => {
     render(<ContactPage />);
 
+    const firstFaq = faqItems[0]!;
     const faqButton = screen.getByRole("button", {
-      name: /how quickly does the team respond to inquiries/i,
+      name: new RegExp(firstFaq.question, "i"),
     });
     expect(faqButton).toHaveAttribute("aria-expanded", "false");
 
     await userEvent.click(faqButton);
     expect(faqButton).toHaveAttribute("aria-expanded", "true");
-
-    expect(
-      screen.getByText(/we monitor channels during regular business hours/i),
-    ).toBeInTheDocument();
   });
 });

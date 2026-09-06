@@ -49,6 +49,15 @@ const mockRoutes: readonly RouteScaffold[] = [
     implementationAreas: ["UI"],
   },
   {
+    id: "agents",
+    title: "Agents Registry",
+    path: "/app/agents",
+    section: "dashboard",
+    purpose: "List and manage registered agents",
+    figmaScope: "Agents screen",
+    implementationAreas: ["UI"],
+  },
+  {
     id: "agent-detail",
     title: "Agent Detail",
     path: "/app/agents/[id]",

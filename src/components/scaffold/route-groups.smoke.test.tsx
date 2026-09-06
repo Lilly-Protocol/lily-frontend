@@ -49,8 +49,9 @@ describe("Route group layout smoke tests", () => {
     );
 
     expect(screen.getByText(/docs, status, and legal/i)).toBeInTheDocument();
+    const nav = screen.getByRole("navigation", { name: /section routes/i });
     expect(
-      screen.getByRole("link", { name: /documentation/i }),
+      within(nav).getByRole("link", { name: /documentation/i }),
     ).toHaveAttribute("href", "/docs");
     expect(screen.getByRole("heading", { name: /documentation/i })).toBeInTheDocument();
   });

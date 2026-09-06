@@ -11,6 +11,25 @@ type SectionNavProps = {
   readonly ariaLabel?: string;
 };
 
+/**
+ * A section link is current when the pathname equals the route path or is
+ * nested underneath it (e.g. visiting /app/agents/<id> keeps the Agents
+ * Registry /app/agents link current). The root path only matches exactly so
+ * "/" is never reported active on deeper routes.
+ */
+function isCurrentSection(
+  pathname: string | null | undefined,
+  routePath: string,
+): boolean {
+  if (!pathname) {
+    return false;
+  }
+  if (routePath === "/") {
+    return pathname === "/";
+  }
+  return pathname === routePath || pathname.startsWith(`${routePath}/`);
+}
+
 export function SectionNav({
   routes,
   ariaLabel = "Section routes",
@@ -21,7 +40,7 @@ export function SectionNav({
     <nav aria-label={ariaLabel}>
       <ul className="grid gap-2">
         {routes.map((route) => {
-          const isActive = pathname === route.path;
+          const isActive = isCurrentSection(pathname, route.path);
 
           return (
             <li key={route.id} className="sm:w-64 sm:flex-none">

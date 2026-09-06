@@ -27,7 +27,7 @@ describe("RootLayout configuration", () => {
     expect(fontMocks.ibmPlexMono).toHaveBeenCalled();
   });
 
-  it("renders exactly one application/ld+json organization script and single footer", () => {
+  it("renders exactly one application/ld+json organization script and no footer in the root layout", () => {
     const { container } = render(
       <RootLayout>
         <div>Content</div>
@@ -37,21 +37,9 @@ describe("RootLayout configuration", () => {
       'script[type="application/ld+json"]#organization-json-ld',
     );
     expect(scripts).toHaveLength(1);
-    expect(container.querySelectorAll("footer")).toHaveLength(1);
-  });
-
-  it("renders exactly one application/ld+json organization script and single footer", () => {
-    const { container } = render(
-      <RootLayout>
-        <div>Content</div>
-      </RootLayout>,
-    );
-
-    const scripts = container.querySelectorAll(
-      'script[type="application/ld+json"]#organization-json-ld',
-    );
-    expect(scripts).toHaveLength(1);
-    expect(container.querySelectorAll("footer")).toHaveLength(1);
+    // The footer is owned by SectionLayout (one per route-group page); the
+    // root layout must not render one (see fix #538).
+    expect(container.querySelectorAll("footer")).toHaveLength(0);
   });
 });
 
