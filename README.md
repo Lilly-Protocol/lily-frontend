@@ -8,6 +8,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B4D6?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-Tested-6E9F18?logo=vitest&logoColor=white)
 [![CI](https://github.com/lily-protocol/lily-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/lily-protocol/lily-frontend/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE)
 [![Stellar](https://img.shields.io/badge/Stellar-agent%20finance-7D00FF)](https://developers.stellar.org/)
 
 **The user-facing web app for Lily Protocol — where controllers manage their AgentLily finance agents, Stellar wallets, and USDC/XLM payments on the Stellar network.**
