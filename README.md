@@ -1,30 +1,55 @@
-# Lily Frontend
+# Lily Frontend — Stellar-Native Agent Finance Dashboard
 
 <img width="1197" height="407" alt="image" src="https://github.com/user-attachments/assets/1cbfb0fe-3668-4e82-8fda-68b1cc4efc25" />
 
-Contributor-ready frontend foundation for Lily Protocol. This repository is intentionally light on shipped product UI so contributors can build features through scoped issues and pull requests.
-
-![Next.js](https://img.shields.io/badge/Next.js-16.2-black?logo=nextdotjs)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?logo=nextdotjs)](https://nextjs.org/)
 ![React](https://img.shields.io/badge/React-19-20232A?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B4D6?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-Tested-6E9F18?logo=vitest&logoColor=white)
 [![CI](https://github.com/lily-protocol/lily-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/lily-protocol/lily-frontend/actions/workflows/ci.yml)
-![Docker](https://img.shields.io/badge/Docker-Planned-2496ED?logo=docker&logoColor=white)
-![License](https://img.shields.io/badge/License-Private-5B5B5B)
+[![Stellar](https://img.shields.io/badge/Stellar-agent%20finance-7D00FF)](https://developers.stellar.org/)
+
+**The user-facing web app for Lily Protocol — where controllers manage their AgentLily finance agents, Stellar wallets, and USDC/XLM payments on the Stellar network.**
+
+`lily-frontend` is the contributor-ready frontend foundation for **Lily Protocol, the autonomous agent finance stack on Stellar**. It ships the marketing site, auth, and dashboard shells for the product surface: an **AgentLily agent registry**, a **Stellar wallet console**, a **payment hub** (USDC/XLM quotes and activity), and developer/settings areas. The repository is intentionally light on finished product UI so contributors build each screen from the approved [Figma](https://www.figma.com/design/GRBeDGDHzCGXefm3xmlbHF/Lily-Protocol?node-id=0-1&t=SiCYBGotCg7HcXhe-1) through scoped issues and pull requests.
 
 **Website:** [agent-lily.online](https://www.agent-lily.online)  
-**Design:** [Figma — Lily Protocol](https://www.figma.com/design/GRBeDGDHzCGXefm3xmlbHF/Lily-Protocol?node-id=0-1&t=SiCYBGotCg7HcXhe-1)
+**Design:** [Figma — Lily Protocol](https://www.figma.com/design/GRBeDGDHzCGXefm3xmlbHF/Lily-Protocol?node-id=0-1&t=SiCYBGotCg7HcXhe-1)  
 **Design Tokens:** [docs/design-tokens.md](./docs/design-tokens.md) — CSS custom properties reference and Figma mapping
+
+## Stellar at a Glance
+
+- **AgentLily dashboard routes are scaffolded** — `/app/agents`, `/app/wallets`, `/app/payments`, and `/app/activity` are the planned surfaces where controllers watch agents act on Stellar: provisioning AgentLily wallets, quoting USDC/XLM payments, and reviewing activity.
+- **Stellar product copy in the shells** — the wallet console's empty state ("Create a wallet to start receiving payments") and the agent/payment route scaffolds describe the Stellar finance flows contributors will implement next.
+- **Stellar-first marketing routes** — `/ecosystem` and `/grants` position the protocol's Stellar ecosystem story on the public site.
+- **Roadmap (planned, not shipped)** — connect Stellar wallets (Freighter), live AgentLily wallet balances (USDC/XLM), payment quote → execute flows against the Lily backend, and real-time agent activity feeds. Each slice is an issue-sized contribution.
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  Lily Frontend (Next.js)                                  │
+│   /            marketing (about · blog · ecosystem)       │
+│   /app/agents  AgentLily registry  → on Stellar identity  │
+│   /app/wallets Stellar wallet console (planned)           │
+│   /app/payments USDC/XLM payment hub (planned)            │
+└──────────────────────────┬─────────────────────────────────┘
+                           │ lilyFetch → typed LilyApiError
+                           ▼
+┌────────────────────────────────────────────────────────────┐
+│  Lily Protocol backend API → Stellar network               │
+│  AgentLily wallets · payment quotes · Soroban contracts    │
+└────────────────────────────────────────────────────────────┘
+```
 
 ## Stack
 
 - Next.js 16 App Router
 - React 19
-- TypeScript
+- TypeScript (strict)
 - Tailwind CSS 4
 - ESLint 9
 - Vitest + Testing Library
+- Playwright smoke tests
 - GitHub Actions CI
 
 ## Current scope
@@ -48,26 +73,13 @@ nvm use
 
 Install dependencies and start the dev server:
 
-1. Copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL`.
-2. Run `npm install`.
-3. Run `npm run dev`.
-
-## Code of Conduct
-
-This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@lily-protocol.dev.
-
 ```bash
-nvm install
-nvm use
 npm install
 cp .env.example .env.local
 npm run dev
 ```
 
-Set `NEXT_PUBLIC_SITE_URL` to the deployed frontend origin and
-`NEXT_PUBLIC_API_BASE_URL` to the browser-accessible Lily API base URL. Public
-environment access is centralized and validated in `src/config/env.ts`; add new
-`NEXT_PUBLIC_*` values there instead of reading `process.env` throughout the app.
+Set `NEXT_PUBLIC_SITE_URL` to the deployed frontend origin and `NEXT_PUBLIC_API_BASE_URL` to the browser-accessible Lily API base URL. Public environment access is centralized and validated in `src/config/env.ts`; add new `NEXT_PUBLIC_*` values there instead of reading `process.env` throughout the app.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -77,17 +89,11 @@ Use Node.js `22+`. The `.nvmrc`, `package.json` engines field, and CI workflow a
 
 `next.config.ts` includes narrowly scoped placeholder patterns for the planned OG image service (`opengraph.example.com/og/**`) and asset CDN (`assets.example.com/lily/**`). Before using either service with `next/image`, replace its example hostname and path with the real provider values. Add another `images.remotePatterns` entry for each additional HTTPS host or path instead of broadening an existing pattern. Keep `port: ""` to disallow custom ports; add a `search` value when the provider uses one fixed query string.
 
-Docker is not configured in this repository yet. The badge above marks it as planned rather than available today.
+## Code of Conduct
+
+This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to conduct@lily-protocol.dev.
 
 ## Quality checks
-
-## Legacy route redirects
-
-This project uses Next.js `redirects()` in `next.config.ts` to map legacy URLs
-(e.g. `/dash`, `/sign-up`, `/agents/:id`) to their current canonical paths under
-`/app`. When adding new routes or renaming existing ones, append a permanent
-redirect entry to the `redirects()` array in `next.config.ts` so old bookmarks
-and external links continue to work.
 
 ```bash
 npm run lint
@@ -99,20 +105,19 @@ npm run check
 npm run format
 npm run icons
 npm run clean
-npm run icons
 ```
 
 `npm run check` mirrors CI and is the fastest way to validate a contribution before opening a PR.
 `npm run format` applies Prettier to supported repository files. `npm run clean` removes the generated `.next`, `coverage`, and `tsconfig.tsbuildinfo` artifacts.
 `npm run icons` regenerates the canonical public icon assets using brand design tokens from `src/app/globals.css`.
 
+## Legacy route redirects
+
+This project uses Next.js `redirects()` in `next.config.ts` to map legacy URLs (e.g. `/dash`, `/sign-up`, `/agents/:id`) to their current canonical paths under `/app`. When adding new routes or renaming existing ones, append a permanent redirect entry to the `redirects()` array in `next.config.ts` so old bookmarks and external links continue to work.
+
 ## Motion tokens
 
-Motion values live in `src/app/globals.css`. Use `--duration-fast` for hover
-feedback, `--duration-base` for ordinary state changes, and `--duration-slow`
-for larger transitions. Pair them with `--ease-standard`; interactive links can
-use the shared `motion-link` class, which becomes instant when the user prefers
-reduced motion.
+Motion values live in `src/app/globals.css`. Use `--duration-fast` for hover feedback, `--duration-base` for ordinary state changes, and `--duration-slow` for larger transitions. Pair them with `--ease-standard`; interactive links can use the shared `motion-link` class, which becomes instant when the user prefers reduced motion.
 
 ## Project structure
 
@@ -137,10 +142,7 @@ docs/
 
 ## API error handling
 
-Use `lilyFetch` from `src/lib/api/client.ts` for API requests. It throws a
-`LilyApiError` with a stable `status`, `code`, and `message`, plus optional
-`details`. Transport failures use status `0` and code `NETWORK_ERROR`. Use
-`isLilyApiError` when narrowing errors in route-level error UI.
+Use `lilyFetch` from `src/lib/api/client.ts` for API requests. It throws a `LilyApiError` with a stable `status`, `code`, and `message`, plus optional `details`. Transport failures use status `0` and code `NETWORK_ERROR`. Use `isLilyApiError` when narrowing errors in route-level error UI.
 
 ## Route scaffold map
 
@@ -169,11 +171,6 @@ Use `EmptyState` from `src/components/ui/empty-state.tsx` for planned list surfa
 4. Prefer building one issue-sized slice at a time from the approved Figma.
 5. Run `npm run check` before opening a pull request.
 
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage, and PR guidance. Please review our [Code of Conduct](./CODE_OF_CONDUCT.md) before participating.
-
-
 ## Contributor-ready focus
 
 - Page-by-page implementation from Figma
@@ -183,9 +180,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage
 
 ### List empty states
 
-Use `EmptyState` from `src/components/ui/empty-state.tsx` when a list route has
-no records to display. Supply the route-specific icon, title, description, and
-optional action instead of duplicating empty-state layout styles:
+Use `EmptyState` from `src/components/ui/empty-state.tsx` when a list route has no records to display. Supply the route-specific icon, title, description, and optional action instead of duplicating empty-state layout styles:
 
 ```tsx
 <EmptyState
@@ -206,3 +201,7 @@ GitHub Actions runs linting, type-checking, tests with coverage, production buil
 This repo uses the `src/` directory convention supported by Next.js 16. Keep App Router routes under `src/app`, route metadata in `src/config`, and reusable scaffold boundaries under `src/components/scaffold` and `src/features/scaffold`.
 
 Shared scaffold dimensions live in `src/app/globals.css`. The layout container is `72rem`, responsive gutters are `1rem`/`1.5rem`/`2rem`, section spacing is `2rem`, and the radius scale is `sm` (`1rem`), `md` (`1.5rem`), `lg` (`1.75rem`), and `xl` (`2rem`). Components should reference these tokens instead of repeating arbitrary values.
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for workflow expectations, issue triage, and PR guidance. Please review our [Code of Conduct](./CODE_OF_CONDUCT.md) before participating.
